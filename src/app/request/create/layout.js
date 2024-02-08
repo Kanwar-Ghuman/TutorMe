@@ -5,10 +5,10 @@ import ProtectedRoute from '../../../components/tutorme/routes/ProtectedRoute';
 const Layout = ({ children }) => {
     return (
         <div>
-            <ProtectedRoute>
+            {/* <ProtectedRoute> */}
                 <Navbar />
                 {children}
-            </ProtectedRoute>
+            {/* </ProtectedRoute> */}
         </div>
     );
 };
