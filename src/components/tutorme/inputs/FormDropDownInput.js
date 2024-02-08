@@ -42,15 +42,12 @@ export function FormDropDownInput(props) {
                     <SelectValue placeholder={props.placeholder} />
                   </SelectTrigger>
                 </FormControl>
-                
-                  
-                  
                 <SelectContent>
-                  {(props.options || []).map((group) => (
-                    <SelectGroup>
+                  {(props.options).map((group) => (
+                    <SelectGroup key={group.label}>
                       {group.label ? <SelectLabel>{group.label}</SelectLabel> : ""}
-                      {(group.group || []).map((option) => (
-                        <SelectItem value={option.value}>
+                      {(group.group).map((option) => (
+                        <SelectItem key={option.label} value={option.value}>
                           {option.label}
                         </SelectItem>
                       ))}

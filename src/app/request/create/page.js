@@ -27,7 +27,7 @@ const CreateRequest = () => {
             required_error: "Email address is required",
         }).email({
             message: "Please enter a valid email address",
-        }).min(1, "Student Email Address is required"),
+        }),
         subject: z.string({required_error: "Subject is required"}),
         genderPreference: z.string({required_error: "Gender Preference is required"}),
     })
@@ -38,11 +38,10 @@ const CreateRequest = () => {
     const [loading, setLoading] = useState(false);
 
     const onSubmit = (data) => {
-        console.log(data)
         setLoading(true);
+        console.log(data)
         // TODO: Send the request to the backend
     }
-
     return (
         <>
             <div class="flex items-center justify-center m-4 pt-8">
