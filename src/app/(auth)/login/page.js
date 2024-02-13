@@ -7,9 +7,6 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-// import firebase from 'firebase/compat/app';
-// import * as firebaseui from 'firebaseui'
-// import 'firebaseui/dist/firebaseui.css'
 
 const Login = () => {
 
