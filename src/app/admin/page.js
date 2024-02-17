@@ -7,14 +7,9 @@ const AcceptRequest = () => {
     return (
         <>
         <div>
-<<<<<<< HEAD
-            <SideBar />
-            <TutorCard />
-=======
             <button 
                 onClick={console.log("hi")}
             >press me</button>
->>>>>>> 4f9f7d56702434a90be1900f3ce41ef8711324da
         </div>
         </>
     );
