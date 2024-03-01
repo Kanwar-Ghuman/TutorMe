@@ -1,10 +1,9 @@
-"use client";
-
+"use client"
 import React from 'react';
 import { signIn } from "next-auth/react";
-import Card from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
-export function LoginPage({ providers }) {
+export const LoginPage = ({ providers }) => {
   return (
     <div>
       {Object.values(providers).map((provider) => (
@@ -18,3 +17,5 @@ export function LoginPage({ providers }) {
     </div>
   );
 }
+
+export default LoginPage;
