@@ -3,11 +3,15 @@
 import React from "react";
 import { useState } from 'react';
 
-function sideBar() {
+const sideBar = () => {
     return (
-        <h1
-            style={{ backgroundColor: "red" }}
-        >hello</h1>
+        <di>
+            <button>olnoi</button>
+            <button></button>
+            <button></button>
+            <button></button>
+            <button></button>
+        </di>
     )
 }
 
