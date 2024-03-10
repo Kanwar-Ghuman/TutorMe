@@ -16,7 +16,6 @@ export function MainNav({
 
   const [openNav, setNav] = useState(false);
 
-
   let maxWidth = window.screen.width * 1 / 2;
   const [width, setWidth] = useState(window.innerWidth);
   const [smallWindow, setSmallWindow] = useState(width < maxWidth);

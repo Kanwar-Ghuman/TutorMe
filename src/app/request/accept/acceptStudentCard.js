@@ -10,27 +10,28 @@ function student() {
 
     const cardStyle = {
         display: 'flex',
-        width: '50%',
+        width: '95%',
         innerHeight: '20%',
         backgroundColor: '#C7F5D3',
-        margin: 'auto',
+        margin: '1% auto',
         borderRadius: '10px 10px',
-        borderLine: 'black',
-        boxShadow: '1px 1px 2px 1px black'
+        border:'1px solid black',
+        // boxShadow: '1px 1px 2px 1px black'
     }
 
     let acceptStyle = (color) => ({
-        width: '30%',
+        // width: '40%',
         backgroundColor: color,
         filter: isHoveredAccept ? 'brightness(95%)' : 'brightness(80%)',
         borderLine: 'black',
         borderRadius: '5px 5px',
         borderLine: 'black',
-        boxShadow: '1px 1px 2px 1px black'
+        boxShadow: '1px 1px 2px 1px black',
+        fontSize: 'fit-content'
     })
 
     let declineStyle = (color) => ({
-        width: '30%',
+        // width: '40%',
         backgroundColor: color,
         filter: isHoveredDecline ? 'brightness(95%)' : 'brightness(80%)',
         borderLine: 'black',
@@ -61,7 +62,7 @@ function student() {
             style={cardStyle}
         >
             <div
-                style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'transparent', margin: '2% 2%', color: '#112A46', width: '50%' }}
+                style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'transparent', margin: '2% 5%', color: '#112A46', width: '50%' }}
             >
                 <div
                 // style={{}}
@@ -72,7 +73,7 @@ function student() {
             </div>
             <div
                 style={{
-                    display: 'flex', flexDirection: 'column', backgroundColor: 'transparent', color: 'black', width: '50%', alignItems: 'end', margin: '2% 5%', justifyContent: 'space-evenly'
+                    display: 'flex', flexDirection: 'column', backgroundColor: 'transparent', color: 'black', width: '50%', alignItems: 'center', margin: '2% 0%', justifyContent: 'space-evenly'
                 }}
             >
                 <button

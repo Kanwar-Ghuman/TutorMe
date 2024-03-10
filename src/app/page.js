@@ -3,9 +3,13 @@ import Image from 'next/image'
 export default function Home() {
   return (
     <>
-      <div className="container">
-        <div className="row">
-          <div className="col-12 col-md-6">
+      <div className="container"
+      style={{height:'100%' }}
+      >
+        <div className="row"
+        >
+          <div className="col-12 col-md-6"
+          >
             <h1 className="display-1">TutorMe</h1>
             <p className="lead">TutorMe is a platform for students to connect with tutors.</p>
           </div>
