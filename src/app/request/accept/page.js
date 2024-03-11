@@ -1,12 +1,11 @@
 
-import React from "react" ;
+import React from "react";
 "use-client";
 
 // import { Inter } from 'next/font/google'
 // import { useState } from "react";
 
 import Navbar from '@/components/tutorme/home/nav/navbar';
-import AcceptStudentCard from './acceptStudentCard'
 import SideBar from './sideBar';
 import ScrollBar from './scrollBar';
 
@@ -21,11 +20,12 @@ const AcceptRequest = () => {
     return (
         <div
             // asChild
-            style={{height:'100vh'}}
+            style={{ height: '100vh' }}
+            className='scroll-hide'
         >
             <Navbar />
             <div
-                style={{ display: 'flex', flexDirection: 'row', width:'100%',height:'90.5%'}}
+                style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '90vh' }}
             >
                 <SideBar />
                 <ScrollBar />

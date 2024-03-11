@@ -6,7 +6,6 @@ export default function Navbar() {
     <>
       <div className="flex flex-col">
         <div className="border-b">
-          {/* <MainNav /> */}
           <MainNav />
         </div>
       </div>

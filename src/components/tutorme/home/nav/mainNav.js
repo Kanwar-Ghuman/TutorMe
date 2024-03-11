@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { UserNav} from './userNav'
+import { UserNav } from './userNav'
 import DropDownBtn from './dropDownBtn';
 
 
@@ -75,28 +75,10 @@ export function MainNav({
           class="flex items-center justify-center m-4"
         >
           <div>
-                      {/* {openNav ? (
-            <button
-              onClick={() => { setNav(false) }}
-            >
-              close
-            </button>
-          ) : (
-            <button
-              onClick={() => { setNav(true) }}
-            >
-              open
-            </button>
-          )} */}
-          </div>
-
-          {/* className="ml-auto flex items-center space-x-4" */}
-          <div>
             <DropDownBtn />
           </div>
           <div
             style={{ margin: "auto" }}
-          // className="flex justify-center"
           >
             <h1
               className="items-center text-lg font-semibold tracking-wide text-primary"

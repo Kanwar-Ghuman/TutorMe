@@ -2,58 +2,58 @@
 
 import React, { useRef } from "react";
 import AcceptStudentCard from './acceptStudentCard'
+import './style.css'
 
-function scrollbar(){
+function scrollbar() {
     let requestArray = [];
-    for (let i = 0; i < 10; i ++){
+    for (let i = 0; i < 10; i++) {
         requestArray.push("student " + i);
     }
 
     // const [myvariable, zerio] = useState(true)
-    const list = requestArray.map(() => 
-    <AcceptStudentCard/>
+    const list = requestArray.map(() =>
+
+        <div
+        >
+            <AcceptStudentCard />
+        </div>
     )
 
     const cardsStyle = {
-        width:'80%',
-        height:'80%',
+        width: '100%',
         display: 'flex',
-        flexDirection:'column',
-        margin:'2% 0%',
-        backgroundColor:'beige',
+        flexDirection: 'column',
+        margin: '0vh 0%',
+        backgroundColor: 'beige',
         borderRadius: '10px',
-        overFlow: 'scroll' 
+        // overFlow: 'scroll'
     }
     const scrollBarWhole = {
-        display:'flex',
-        height: '80%',
-        width:'80%' , 
-        margin: '5% 0%', 
-        display:'flex', 
-        flexDirection:'column', 
-        justifyContent:'center', 
-        alignItems:'center',
-        backgroundColor:'green',
+        display: 'flex',
+        width: '100%',
+        margin: '0% 0%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start',
+        alignItems: 'center',
+        backgroundColor: 'grey',
         borderRadius: '10px'
     }
 
     return (
         <div
-        style={{width:'100%', height: '100%', display:'flex', justifyContent:'center',alignItems:'center', backgroundColor:'transparent'}}
-        >
-            <div
             style={scrollBarWhole}
-            >
-                <input 
-                style={{border:'2px solid black', borderRadius:'7px', textAlign: 'center', margin:'auto 0%'}}
-                type = 'text'
+        >
+            <input
+                style={{ border: '2px solid black', borderRadius: '7px', textAlign: 'center', margin: '5vh' }}
+                autoFocus
+                type='text'
                 placeholder='looking for someone ?'></input>
-                <div 
-                style={cardsStyle}
+            <div
                 className="overflow-y-scroll scroll whitespacer-nonwrap"
-                >
-                    {list}
-                </div>
+                style={cardsStyle}
+            >
+                {list}
             </div>
         </div>
     )

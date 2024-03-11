@@ -11,11 +11,11 @@ const sideBar = () => {
         margin: "0% 0%",
         borderWidth: '1px',
         width: '20%',
-        // height: '90vh',
+        height: '90vh',
     })
     return (
         <div
-        style={sideBarStyle('p')}
+            style={sideBarStyle('p')}
         >
             <button>olnoi</button>
             <button></button>
