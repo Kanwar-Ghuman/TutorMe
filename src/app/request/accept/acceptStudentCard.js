@@ -15,7 +15,7 @@ function student() {
         backgroundColor: '#C7F5D3',
         margin: '1% auto',
         borderRadius: '10px 10px',
-        border:'1px solid black',
+        border: '1px solid black',
         // boxShadow: '1px 1px 2px 1px black'
     }
 
@@ -27,7 +27,8 @@ function student() {
         borderRadius: '5px 5px',
         borderLine: 'black',
         boxShadow: '1px 1px 2px 1px black',
-        fontSize: 'fit-content'
+        // fontSize: 'fit-content',
+        width: '40%'
     })
 
     let declineStyle = (color) => ({
@@ -37,7 +38,9 @@ function student() {
         borderLine: 'black',
         borderRadius: '5px 5px',
         borderLine: 'black',
-        boxShadow: '1px 1px 2px 1px black'
+        boxShadow: '1px 1px 2px 1px black',
+        width: '40%'
+
     })
 
     const handleMouseEnterAccept = () => {
@@ -73,7 +76,7 @@ function student() {
             </div>
             <div
                 style={{
-                    display: 'flex', flexDirection: 'column', backgroundColor: 'transparent', color: 'black', width: '50%', alignItems: 'center', margin: '2% 0%', justifyContent: 'space-evenly'
+                    display: 'flex', flexDirection: 'column', backgroundColor: 'transparent', color: 'black', width: '50%', alignItems: 'end', margin: '0% 5%', justifyContent: 'space-evenly'
                 }}
             >
                 <button

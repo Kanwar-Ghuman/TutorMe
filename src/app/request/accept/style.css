@@ -1,3 +1,24 @@
 input:hover {
     background-color: aquamarine;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+#sideBar button {
+    width: 90%;
+    background-color: transparent;
+    border-radius: 0px 5px 5px 0px;
+    text-align: start;
+    border: 1px solid transparent;
+
+}
+
+#sideBar button:hover {
+    background-color: rgb(253, 227, 227);
+}
+
+#sideBar {
+    background-color: red;
+}

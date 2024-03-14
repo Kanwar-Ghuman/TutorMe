@@ -12,7 +12,6 @@ function scrollbar() {
 
     // const [myvariable, zerio] = useState(true)
     const list = requestArray.map(() =>
-
         <div
         >
             <AcceptStudentCard />
@@ -24,8 +23,8 @@ function scrollbar() {
         display: 'flex',
         flexDirection: 'column',
         margin: '0vh 0%',
-        backgroundColor: 'beige',
-        borderRadius: '10px',
+        backgroundColor: 'transparent',
+        // borderRadius: '10px',
         // overFlow: 'scroll'
     }
     const scrollBarWhole = {
@@ -36,8 +35,9 @@ function scrollbar() {
         flexDirection: 'column',
         justifyContent: 'start',
         alignItems: 'center',
-        backgroundColor: 'grey',
-        borderRadius: '10px'
+        backgroundColor: 'transparent',
+        // borderRadius: '10px'
+        borderWidth: '0px 1px'
     }
 
     return (
