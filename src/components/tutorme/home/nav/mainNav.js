@@ -36,7 +36,7 @@ export function MainNav({
 
       {!smallWindow ? (
         <div
-          class="flex items-center justify-center m-4"
+          className="flex items-center justify-center px-4 nav-height"
         >
           <nav
 

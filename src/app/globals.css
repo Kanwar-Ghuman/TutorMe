@@ -33,6 +33,9 @@
     --ring: 240 10% 3.9%;
  
     --radius: 0.5rem;
+
+    --nav-height: 70px;
+    --adjusted-h-full: calc(100% - var(--nav-height));
   }
  
   .dark {
@@ -73,4 +76,16 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.max-h-adjusted-full {
+  max-height: var(--adjusted-h-full);
+}
+
+.h-adjusted-full {
+  height: var(--adjusted-h-full);
+}
+
+.nav-height {
+  height: var(--nav-height);
 }

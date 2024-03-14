@@ -25,10 +25,14 @@ const AcceptRequest = () => {
         >
             <Navbar />
             <div
-                style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '90vh' }}
-            >
-                <SideBar />
-                <ScrollBar />
+                className="flex w-100 space-x-4 p-4"
+            >  
+                <div className="w-[20%] shadow-md rounded-lg">
+                    <SideBar />
+                </div>
+                <div className="w-[80%]">
+                    <ScrollBar />
+                </div>
             </div>
 
         </div>
