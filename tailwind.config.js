@@ -28,6 +28,7 @@ module.exports = {
         foreground: "hsl(var(--foreground))",
         "yellow-button": "#FACA15",
         "cancel-button": "#FF7676",
+        "yellow-text": "#E3A008",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
