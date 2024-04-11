@@ -5,3 +5,7 @@
 #sideBar {
     background-color: red;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}

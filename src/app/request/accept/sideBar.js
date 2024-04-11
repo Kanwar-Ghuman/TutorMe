@@ -32,7 +32,7 @@ const sideBar = () => {
 
     return (
         <div
-            style={{ width: '20%', height: '90vh' }}
+            style={{ width: '20%', height: '87vh' }}
         >
             <div
                 id="sideBar"
