@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 const AcceptRequest = () => {
   return (
     <div className="flex flex-col justify-start min-h-screen px-4 sm:px-10 md:px-20 lg:px-32 xl:px-80 pb-[5rem] sm:pb-[10rem] md:pb-[15rem] lg:pb-[20rem] xl:pb-[30rem]">
-      {/* Increased top padding for the first div to move the text box down a bit */}
       <div className="pt-10 sm:pt-12 md:pt-14 lg:pt-16 xl:pt-20">
-        {/* Adjusted font size to be larger on smaller screens */}
         <h1 className="text-md sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold">
           <span className="text-[#0E9F6E]">Success!</span> You are now pending
           approval from Mr. Decker.
