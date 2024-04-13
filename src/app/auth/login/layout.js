@@ -1,5 +1,6 @@
 import React from "react";
-import Navbar from "@/components/tutorme/home/nav/authNav";
+import Navbar from "@/components/tutorme/home/nav/navbar";
+
 const Layout = ({ children }) => {
   return (
     <div>

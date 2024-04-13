@@ -18,9 +18,6 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        "inter-good": ["Inter", "Helvetica", "sans-serif"],
-      },
-      fontFamily: {
         "inter-bold": ['"Inter-Bold"', "Helvetica", "sans-serif"],
       },
       colors: {
