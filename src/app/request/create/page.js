@@ -28,8 +28,8 @@ const CreateRequest = () => {
         }).email({
             message: "Please enter a valid email address",
         }),
-        subject: z.string({required_error: "Subject is required"}),
-        genderPreference: z.string({required_error: "Gender Preference is required"}),
+        subject: z.string({ required_error: "Subject is required" }),
+        genderPreference: z.string({ required_error: "Gender Preference is required" }),
     })
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -70,36 +70,44 @@ const CreateRequest = () => {
                                 name="subject"
                                 label="Subject"
                                 options={[
-                                    {"label": "Math", "group": [
-                                        {"value": "IM1", "label": "IM1"},
-                                        {"value": "IM2", "label": "IM2"},
-                                        {"value": "IM3", "label": "IM3"},
-                                        {"value": "Precalc", "label": "Precalculus"},
-                                        {"value": "CalcAB", "label": "AP Calculus AB"},
-                                        {"value": "CalcBC", "label": "AP Calculus BC"}
-                                    ]},
-                                    {"label": "Science", "group": [
-                                        {"value": "Physics", "label": "Physics"},
-                                        {"value": "Chemistry", "label": "Chemistry"},
-                                        {"value": "Biology", "label": "Biology"},
-                                        {"value": "APPhysics", "label": "AP Physics"},
-                                        {"value": "APChemistry", "label": "AP Chemistry"},
-                                        {"value": "APBiology", "label": "AP Biology"}
-                                    ]},
-                                    {"label": "Spanish", "group": [
-                                        {"value": "Spanish1", "label": "Spanish 1"},
-                                        {"value": "Spanish2", "label": "Spanish 2"},
-                                        {"value": "Spanish3", "label": "Spanish 3"},
-                                        {"value": "Spanish4", "label": "Spanish 4"},
-                                        {"value": "Spanish5", "label": "Spanish 5"},
-                                    ]}, 
-                                    {"label": "German", "group": [
-                                        {"value": "German1", "label": "German 1"},
-                                        {"value": "German2", "label": "German 2"},
-                                        {"value": "German3", "label": "German 3"},
-                                        {"value": "German4", "label": "German 4"},
-                                        {"value": "German5", "label": "German 5"}
-                                    ]}
+                                    {
+                                        "label": "Math", "group": [
+                                            { "value": "IM1", "label": "IM1" },
+                                            { "value": "IM2", "label": "IM2" },
+                                            { "value": "IM3", "label": "IM3" },
+                                            { "value": "Precalc", "label": "Precalculus" },
+                                            { "value": "CalcAB", "label": "AP Calculus AB" },
+                                            { "value": "CalcBC", "label": "AP Calculus BC" }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Science", "group": [
+                                            { "value": "Physics", "label": "Physics" },
+                                            { "value": "Chemistry", "label": "Chemistry" },
+                                            { "value": "Biology", "label": "Biology" },
+                                            { "value": "APPhysics", "label": "AP Physics" },
+                                            { "value": "APChemistry", "label": "AP Chemistry" },
+                                            { "value": "APBiology", "label": "AP Biology" }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Spanish", "group": [
+                                            { "value": "Spanish1", "label": "Spanish 1" },
+                                            { "value": "Spanish2", "label": "Spanish 2" },
+                                            { "value": "Spanish3", "label": "Spanish 3" },
+                                            { "value": "Spanish4", "label": "Spanish 4" },
+                                            { "value": "Spanish5", "label": "Spanish 5" },
+                                        ]
+                                    },
+                                    {
+                                        "label": "German", "group": [
+                                            { "value": "German1", "label": "German 1" },
+                                            { "value": "German2", "label": "German 2" },
+                                            { "value": "German3", "label": "German 3" },
+                                            { "value": "German4", "label": "German 4" },
+                                            { "value": "German5", "label": "German 5" }
+                                        ]
+                                    }
                                 ]}
                                 form={form}
                                 description="What subject does your student need help with?"
@@ -108,7 +116,7 @@ const CreateRequest = () => {
                             <FormDropDownInput
                                 name="genderPreference"
                                 label="Gender Preference"
-                                options={[{"group": [{"value": "M", "label": "Male"}, {"value": "F", "label": "Female"}, {"value": "N", "label": "No Preference"}]}]}
+                                options={[{ "group": [{ "value": "M", "label": "Male" }, { "value": "F", "label": "Female" }, { "value": "N", "label": "No Preference" }] }]}
                                 form={form}
                                 description="Does your student prefer a certain tutor gender?"
                                 isRequired
@@ -118,7 +126,7 @@ const CreateRequest = () => {
                         </form>
                     </Form>
 
-                            
+
 
                 </div>
             </div>
