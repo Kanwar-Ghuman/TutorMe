@@ -1,4 +1,3 @@
-import React from "react";
 ("use-client");
 
 // import { Inter } from 'next/font/google'
@@ -13,7 +12,6 @@ const AcceptRequest = () => {
   function mouseOver(event) {
     event.target.style.background = "red";
   }
-
   // const myHeight = window.innerHeight * 0.5;
   return (
     <div

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
 import "./style.css";
 //to do list
 import { LuListTodo } from "react-icons/lu";
@@ -13,7 +12,7 @@ import { MdOutlineArchive } from "react-icons/md";
 import { IoFileTrayFullOutline } from "react-icons/io5";
 
 const sideBar = () => {
-  const sideBarStyle = (p) => ({
+  const sideBarStyle = () => ({
     margin: "0% 2%",
     backgroundColor: "transparent",
     width: "100%",
