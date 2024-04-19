@@ -19,13 +19,13 @@ export function MainNav({
       >
         <Link
           href="/request/create"
-          className={"text-sm transition-colors hover:text-primary" + router.pathname == "/request/create" ? "active" : ""}
+          className={"text-sm transition-colors hover:text-primary" + router.pathname == "/request/create" ? "" : "text-muted-foreground"}
         >
           Create Tutor Request
         </Link>
         <Link
           href="/examples/dashboard"
-          className="text-sm text-muted-foreground transition-colors hover:text-primary"
+          className={"text-sm transition-colors hover:text-primary" + router.pathname == "/request/create" ? "" : "text-muted-foreground"}
         >
           View Past Requests
         </Link>
