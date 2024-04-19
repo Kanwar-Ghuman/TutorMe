@@ -23,8 +23,8 @@ const NotFound = () => {
         if you think this is a mistake
       </p>
       <Button
-        className="w-3/4 sm:w-1/2 md:w-1/4 text-black bg-yellow-button mt-[10rem]"
-        variant="primary"
+        className="w-3/4 sm:w-1/2 md:w-1/4 mt-[6rem]"
+        variant="destructive"
       >
         Logout
       </Button>
