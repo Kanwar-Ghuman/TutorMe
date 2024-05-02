@@ -3,6 +3,7 @@
 import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
+import { signOut } from "../../auth/signout";
 
 export function BaseNav({menuItems, profileItems}) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -60,9 +61,9 @@ export function BaseNav({menuItems, profileItems}) {
                             as="button"
                             className="transition-transform"
                             color="secondary"
-                            name="Jason Hughes"
+                            name={profileItems[0][0]}
                             size="sm"
-                            src={profileItems[0]}
+                            src={profileItems[0][1]}
                         />
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Dynamic Actions" items={profileItems[1]}>
@@ -72,6 +73,7 @@ export function BaseNav({menuItems, profileItems}) {
                                 color={item.color ? item.color : "default"}
                                 className={item.className ? item.className : ""}
                                 href={item.link ? item.link : undefined}
+                                onClick={item.key === "logout" ? () => {signOut()} : undefined}
                             >
                                 {item.label}
                             </DropdownItem>
