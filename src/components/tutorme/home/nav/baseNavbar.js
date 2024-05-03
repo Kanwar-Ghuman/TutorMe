@@ -5,7 +5,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, Navba
 import { usePathname } from 'next/navigation'
 import { signOut } from "../../auth/signout";
 
-export function BaseNav({menuItems, profileItems}) {
+export function BaseNavbar({logoLink, menuItems, profileItems}) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     const routerUrl = usePathname();
@@ -34,12 +34,20 @@ export function BaseNav({menuItems, profileItems}) {
                     aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                     className="sm:hidden"
                 />
-                <h1 className="text-lg font-semibold text-primary mr-6 whitespace-nowrap">
-                    <span className="text-black">NHS</span> TutorMe
-                </h1>
+                { logoLink ? (
+                    <Link href={logoLink}>
+                        <h1 className="text-lg font-semibold text-primary mr-6 whitespace-nowrap">
+                            <span className="text-black">NHS</span> TutorMe
+                        </h1>
+                    </Link>
+                ) : (
+                    <h1 className="text-lg font-semibold text-primary mr-6 whitespace-nowrap">
+                        <span className="text-black">NHS</span> TutorMe
+                    </h1>
+                )}
                 
                 <NavbarContent className="hidden sm:flex gap-6" justify="center">
-                {menuItems.map((item, index) => (
+                {menuItems?.map((item, index) => (
                     <NavbarItem key={`${item.label}-${index}`} isActive={routerUrl === item.link}>
                         <Link 
                             href={item.link} aria-current={routerUrl === item.link ? "page" : undefined}
@@ -81,11 +89,12 @@ export function BaseNav({menuItems, profileItems}) {
                         </DropdownMenu>
                     </Dropdown>
                 ) : (
-                    {profileItems}
+                    <div>{profileItems}</div>
+                    
                 )}
             </NavbarContent>
             <NavbarMenu>
-                {menuItems.map((item, index) => (
+                {menuItems?.map((item, index) => (
                     <NavbarMenuItem key={`${item.label}-${index}`} isActive={routerUrl === item.link}>
                         <Link
                             className="w-full"

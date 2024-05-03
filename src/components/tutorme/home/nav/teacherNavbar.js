@@ -1,7 +1,7 @@
 "use server";
-import { BaseNav } from "./baseNav";
+import { BaseNavbar } from "./baseNavbar";
 
-export async function TeacherNav() {
+export async function TeacherNavbar({ session }) {
     const menuItems = [
         { label: "Dashboard", link: "/teacher/dashboard" },
         { label: "Create a Request", link: "/teacher/request/create" },
@@ -21,6 +21,6 @@ export async function TeacherNav() {
     ]
 
     return (
-        <BaseNav menuItems={menuItems} profileItems={[[session.user.name, session.user.image], profile]} />
+        <BaseNavbar menuItems={menuItems} profileItems={[[session.user.name, session.user.image], profile]} />
     );
 }

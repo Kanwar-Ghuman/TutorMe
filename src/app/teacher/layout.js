@@ -1,7 +1,7 @@
 "use server"
 
 import React from 'react';
-import { TeacherNav } from '@/components/tutorme/home/nav/teacherNav';
+import { TeacherNavbar } from '@/components/tutorme/home/nav/teacherNavbar';
 
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
@@ -16,7 +16,7 @@ async function Layout({ children }) {
     return (
         <div>
             {/* Teacher Navbar (logged in through auth) */}
-            <TeacherNav />
+            <TeacherNavbar session={session} />
             {children}
         </div>
     );
