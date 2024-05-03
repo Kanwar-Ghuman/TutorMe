@@ -9,7 +9,7 @@ async function Layout({ children }) {
         return redirect("/auth/login");
     }
 
-    console.log(session.user)
+    console.log(session)
 
     return (
         <div>
