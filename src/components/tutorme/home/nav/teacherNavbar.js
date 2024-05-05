@@ -1,7 +1,7 @@
 "use server";
 import { BaseNavbar } from "./baseNavbar";
 
-export async function TeacherNavbar({ session }) {
+export async function TeacherNavbar({ user }) {
     const menuItems = [
         { label: "Dashboard", link: "/teacher/dashboard" },
         { label: "Create a Request", link: "/teacher/request/create" },
@@ -12,7 +12,7 @@ export async function TeacherNavbar({ session }) {
     const profile = [
         {key: "profile", label: (<>
             <p className="font-semibold">Signed in as</p>
-            <p className="font-semibold">{session.user.email}</p>
+            <p className="font-semibold">{user.email}</p>
         </>), className: "h-14 gap-2", link: "/profile"},
         {key: "settings", label: "Settings", link: "/settings"},
         {key: "team_settings", label: "Team Settings", link: "/team-settings"},
@@ -21,6 +21,6 @@ export async function TeacherNavbar({ session }) {
     ]
 
     return (
-        <BaseNavbar menuItems={menuItems} profileItems={[[session.user.name, session.user.image], profile]} />
+        <BaseNavbar menuItems={menuItems} profileItems={[[user.name, user.image], profile]} />
     );
 }

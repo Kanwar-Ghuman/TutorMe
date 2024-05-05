@@ -26,12 +26,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
   providers: [Google({})],
+  callbacks: {
+    session({ session, user }) {
+      session.user.role = user.role
+      return session
+    }
+  },
   events: {
     async signIn({ user, isNewUser  }) {
       // Only update the role if the user doesn't already have a role
       if (!isNewUser) return;
       user.role = getUserRole(user.email); // Implement this function based on your logic
-      console.log(user.role)
 
       // Persist the role in the database
       await prisma.user.update({

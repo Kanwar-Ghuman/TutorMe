@@ -1,30 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
-import Joi from 'joi';
+import { createTutorRequestSchema } from '@/lib/forms/schemas';
+import { validateForm } from '@/lib/forms/helpers';
+import { getBackendPermission } from '@/lib/auth/roles';
 
 const prisma = new PrismaClient();
 
-const schema = Joi.object({
-  user: Joi.object({
-    id: Joi.string().required(),
-    role: Joi.string().valid('teacher').required(),
-  }).required(),
-  teacherId: Joi.string().required(),
-  student: Joi.string().required(),
-  studentEmail: Joi.string().email().required(),
-  subject: Joi.string().required(),
-  genderPref: Joi.string().optional(),
-  additionalInfo: Joi.string().optional(),
-  tutorId: Joi.string().optional(),
-});
-export default async function POST(req) {
-    const { error } = schema.validate(req.body);
+export async function POST(req) {
+    const response = await getBackendPermission("teacher");
+    if (!response.isValid) return response.error;
+    const user = response.user;
 
-    if (error) {
-      return NextResponse.json({ error: error.details[0].message });
-    }
-
-    const { user, ...tutorRequestData } = req.body;
+    const data = await req.json();
+    console.log(data)
 
     let teacher = await prisma.teacher.findUnique({ where: { userId: user.id } });
 
@@ -34,10 +22,13 @@ export default async function POST(req) {
 
     const tutorRequest = await prisma.tutorRequest.create({
       data: {
-        ...tutorRequestData,
+        student: data.studentName,
+        studentEmail: data.studentEmail,
+        subject: data.subject,
+        genderPref: data.genderPreference,
         teacherId: teacher.id,
       },
     });
 
-    return NextResponse.json(tutorRequest);
+    return NextResponse.json({message : "Request created successfully"});
 }

@@ -1,20 +1,16 @@
 import React from 'react';
 import { PlainNavbar } from '@/components/tutorme/home/nav/plainNavbar';
-import { auth } from '@/auth';
+import { getFrontendPermission } from '@/lib/auth/roles';
 
 async function Layout({ children }) {
-    const session = await auth();
-
-    if (!session) {
-        return redirect("/auth/login");
-    }
-
-    console.log(session)
+    const response = await getFrontendPermission("student");
+    if (!response.isValid) return response.error;
+    const user = response.user;
 
     return (
         <div>
             {/* Student Navbar (logged in with magic link to email) */}
-            <PlainNavbar session={session} />
+            <PlainNavbar user={user} />
             {children}
         </div>
     );
