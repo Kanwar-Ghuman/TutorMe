@@ -1,9 +1,10 @@
 ("use-client");
+("use client");
+import React from "react";
+import Navbar from "@/components/tutorme/home/nav/teacherNavbar";
 
 // import { Inter } from 'next/font/google'
 // import { useState } from "react";
-
-import Navbar from "@/components/tutorme/home/nav/navbar";
 import SideBar from "./sideBar";
 import ScrollBar from "./scrollBar";
 
