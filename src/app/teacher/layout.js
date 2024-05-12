@@ -6,7 +6,7 @@ import { TeacherNavbar } from '@/components/tutorme/home/nav/teacherNavbar';
 import { getFrontendPermission } from '@/lib/auth/roles';
 
 async function Layout({ children }) {
-    const response = await getFrontendPermission();
+    const response = await getFrontendPermission("teacher");
     if (!response.isValid) return response.error;
     const user = response.user;
 

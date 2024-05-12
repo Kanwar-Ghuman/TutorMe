@@ -12,20 +12,24 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 
+import { BsExclamationCircle } from "react-icons/bs";
+
 import { createTutorRequestSchema } from "@/lib/forms/schemas";
+import { cn } from "@/lib/utils"
 
 const CreateRequest = () => {
     // Your base page content goes here3
     
     const form = useForm({
-        resolver: zodResolver(createTutorRequestSchema),
+        // resolver: zodResolver(createTutorRequestSchema),
     })
 
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     async function onSubmit(data) {
         setLoading(true);
-        console.log(data)
+        setError("");
         // TODO: Send the fetch request to the backend
         const response = await fetch('/api/teacher/create-tutor-request', {
             method: 'POST',
@@ -41,7 +45,11 @@ const CreateRequest = () => {
             console.log(responseData);
         } else {
             // Request failed, handle the error
-            console.error('Request failed with status:', response.status);
+            // create zod error and display it
+            const errors = await response.json()
+            console.log(errors.error);
+            setError(JSON.stringify(errors.error));
+
         }
     }
     return (
@@ -123,7 +131,7 @@ const CreateRequest = () => {
                                 description="Does your student prefer a certain tutor gender?"
                                 isRequired
                             />
-
+                            <p className={cn("text-danger fill-danger", error ? "" : "hidden")}><BsExclamationCircle /><span>{error}</span></p>
                             <Button className="w-full mb-7" type="submit" isLoading={loading}>Submit</Button>
                         </form>
                     </Form>
