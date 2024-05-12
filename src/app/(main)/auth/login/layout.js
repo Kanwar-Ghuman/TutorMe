@@ -1,10 +1,10 @@
 import React from "react";
-import { TeacherNavbar } from "@/components/tutorme/home/nav/teacherNavbar";
+import { PlainNavbar } from "@/components/tutorme/home/nav/plainNavbar";
 
 const Layout = ({ children }) => {
   return (
     <div>
-      {/* <TeacherNavbar  /> */}
+      <PlainNavbar  />
       {children}
     </div>
   );
