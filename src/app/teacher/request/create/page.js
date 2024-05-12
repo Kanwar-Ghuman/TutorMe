@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 
 import { FormDropDownInput } from "@/components/tutorme/inputs/FormDropDownInput"
 import { FormInput } from "@/components/tutorme/inputs/FormInput"
@@ -13,34 +12,45 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 
+import { BsExclamationCircle } from "react-icons/bs";
+
+import { createTutorRequestSchema } from "@/lib/forms/schemas";
+import { cn } from "@/lib/utils"
 
 const CreateRequest = () => {
     // Your base page content goes here3
-    const formSchema = z.object({
-        studentName: z.string({
-            required_error: "Student Name is required"
-        }).refine((value) => {
-            const nameRegex = /^[A-Za-z]+\s[A-Za-z]+$/
-            return nameRegex.test(value)
-        }, "Please enter the student's full name in the format 'First Last'"),
-        studentEmail: z.string({
-            required_error: "Email address is required",
-        }).email({
-            message: "Please enter a valid email address",
-        }),
-        subject: z.string({ required_error: "Subject is required" }),
-        genderPreference: z.string({ required_error: "Gender Preference is required" }),
-    })
+    
     const form = useForm({
-        resolver: zodResolver(formSchema),
+        // resolver: zodResolver(createTutorRequestSchema),
     })
 
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    const onSubmit = (data) => {
+    async function onSubmit(data) {
         setLoading(true);
-        console.log(data)
-        // TODO: Send the request to the backend
+        setError("");
+        // TODO: Send the fetch request to the backend
+        const response = await fetch('/api/teacher/create-tutor-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            // Request succeeded, handle the response
+            const responseData = await response.json();
+            console.log(responseData);
+        } else {
+            // Request failed, handle the error
+            // create zod error and display it
+            const errors = await response.json()
+            console.log(errors.error);
+            setError(JSON.stringify(errors.error));
+
+        }
     }
     return (
         <>
@@ -121,7 +131,7 @@ const CreateRequest = () => {
                                 description="Does your student prefer a certain tutor gender?"
                                 isRequired
                             />
-
+                            <p className={cn("text-danger fill-danger", error ? "" : "hidden")}><BsExclamationCircle /><span>{error}</span></p>
                             <Button className="w-full mb-7" type="submit" isLoading={loading}>Submit</Button>
                         </form>
                     </Form>

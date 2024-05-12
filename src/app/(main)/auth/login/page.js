@@ -1,22 +1,20 @@
 "use server";
-import { getProviders } from "next-auth/react";
-import { getServerSession } from "next-auth/next";
-import { options } from "@/app/api/auth/[...nextauth]/route";
+
 import LoginPage from "@/components/tutorme/auth/login";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth"
+import { getApp } from "@/lib/auth/roles";
 
 export default async function SignIn(context) {
-  const session = await getServerSession(options);
+  const session = await auth();
 
   if (session) {
-    return redirect("/request/create");
+    return redirect(getApp(session.user))
   }
-
-  const providers = await getProviders();
 
   return (
     <>
-      <LoginPage providers={providers} />
+      <LoginPage />
     </>
   );
 }
