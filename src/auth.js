@@ -28,12 +28,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google({})],
   callbacks: {
     session({ session, user }) {
-      session.user.role = user.role
-      return session
-    }
+      session.user.role = user.role;
+      return session;
+    },
   },
   events: {
-    async signIn({ user, isNewUser  }) {
+    async signIn({ user, isNewUser }) {
       // Only update the role if the user doesn't already have a role
       if (!isNewUser) return;
       user.role = getUserRole(user.email); // Implement this function based on your logic
