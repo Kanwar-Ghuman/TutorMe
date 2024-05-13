@@ -3,17 +3,21 @@ import "./style.css";
 //to do list
 import { BsListCheck } from "react-icons/bs";
 //bin
+import { BsTrash } from "react-icons/bs";
 //archive
-//current
+import { BsArchive } from "react-icons/bs";
+//inbox
+import { BsInbox } from "react-icons/bs";
 
 const SideButton = (props) => {
   return (
     <div
-      className="ml-[5%] justify-center h-[100]"
+      className="flex flex-row ml-[5%] h-[100]"
     >
-      <button className=" mt-[3%] bg-green rounded"
-      >{props.theName}
+      <button className="gap-2 items-center flex flex-row mb-[3%] bg-green rounded"
+      >
         <props.theIcon />
+        {props.theName}
       </button>
     </div>
   )
@@ -21,11 +25,11 @@ const SideButton = (props) => {
 
 const sideBar = () => {
   return (
-    <div>
+    <div className="bg-slate-300 flex-col">
       <SideButton theName="to do list" theIcon={BsListCheck} />
-      {/* <SideButton theName="bin" />
-      <SideButton theName="archive" />
-      <SideButton theName="pending" /> */}
+      <SideButton theName="bin" theIcon={BsTrash} />
+      <SideButton theName="archive" theIcon={BsArchive} />
+      <SideButton theName="pending" theIcon={BsInbox} />
 
     </div>
   )

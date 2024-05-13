@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 const adminEmailList = [
   "popguy1029@gmail.com",
   "keith.decker@franklin.k12.wi.us",
+  "melchior.bataille@franklinsabers.org",
 ];
 const teachersEmailList = ["shamit.surana@gmail.com"];
 const studentsEmailList = ["shamit.surana@franklinsabers.org"];
@@ -33,7 +34,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }
   },
   events: {
-    async signIn({ user, isNewUser  }) {
+    async signIn({ user, isNewUser }) {
       // Only update the role if the user doesn't already have a role
       if (!isNewUser) return;
       user.role = getUserRole(user.email); // Implement this function based on your logic

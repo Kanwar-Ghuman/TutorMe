@@ -1,6 +1,6 @@
 ("use-client");
 
-import { TeacherNav } from "@/components/tutorme/home/nav/teacherNav";
+
 // import { Inter } from 'next/font/google'
 // import { useState } from "react";
 import ScrollBar from "./scrollBar";
@@ -11,16 +11,16 @@ const AcceptRequest = () => {
   function mouseOver(event) {
     event.target.style.background = "red";
   }
-
   // const myHeight = window.innerHeight * 0.5;
   return (
     <div
       // asChild
-      className="scroll-hide h-[100vh]"
+      style={{ height: "100vh" }}
+      className="scroll-hide"
     >
-      <TeacherNav />
+
       <div className="flex w-100 space-x-4 p-4">
-        <div className="w-[20%] shadow-md rounded-lg bg-slate-50">
+        <div className="w-[20%] shadow-md rounded-lg">
           <SideBar />
         </div>
         <div className="w-[80%]">
