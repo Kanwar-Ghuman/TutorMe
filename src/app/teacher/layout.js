@@ -1,11 +1,19 @@
-import React from 'react';
-import { TeacherNav } from '@/components/tutorme/home/nav/teacherNav';
+"use server"
 
-const Layout = ({ children }) => {
+import React from 'react';
+import { TeacherNavbar } from '@/components/tutorme/home/nav/teacherNavbar';
+
+import { getFrontendPermission } from '@/lib/auth/roles';
+
+async function Layout({ children }) {
+    const response = await getFrontendPermission("teacher");
+    if (!response.isValid) return response.error;
+    const user = response.user;
+
     return (
         <div>
             {/* Teacher Navbar (logged in through auth) */}
-            <TeacherNav />
+            <TeacherNavbar user={user} />
             {children}
         </div>
     );

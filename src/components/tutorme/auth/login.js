@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { signIn } from "next-auth/react";
+import { signIn } from "./signin"
 import { EnvelopeOpenIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 
-export const LoginPage = ({ providers }) => {
+async function LoginPage() {
   return (
     <div className="bg-[#f7f7f7] flex flex-col md:flex-row justify-start md:justify-between items-center w-full h-full min-h-screen px-4 sm:px-10 md:px-20">
       <div className="text-left mb-10 mt-[9rem] sm:mt-[5rem] md:mt-[-2rem] ml-4 md:ml-20">
@@ -23,20 +23,17 @@ export const LoginPage = ({ providers }) => {
         </div>
       </div>
       <div className="w-full mt-4 px-4 sm:px-0">
-        {Object.values(providers).map((provider) => (
-          <div
-            key={provider.name}
+      <div
             className="mt-4 flex justify-center md:justify-end"
           >
             <Button
               className="w-[300px] h-[50px]"
-              onClick={() => signIn(provider.id)}
+              onClick={() => signIn()}
             >
               <EnvelopeOpenIcon className="mr-2 h-4 w-4" />
-              Sign in with {provider.name}
+              Sign in with Google
             </Button>
           </div>
-        ))}
       </div>
     </div>
   );

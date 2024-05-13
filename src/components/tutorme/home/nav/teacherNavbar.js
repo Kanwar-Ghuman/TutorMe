@@ -1,7 +1,7 @@
-import { BaseNav } from "./baseNav";
-import {DropdownMenu, DropdownItem } from "@nextui-org/react";
+"use server";
+import { BaseNavbar } from "./baseNavbar";
 
-export function TeacherNav() {
+export async function TeacherNavbar({ user }) {
     const menuItems = [
         { label: "Dashboard", link: "/teacher/dashboard" },
         { label: "Create a Request", link: "/teacher/request/create" },
@@ -12,15 +12,15 @@ export function TeacherNav() {
     const profile = [
         {key: "profile", label: (<>
             <p className="font-semibold">Signed in as</p>
-            <p className="font-semibold">zoey@example.com</p>
+            <p className="font-semibold">{user.email}</p>
         </>), className: "h-14 gap-2", link: "/profile"},
         {key: "settings", label: "Settings", link: "/settings"},
         {key: "team_settings", label: "Team Settings", link: "/team-settings"},
         {key: "analytics", label: "Analytics", link: "/analytics"},
-        {key: "logout", label: "Log Out", link: "/logout", color: "danger"}
+        {key: "logout", label: "Log Out", color: "danger"},
     ]
 
     return (
-        <BaseNav menuItems={menuItems} profileItems={["https://github.com/shadcn.png", profile]} />
+        <BaseNavbar menuItems={menuItems} profileItems={[[user.name, user.image], profile]} />
     );
 }
