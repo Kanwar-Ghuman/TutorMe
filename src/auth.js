@@ -9,7 +9,10 @@ const adminEmailList = [
   "keith.decker@franklin.k12.wi.us",
   "melchior.bataille@franklinsabers.org",
 ];
-const teachersEmailList = ["shamit.surana@gmail.com"];
+const teachersEmailList = [
+  "shamit.surana@gmail.com",
+  "kanwarmehtab.ghuman@franklinsabers.org"
+];
 const studentsEmailList = ["shamit.surana@franklinsabers.org"];
 
 function getUserRole(email) {
