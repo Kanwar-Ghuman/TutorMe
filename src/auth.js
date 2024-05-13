@@ -47,6 +47,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         where: { email: user.email },
         data: { role: user.role },
       });
+
+      if (user.role == "teacher") {
+        let teacher = await prisma.teacher.findUnique({ where: { userId: user.id } });
+
+        if (!teacher) {
+          teacher = await prisma.teacher.create({ data: { userId: user.id } });
+        }
+      }
       return;
     },
   },

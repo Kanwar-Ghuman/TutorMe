@@ -19,10 +19,6 @@ export async function POST(req) {
 
     let teacher = await prisma.teacher.findUnique({ where: { userId: user.id } });
 
-    if (!teacher) {
-      teacher = await prisma.teacher.create({ data: { userId: user.id } });
-    }
-
     const tutorRequest = await prisma.tutorRequest.create({
       data: {
         student: data.studentName,
