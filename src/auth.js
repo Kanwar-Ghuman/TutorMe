@@ -7,13 +7,12 @@ import { PrismaClient } from "@prisma/client";
 const adminEmailList = [
   "popguy1029@gmail.com",
   "keith.decker@franklin.k12.wi.us",
-  "melchior.bataille@franklinsabers.org",
 ];
 
 const teachersEmailList = [
   "shamit.surana@gmail.com",
-  "mcdabg1236@gmail.com",
   "kanwarmehtab.ghuman@franklinsabers.org",
+  "mcdabg1236@gmail.com",
 ];
 const studentsEmailList = ["shamit.surana@franklinsabers.org"];
 
@@ -51,7 +50,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       });
 
       if (user.role == "teacher") {
-        let teacher = await prisma.teacher.findUnique({ where: { userId: user.id } });
+        let teacher = await prisma.teacher.findUnique({
+          where: { userId: user.id },
+        });
 
         if (!teacher) {
           teacher = await prisma.teacher.create({ data: { userId: user.id } });
