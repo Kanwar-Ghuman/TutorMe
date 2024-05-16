@@ -3,7 +3,7 @@
 ## Teacher Role (Authentication Required)
 
 ### Create Tutoring Request
-- **POST /api/teacher/tutor-request**
+- **POST /api/teacher/create-tutor-request**
   - **Description:** Create a new tutoring request on behalf of a student.
   - **Body:**
     ```json
