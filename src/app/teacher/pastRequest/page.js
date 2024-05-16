@@ -10,6 +10,8 @@ import {
   Skeleton,
 } from "@nextui-org/react";
 
+import { CiEdit } from "react-icons/ci";
+
 const PastRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ const PastRequests = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center w-full">
-        {Array.from({ length: 3 }).map((_, index) => (
+        {Array.from({ length: 4 }).map((_, index) => (
           <Card key={index} className="w-[1500px] mb-4 p-4 space-y-5">
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
@@ -67,11 +69,15 @@ const PastRequests = () => {
           <CardBody>
             <p>Email: {request.studentEmail}</p>
             <p>Subject: {request.subject}</p>
-            <p>Gender Preference: {request.preferredGender}</p>
+            <p>Gender Preference: {request.genderPreference}</p>
           </CardBody>
-          <CardFooter>
-            <Button color="success">Accept</Button>
-            <Button color="primary">Modify</Button>
+          <CardFooter className="space-x-4">
+            <Button color="danger" variant="bordered">
+              Delete Request
+            </Button>
+            <Button color="primary" endContent={<CiEdit />}>
+              Modify
+            </Button>
           </CardFooter>
         </Card>
       ))}
