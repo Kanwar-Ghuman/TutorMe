@@ -6,12 +6,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import AcceptStudentCard from "../../../components/request/accept/acceptStudentCard";
 import "./style.css";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 
@@ -101,7 +101,7 @@ function Scrollbar() {
             search(event.target.value);
           }}
         />
-        <div>
+        <div className="flex items-center gap-[3%]">
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline">Filter</Button>
