@@ -7,10 +7,6 @@ import { PrismaClient } from "@prisma/client";
 const adminEmailList = [
   "popguy1029@gmail.com",
   "keith.decker@franklin.k12.wi.us",
-<<<<<<< HEAD
-=======
-  "melchior.bataille@franklinsabers.org",
->>>>>>> cd14bb8dd32768e8edeb77403381517ca108785b
 ];
 
 const teachersEmailList = [
@@ -54,7 +50,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       });
 
       if (user.role == "teacher") {
-        let teacher = await prisma.teacher.findUnique({ where: { userId: user.id } });
+        let teacher = await prisma.teacher.findUnique({
+          where: { userId: user.id },
+        });
 
         if (!teacher) {
           teacher = await prisma.teacher.create({ data: { userId: user.id } });
