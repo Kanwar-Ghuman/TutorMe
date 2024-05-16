@@ -1,9 +1,9 @@
 "use server";
 import { BaseNavbar } from "./baseNavbar";
 
-export async function TeacherNavbar({ user }) {
+export async function AdminNavbar({ user }) {
   const menuItems = [
-    { label: "Dashboard", link: "/teacher/dashboard" },
+    { label: "Dashboard", link: "/admin/dashboard" },
     { label: "Create a Request", link: "/teacher/request/create" },
   ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-
+import Link from "next/link";
 import React from "react";
 
 //to do list
@@ -24,13 +24,13 @@ const SideButton = (props) => {
     <div
       className="flex flex-row ml-[4%] h-[100] mr-[5%]"
     >
-      <button
-        type="button"
+      <Link href={props.theLink}
+        // type="button"
         className="flex gap-2 items-center flex-row rounded-lg mt-[3%] transition duration-150 hover:bg-slate-200 shadow w-full h-[4vh] "
-      >
+        >
         <props.theIcon className="ml-[2vh]" />
         {props.theName}
-      </button>
+      </Link>
     </div>
   )
 }
@@ -38,10 +38,10 @@ const SideButton = (props) => {
 const sideBar = () => {
   return (
     <div className="flex-col mt-[3%] h-full">
-      <SideButton theName="to do list" theIcon={BsListCheck} />
-      <SideButton theName="bin" theIcon={BsTrash} />
-      <SideButton theName="archive" theIcon={BsArchive} />
-      <SideButton theName="pending" theIcon={BsInbox} />
+      <SideButton theName="to do list" theIcon={BsListCheck} theLink="/admin/dashboard"/>
+      <SideButton theName="bin" theIcon={BsTrash} theLink="/auth/login"/>
+      <SideButton theName="archive" theIcon={BsArchive} theLink="/admin/dashboard"/>
+      <SideButton theName="pending" theIcon={BsInbox} theLink="/admin/dashboard"/>
 
     </div>
   )
