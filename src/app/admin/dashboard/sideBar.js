@@ -12,11 +12,13 @@ import { BsInbox } from "react-icons/bs";
 const SideButton = (props) => {
   return (
     <div
-      className="flex flex-row ml-[5%] h-[100]"
+      className="flex flex-row ml-[4%] h-[100] mr-[5%]"
     >
-      <button className="gap-2 items-center flex flex-row mb-[3%] bg-green rounded"
+      <button
+        type="button"
+        className="flex gap-2 items-center flex-row rounded-lg mt-[3%] transition duration-150 hover:bg-slate-200 shadow w-full h-[4vh] "
       >
-        <props.theIcon />
+        <props.theIcon className="ml-[2vh]" />
         {props.theName}
       </button>
     </div>
@@ -25,7 +27,7 @@ const SideButton = (props) => {
 
 const sideBar = () => {
   return (
-    <div className="bg-slate-300 flex-col">
+    <div className="flex-col mt-[3%] h-full">
       <SideButton theName="to do list" theIcon={BsListCheck} />
       <SideButton theName="bin" theIcon={BsTrash} />
       <SideButton theName="archive" theIcon={BsArchive} />

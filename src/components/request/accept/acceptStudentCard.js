@@ -1,8 +1,7 @@
 "use client";
-import React from "react";
 
-import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription } from "@/components/ui/card";
 
 export default function acceptStudentCard(props) {
   return (
@@ -20,8 +19,8 @@ export default function acceptStudentCard(props) {
             <CardDescription>Click to view more information</CardDescription>
           </div>
           <div className="flex flex-col space-y-4">
-            <Button variant="success">Accept</Button>
-            <Button variant="destructive">Decline</Button>
+            <Button variant="success" className="bg-green-500	hover:bg-green-400">Accept</Button>
+            <Button variant="destructive" className="bg-red-600	hover:bg-red-500">Decline</Button>
           </div>
         </div>
       </CardContent>
