@@ -9,9 +9,11 @@ const adminEmailList = [
   "keith.decker@franklin.k12.wi.us",
   "melchior.bataille@franklinsabers.org",
 ];
+
 const teachersEmailList = [
   "shamit.surana@gmail.com",
-  "kanwarmehtab.ghuman@franklinsabers.org"
+  "mcdabg1236@gmail.com",
+  "kanwarmehtab.ghuman@franklinsabers.org",
 ];
 const studentsEmailList = ["shamit.surana@franklinsabers.org"];
 
@@ -32,9 +34,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [Google({})],
   callbacks: {
     session({ session, user }) {
-      session.user.role = user.role
-      return session
-    }
+      session.user.role = user.role;
+      return session;
+    },
   },
   events: {
     async signIn({ user, isNewUser }) {
