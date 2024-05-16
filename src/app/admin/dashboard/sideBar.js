@@ -17,17 +17,17 @@ import { MdOutlineArchive } from "react-icons/md";
 //current
 import { IoFileTrayFullOutline } from "react-icons/io5";
 
-const sideBar = () => {
-  const sideBarStyle = () => ({
-    margin: "0% 2%",
-    backgroundColor: "transparent",
-    width: "100%",
-    height: "25%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "start",
-  });
+// const sideBar = () => {
+//   const sideBarStyle = () => ({
+//     margin: "0% 2%",
+//     backgroundColor: "transparent",
+//     width: "100%",
+//     height: "25%",
+//     display: "flex",
+//     flexDirection: "column",
+//     justifyContent: "space-around",
+//     alignItems: "start",
+//   });
 
 
 const SideButton = (props) => {
