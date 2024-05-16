@@ -8,6 +8,12 @@ import {
   CardFooter,
   Button,
   Skeleton,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 
 import { CiEdit } from "react-icons/ci";
@@ -16,6 +22,8 @@ const PastRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -35,6 +43,15 @@ const PastRequests = () => {
 
     fetchRequests();
   }, []);
+
+  const handleModifyClick = (request) => {
+    setSelectedRequest(request);
+    onOpen();
+  };
+
+  const handleSaveClick = () => {
+    onClose();
+  };
 
   if (loading) {
     return (
@@ -75,12 +92,55 @@ const PastRequests = () => {
             <Button color="danger" variant="bordered">
               Delete Request
             </Button>
-            <Button color="primary" endContent={<CiEdit />}>
+            <Button
+              color="primary"
+              endContent={<CiEdit />}
+              onPress={() => handleModifyClick(request)}
+            >
               Modify
             </Button>
           </CardFooter>
         </Card>
       ))}
+      <Modal isOpen={isOpen} onOpenChange={onClose}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Modify Request
+              </ModalHeader>
+              <ModalBody>
+                {selectedRequest && (
+                  <>
+                    <p>
+                      <strong>Student Name:</strong>{" "}
+                      {selectedRequest.studentName}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {selectedRequest.studentEmail}
+                    </p>
+                    <p>
+                      <strong>Subject:</strong> {selectedRequest.subject}
+                    </p>
+                    <p>
+                      <strong>Gender Preference:</strong>{" "}
+                      {selectedRequest.genderPreference}
+                    </p>
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={handleSaveClick}>
+                  Save
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
