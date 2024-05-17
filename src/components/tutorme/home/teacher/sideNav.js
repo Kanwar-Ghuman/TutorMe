@@ -1,63 +1,55 @@
-import React from 'react';
-
-export function sideNav() {
-  return (
-    <div>
-      {/* Your sidebar content goes here */}
-    </div>
-  );
-}
-
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-//to do list
-import { BsListCheck } from "react-icons/bs";
-//bin
-import { BsTrash } from "react-icons/bs";
-//archive
-
-import { BsArchive } from "react-icons/bs";
-//inbox
-import { BsInbox } from "react-icons/bs";
-
-import { MdOutlineArchive } from "react-icons/md";
-//current
-import { IoFileTrayFullOutline } from "react-icons/io5";
+// Icons
+import { FaCodePullRequest } from "react-icons/fa6";
 
 import { MdDashboard } from "react-icons/md";
 
-
-
-
-const SideButton = (props) => {
+const SideButton = ({ theLink, theIcon: Icon, theName, isActive }) => {
   return (
-    <div
-      className="flex flex-row ml-[4%] h-[100] mr-[5%]"
-    >
-      <Link href={props.theLink}
-        className="flex gap-2 items-center flex-row rounded-lg mt-[3%] transition duration-150 hover:bg-slate-200 shadow w-full h-[4vh] "
-        >
-        <props.theIcon className="ml-[2vh]" />
-        {props.theName}
+    <div className="flex flex-row h-[100] mb-4">
+      <Link
+        href={theLink}
+        className={`flex gap-2 items-center flex-row rounded-lg transition duration-150 w-full h-[4vh] p-2 ${
+          isActive ? "bg-primary text-white" : "hover:bg-slate-200"
+        }`}
+      >
+        <Icon className="ml-2" />
+        <span>{theName}</span>
       </Link>
     </div>
-  )
-}
+  );
+};
 
-const sideNav = () => {
+const SideNav = () => {
+  const [currentPath, setCurrentPath] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
+
   return (
-    <div className="flex-col mt-[3%] h-full">
-      <SideButton theName="to do list" theIcon={MdDashboard} theLink="/teacher/dashboard"/>
-      <SideButton theName="bin" theIcon={BsTrash} theLink="/teacher/pastRequest"/>
-     
-
+    <div className="flex-col mt-4 w-64 h-full p-4 bg-white">
+      <SideButton
+        theName="Dashboard"
+        theIcon={MdDashboard}
+        theLink="/teacher/dashboard"
+        isActive={currentPath === "/teacher/dashboard"}
+      />
+      <SideButton
+        theName="Past Requests"
+        theIcon={FaCodePullRequest}
+        theLink="/teacher/pastRequest"
+        isActive={currentPath === "/teacher/pastRequest"}
+      />
     </div>
-  )
-}
+  );
+};
 
-
-
-export default sideBar;
+export default SideNav;

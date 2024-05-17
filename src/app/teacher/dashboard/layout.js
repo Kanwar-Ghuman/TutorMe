@@ -1,18 +1,14 @@
-import Link from "next/link";
+"use client";
 
-import SideBar from "@/components/tutorme/home/admin/sideBar";
+import SideNav from "@/components/tutorme/home/teacher/sideNav";
 
-
-export const metadata = {
-  title: "Teacher Dashboard",
-  description: "Teacher Dashboard Application",
-};
-
-const TeacherDashboard = ({ children }) => {
+const TeacherLayout = ({ children }) => {
   return (
-  <SideBar />
-  {children}
+    <div className="flex flex-row">
+      <SideNav />
+      {children}
+    </div>
   );
 };
 
-export default TeacherDashboard;
+export default TeacherLayout;
