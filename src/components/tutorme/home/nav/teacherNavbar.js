@@ -19,9 +19,7 @@ export async function TeacherNavbar({ user }) {
       className: "h-14 gap-2",
       link: "/profile",
     },
-    { key: "settings", label: "Settings", link: "/settings" },
-    { key: "team_settings", label: "Team Settings", link: "/team-settings" },
-    { key: "analytics", label: "Analytics", link: "/analytics" },
+
     { key: "logout", label: "Log Out", color: "danger" },
   ];
 
