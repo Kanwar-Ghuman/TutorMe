@@ -19,17 +19,22 @@ model TutorRequest {
   subject        String
   genderPref     String?
   additionalInfo String?
+  
+  isActive         Boolean @default(true)
 
   tutor   Tutor?  @relation(fields: [tutorId], references: [id])
   tutorId String?
 }
 
 model Tutor {
-  id              String         @id @default(cuid())
-  tutorName       String
-  tutorEmail      String
+  id               String        @id @default(cuid())
+  name             String
+  email            String        @unique
+  subjects         String[]
 
-  matchedRequests TutorRequest[]
+  isActive         Boolean @default(true)
+
+  matchedRequests  TutorRequest[]
 }
 
 model Teacher {
