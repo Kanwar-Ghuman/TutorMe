@@ -105,21 +105,31 @@
     }
     ```
 
+### Get tutors
+- **GET /api/admin/tutors**
+  - **Description:** Retrieve a list of all tutors in the system.
+
+
 ### Add a Tutor
-- **POST /api/admin/tutor**
+- **POST /api/admin/tutors**
   - **Description:** Add a new tutor to the system.
   - **Body:**
     ```json
     {
-      "tutorId": "string",
-      "name": "string",
-      "subjects": ["string"],
-      "availability": "string"
+      [{
+        "name": "John Doe",
+        "email": "john.doe@franklinsabers.org",
+        "subjects": ["calc", "chem"]
+      }], [{
+        "name": "John Doe",
+        "email": "john.doe@franklinsabers.org",
+        "subjects": ["calc", "chem"]
+      }]
     }
     ```
 
 ### Modify Tutor Details
-- **PUT /api/admin/tutor/{tutorId}**
+- **PUT /api/admin/tutors/{tutorId}**
   - **Description:** Modify details of an existing tutor.
   - **Path Parameter:** `tutorId`: string
   - **Body:**
@@ -132,6 +142,11 @@
     ```
 
 ### Delete a Tutor
-- **DELETE /api/admin/tutor/{tutorId}**
+- **DELETE /api/admin/tutors/{tutorId}**
   - **Description:** Remove a tutor from the system.
+  - **Path Parameter:** `tutorId`: string
+
+### Get specific tutor details
+- **GET /api/admin/tutors/{tutorId}**
+- **Description:** Retrieve details of a specific tutor.
   - **Path Parameter:** `tutorId`: string

@@ -15,3 +15,18 @@ export const createTutorRequestSchema = z.object({
     subject: z.string({ required_error: "Subject is required" }),
     genderPreference: z.string({ required_error: "Gender Preference is required" }),
 })
+
+export const createTutorSchema = z.object({
+    name: z.string({
+        required_error: "Name is required"
+    }).refine((value) => {
+        const nameRegex = /^[A-Za-z]+\s[A-Za-z]+$/
+        return nameRegex.test(value)
+    }, "Please enter the full name in the format 'First Last'"),
+    email: z.string({
+        required_error: "Email address is required",
+    }).email({
+        message: "Please enter a valid email address",
+    }),
+    subjects: z.array(z.string({ required_error: "Subject is required" })),
+})
