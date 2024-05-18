@@ -8,7 +8,6 @@ import {
 
 import { useState } from "react";
 import AcceptStudentCard from "../../../components/request/accept/acceptStudentCard";
-import "./style.css";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

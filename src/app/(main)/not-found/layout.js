@@ -1,10 +1,10 @@
 import React from "react";
-import Navbar from "@/components/tutorme/home/nav/navbar";
+import { PlainNavbar } from "@/components/tutorme/home/nav/plainNavbar";
 
 const Layout = ({ children }) => {
   return (
     <div>
-      <Navbar />
+      <PlainNavbar />
       {children}
     </div>
   );

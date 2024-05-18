@@ -33,6 +33,7 @@ const PastRequests = () => {
           throw new Error("Failed to fetch requests");
         }
         const data = await response.json();
+        console.log("Fetched Data:", data);
         setRequests(data);
         setLoading(false);
       } catch (err) {
@@ -55,7 +56,7 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col items-center w-full mt-8 p-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <Card key={index} className="w-[1500px] mb-4 p-4 space-y-5">
             <Skeleton className="rounded-lg">
@@ -79,29 +80,39 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      {requests.map((request) => (
-        <Card key={request.id} className="w-[1500px] mb-4">
-          <CardHeader>{request.studentName}</CardHeader>
-          <CardBody>
-            <p>Email: {request.studentEmail}</p>
-            <p>Subject: {request.subject}</p>
-            <p>Gender Preference: {request.genderPreference}</p>
-          </CardBody>
-          <CardFooter className="space-x-4">
-            <Button color="danger" variant="bordered">
-              Delete Request
-            </Button>
-            <Button
-              color="primary"
-              endContent={<CiEdit />}
-              onPress={() => handleModifyClick(request)}
-            >
-              Modify
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
+    <div className="flex flex-col items-center w-full mt-8 p-4">
+      {requests.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full">
+          <p className="text-2xl text-black-500">No Requests Found</p>
+        </div>
+      ) : (
+        requests.map((request) => (
+          <Card key={request.id} className="w-[1500px] mb-4">
+            <strong>
+              <CardHeader className="text-black-700 text-m">
+                {request.student}
+              </CardHeader>
+            </strong>
+            <CardBody>
+              <p>Email: {request.studentEmail}</p>
+              <p>Subject: {request.subject}</p>
+              <p>Gender Preference: {request.genderPref} </p>
+            </CardBody>
+            <CardFooter className="space-x-4">
+              <Button color="danger" variant="bordered">
+                Delete Request
+              </Button>
+              <Button
+                color="primary"
+                endContent={<CiEdit />}
+                onPress={() => handleModifyClick(request)}
+              >
+                Modify
+              </Button>
+            </CardFooter>
+          </Card>
+        ))
+      )}
       <Modal isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           {(onClose) => (
@@ -113,8 +124,7 @@ const PastRequests = () => {
                 {selectedRequest && (
                   <>
                     <p>
-                      <strong>Student Name:</strong>{" "}
-                      {selectedRequest.studentName}
+                      <strong>Student Name:</strong> {selectedRequest.student}
                     </p>
                     <p>
                       <strong>Email:</strong> {selectedRequest.studentEmail}
@@ -124,7 +134,7 @@ const PastRequests = () => {
                     </p>
                     <p>
                       <strong>Gender Preference:</strong>{" "}
-                      {selectedRequest.genderPreference}
+                      {selectedRequest.genderPref}
                     </p>
                   </>
                 )}
