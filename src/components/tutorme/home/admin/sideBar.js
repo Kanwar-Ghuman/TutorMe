@@ -40,7 +40,7 @@ const SideBar = () => {
         theIcon={IoIosGitPullRequest}
         theLink="/admin/past-request"
       />
-      <SideButton
+      {/* <SideButton
         theName="Archive"
         theIcon={BsArchive}
         theLink="/admin/archive"
@@ -49,7 +49,7 @@ const SideBar = () => {
         theName="Pending"
         theIcon={BsInbox}
         theLink="/admin/pending"
-      />
+      /> */}
     </div>
   );
 };

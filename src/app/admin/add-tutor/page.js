@@ -93,14 +93,11 @@ const TutorRequest = () => {
 
       if (!response.ok) {
         const errors = await response.json();
-        console.log(errors.error);
-        setError(JSON.stringify(errors.error));
+        setError(errors.error);
         return;
       }
 
       const responseData = await response.json();
-      console.log(responseData);
-
       setSuccess(true);
       form.reset(defaultValues);
 
