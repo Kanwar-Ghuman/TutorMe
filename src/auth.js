@@ -13,9 +13,12 @@ const adminEmailList = [
 const teachersEmailList = [
   "shamit.surana@gmail.com",
   "kanwarmehtab.ghuman@franklinsabers.org",
+  ,
+];
+const studentsEmailList = [
+  "shamit.surana@franklinsabers.org",
   "mcdabg1236@gmail.com",
 ];
-const studentsEmailList = ["shamit.surana@franklinsabers.org"];
 
 function getUserRole(email) {
   // Implement your logic to check if the email belongs to a teacher

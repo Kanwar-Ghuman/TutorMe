@@ -19,7 +19,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Spinner } from "@nextui-org/react";
+import { Loader2 } from "lucide-react";
 import Select from "react-select";
+import { BsExclamationCircle } from "react-icons/bs";
+import { cn } from "@/lib/utils";
 import AcceptStudentCard from "../../../components/request/accept/acceptStudentCard";
 
 const Scrollbar = () => {
@@ -28,6 +31,9 @@ const Scrollbar = () => {
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [formLoading, setformLoading] = useState(true);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [editName, setEditName] = useState("");
@@ -105,8 +111,8 @@ const Scrollbar = () => {
 
   const handleModifyClick = (tutor) => {
     setSelectedRequest(tutor);
-    setEditName(tutor.studentName); // Ensure this sets the correct value
-    setEditEmail(tutor.tutorName); // Ensure this sets the correct value
+    setEditName(tutor.studentName);
+    setEditEmail(tutor.tutorName);
     setEditSubjects(
       tutor.subjects.map((subject) => ({ value: subject, label: subject }))
     );
@@ -114,6 +120,9 @@ const Scrollbar = () => {
   };
 
   const handleSaveClick = async () => {
+    setformLoading(true);
+    setError("");
+
     const updatedTutor = {
       name: editName,
       email: editEmail,
@@ -130,7 +139,10 @@ const Scrollbar = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update tutor");
+        const errors = await response.json();
+        console.log(errors.error);
+        setError(JSON.stringify(errors.error));
+        return;
       }
 
       const updatedData = await response.json();
@@ -139,9 +151,18 @@ const Scrollbar = () => {
           student.id === selectedRequest.id ? updatedData : student
         )
       );
-      onClose();
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+        onClose();
+      }, 2000);
     } catch (error) {
       console.error("Failed to update tutor:", error);
+      setError("An unexpected error occurred.");
+    } finally {
+      setformLoading(false);
     }
   };
 
@@ -265,7 +286,7 @@ const Scrollbar = () => {
                 {selectedRequest && (
                   <>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium                      text-gray-700">
+                      <label className="block text-sm font-medium text-gray-700">
                         Name
                       </label>
                       <input
@@ -307,8 +328,25 @@ const Scrollbar = () => {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={handleSaveClick}>
-                  Save
+                <Button
+                  color="primary"
+                  onPress={handleSaveClick}
+                  disabled={loading || success}
+                  className={cn("", {
+                    "bg-green-500": success,
+                    "hover:bg-green-600": success,
+                  })}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Please wait
+                    </>
+                  ) : success ? (
+                    "Success"
+                  ) : (
+                    "Save"
+                  )}
                 </Button>
               </ModalFooter>
             </>
