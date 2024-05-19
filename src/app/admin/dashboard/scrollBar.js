@@ -10,6 +10,7 @@ import {
   useDisclosure,
   Button,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
 import {
@@ -118,44 +119,59 @@ const Scrollbar = () => {
 
   return (
     <div className="h-[87vh] flex flex-col items-center overflow-hidden">
-      <div className="flex flex-row m-4 justify-between items-center w-full">
-        <Input
-          type="text"
-          id="inputSearch"
-          placeholder="Filter"
-          className="w-[80%]"
-          onKeyUp={(event) => {
-            search(event.target.value);
-          }}
-        />
-        <div className="flex items-center gap-[3%]">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline">Filter</Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <div className="grid gap-4">first name</div>
-              <div className="grid gap-4">last name</div>
-              <div className="grid gap-4">student id</div>
-            </PopoverContent>
-          </Popover>
-          <Button variant="outline" type="button" onClick={reverseStudent}>
-            <HiOutlineArrowsUpDown />
-          </Button>
+      {listStudent.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full">
+          <p className="text-6xl text-black-500">No Current Tutors</p>
+          <p className="text-sm mt-2">
+            Please go to the{" "}
+            <Link href="/admin/add-tutor" passHref>
+              <span className="text-primary">&quot;Add Tutor&quot; </span>
+              tab.
+            </Link>
+          </p>
         </div>
-      </div>
-      <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
-        {listStudent.map((student) => (
-          <AcceptStudentCard
-            id={student.id}
-            studentName={student.name}
-            tutorName={student.email}
-            subjects={student.subjects}
-            onDelete={handleDelete}
-            key={student.id}
-          />
-        ))}
-      </div>
+      ) : (
+        <>
+          <div className="flex flex-row m-4 justify-between items-center w-full">
+            <Input
+              type="text"
+              id="inputSearch"
+              placeholder="Filter"
+              className="w-[80%]"
+              onKeyUp={(event) => {
+                search(event.target.value);
+              }}
+            />
+            <div className="flex items-center gap-[3%]">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">Filter</Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="grid gap-4">first name</div>
+                  <div className="grid gap-4">last name</div>
+                  <div className="grid gap-4">student id</div>
+                </PopoverContent>
+              </Popover>
+              <Button variant="outline" type="button" onClick={reverseStudent}>
+                <HiOutlineArrowsUpDown />
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
+            {listStudent.map((student) => (
+              <AcceptStudentCard
+                id={student.id}
+                studentName={student.name}
+                tutorName={student.email}
+                subjects={student.subjects}
+                onDelete={handleDelete}
+                key={student.id}
+              />
+            ))}
+          </div>
+        </>
+      )}
       <Modal isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           {(onClose) => (
