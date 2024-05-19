@@ -1,26 +1,11 @@
 ("use-client");
-
-// import { Inter } from 'next/font/google'
-// import { useState } from "react";
-
 import React from "react";
-import Navbar from "@/components/tutorme/home/nav/teacherNavbar";
-
-// import { Inter } from 'next/font/google'
-// import { useState } from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
 import ScrollBar from "./scrollBar";
 
 const AcceptRequest = () => {
-  // Your base page content goes here
-
-  // const myHeight = window.innerHeight * 0.5;
   return (
-    <div
-      // asChild
-      style={{ height: "100vh" }}
-      className="scroll-hide"
-    >
+    <div className="scroll-hide h-[100vh]">
       <div className="flex w-100 space-x-4 p-4">
         <div className="w-[20%] shadow-md rounded-lg">
           <SideBar />

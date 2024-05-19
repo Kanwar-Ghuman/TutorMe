@@ -10,6 +10,7 @@ import AcceptStudentCard from "../../../components/request/accept/acceptStudentC
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
+import { Spinner } from "@nextui-org/react";
 
 function Scrollbar() {
   const [studentArr, setStudentArr] = useState([]);
@@ -77,9 +78,12 @@ function Scrollbar() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
   }
-
   return (
     <div className="h-[87vh]">
       <div className="flex flex-row m-4 justify-between items-center">

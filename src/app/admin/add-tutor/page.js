@@ -1,40 +1,74 @@
 "use client";
 
 import { useState } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Loader2 } from "lucide-react";
-
-import { FormDropDownInput } from "@/components/tutorme/inputs/FormDropDownInput";
+import Select from "react-select";
 import { FormInput } from "@/components/tutorme/inputs/FormInput";
-
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-
 import { BsExclamationCircle } from "react-icons/bs";
-
-import { createTutorRequestSchema } from "@/lib/forms/schemas";
 import { cn } from "@/lib/utils";
 
 const TutorRequest = () => {
-  // Your base page content goes here3
   const defaultValues = {
     studentName: "",
     studentEmail: "",
-    subject: "",
+    subjects: [],
   };
 
   const form = useForm({
-    // resolver: zodResolver(createTutorRequestSchema),
     defaultValues,
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
   const [error, setError] = useState("");
+
+  const subjectsOptions = [
+    {
+      label: "Math",
+      options: [
+        { value: "IM1", label: "IM1" },
+        { value: "IM2", label: "IM2" },
+        { value: "IM3", label: "IM3" },
+        { value: "Precalc", label: "Precalculus" },
+        { value: "Calc AB", label: "AP Calculus AB" },
+        { value: "Calc BC", label: "AP Calculus BC" },
+      ],
+    },
+    {
+      label: "Science",
+      options: [
+        { value: "Physics", label: "Physics" },
+        { value: "Chemistry", label: "Chemistry" },
+        { value: "Biology", label: "Biology" },
+        { value: "AP Physics", label: "AP Physics" },
+        { value: "AP Chemistry", label: "AP Chemistry" },
+        { value: "AP Biology", label: "AP Biology" },
+      ],
+    },
+    {
+      label: "Spanish",
+      options: [
+        { value: "Spanish 1", label: "Spanish 1" },
+        { value: "Spanish 2", label: "Spanish 2" },
+        { value: "Spanish 3", label: "Spanish 3" },
+        { value: "Spanish 4", label: "Spanish 4" },
+        { value: "Spanish 5", label: "Spanish 5" },
+      ],
+    },
+    {
+      label: "German",
+      options: [
+        { value: "German 1", label: "German 1" },
+        { value: "German 2", label: "German 2" },
+        { value: "German 3", label: "German 3" },
+        { value: "German 4", label: "German 4" },
+        { value: "German 5", label: "German 5" },
+      ],
+    },
+  ];
 
   async function onSubmit(data) {
     setLoading(true);
@@ -44,7 +78,7 @@ const TutorRequest = () => {
       {
         name: data.studentName,
         email: data.studentEmail,
-        subjects: [data.subject],
+        subjects: data.subjects.map((subject) => subject.value),
       },
     ];
 
@@ -83,7 +117,7 @@ const TutorRequest = () => {
 
   return (
     <>
-      <div class="flex items-center justify-center m-4 pt-8">
+      <div className="flex items-center justify-center m-4 pt-8">
         <div className="w-full md:w-1/2">
           <h1 className="text-2xl mb-10">Add A Tutor</h1>
           <Form {...form}>
@@ -105,56 +139,19 @@ const TutorRequest = () => {
                 isRequired
               />
 
-              <FormDropDownInput
-                name="subject"
-                label="Subject"
-                options={[
-                  {
-                    label: "Math",
-                    group: [
-                      { value: "IM1", label: "IM1" },
-                      { value: "IM2", label: "IM2" },
-                      { value: "IM3", label: "IM3" },
-                      { value: "Precalc", label: "Precalculus" },
-                      { value: "Calc AB", label: "AP Calculus AB" },
-                      { value: "Calc BC", label: "AP Calculus BC" },
-                    ],
-                  },
-                  {
-                    label: "Science",
-                    group: [
-                      { value: "Physics", label: "Physics" },
-                      { value: "Chemistry", label: "Chemistry" },
-                      { value: "Biology", label: "Biology" },
-                      { value: "AP Physics", label: "AP Physics" },
-                      { value: "AP Chemistry", label: "AP Chemistry" },
-                      { value: "AP Biology", label: "AP Biology" },
-                    ],
-                  },
-                  {
-                    label: "Spanish",
-                    group: [
-                      { value: "Spanish 1", label: "Spanish 1" },
-                      { value: "Spanish 2", label: "Spanish 2" },
-                      { value: "Spanish 3", label: "Spanish 3" },
-                      { value: "Spanish 4", label: "Spanish 4" },
-                      { value: "Spanish 5", label: "Spanish 5" },
-                    ],
-                  },
-                  {
-                    label: "German",
-                    group: [
-                      { value: "German 1", label: "German 1" },
-                      { value: "German 2", label: "German 2" },
-                      { value: "German 3", label: "German 3" },
-                      { value: "German 4", label: "German 4" },
-                      { value: "German 5", label: "German 5" },
-                    ],
-                  },
-                ]}
-                form={form}
-                description="What subject does your student need help with?"
-                isRequired
+              <Controller
+                name="subjects"
+                control={form.control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    isMulti
+                    options={subjectsOptions}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    placeholder="Select subjects"
+                  />
+                )}
               />
 
               <p
