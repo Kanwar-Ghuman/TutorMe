@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Spinner } from "@nextui-org/react";
-import { CiEdit } from "react-icons/ci";
+import Select from "react-select";
 import AcceptStudentCard from "../../../components/request/accept/acceptStudentCard";
 
 const Scrollbar = () => {
@@ -30,6 +30,9 @@ const Scrollbar = () => {
   const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editSubjects, setEditSubjects] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,14 +103,92 @@ const Scrollbar = () => {
     }
   };
 
-  const handleModifyClick = (request) => {
-    setSelectedRequest(request);
+  const handleModifyClick = (tutor) => {
+    setSelectedRequest(tutor);
+    setEditName(tutor.studentName); // Ensure this sets the correct value
+    setEditEmail(tutor.tutorName); // Ensure this sets the correct value
+    setEditSubjects(
+      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
+    );
     onOpen();
   };
 
-  const handleSaveClick = () => {
-    onClose();
+  const handleSaveClick = async () => {
+    const updatedTutor = {
+      name: editName,
+      email: editEmail,
+      subjects: editSubjects.map((subject) => subject.value),
+    };
+
+    try {
+      const response = await fetch(`/api/admin/tutors/${selectedRequest.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTutor),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update tutor");
+      }
+
+      const updatedData = await response.json();
+      setListStudent((prev) =>
+        prev.map((student) =>
+          student.id === selectedRequest.id ? updatedData : student
+        )
+      );
+      onClose();
+    } catch (error) {
+      console.error("Failed to update tutor:", error);
+    }
   };
+
+  const subjectsOptions = [
+    {
+      label: "Math",
+      options: [
+        { value: "IM1", label: "IM1" },
+        { value: "IM2", label: "IM2" },
+        { value: "IM3", label: "IM3" },
+        { value: "Precalc", label: "Precalculus" },
+        { value: "Calc AB", label: "AP Calculus AB" },
+        { value: "Calc BC", label: "AP Calculus BC" },
+      ],
+    },
+    {
+      label: "Science",
+      options: [
+        { value: "Physics", label: "Physics" },
+        { value: "Chemistry", label: "Chemistry" },
+        { value: "Biology", label: "Biology" },
+        { value: "AP Physics", label: "AP Physics" },
+        { value: "AP Chemistry", label: "AP Chemistry" },
+        { value: "AP Biology", label: "AP Biology" },
+      ],
+    },
+    {
+      label: "Spanish",
+      options: [
+        { value: "Spanish 1", label: "Spanish 1" },
+        { value: "Spanish 2", label: "Spanish 2" },
+        { value: "Spanish 3", label: "Spanish 3" },
+        { value: "Spanish 4", label: "Spanish 4" },
+        { value: "Spanish 5", label: "Spanish 5" },
+      ],
+    },
+    {
+      label: "German",
+      options: [
+        { value: "German 1", label: "German 1" },
+        { value: "German 2", label: "German 2" },
+        { value: "German 3", label: "German 3" },
+        { value: "German 4", label: "German 4" },
+        { value: "German 5", label: "German 5" },
+      ],
+    },
+  ];
 
   if (loading) {
     return (
@@ -121,8 +202,8 @@ const Scrollbar = () => {
     <div className="h-[87vh] flex flex-col items-center overflow-hidden">
       {listStudent.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
-          <p className="text-6xl text-black-500">No Current Tutors</p>
-          <p className="text-sm mt-2">
+          <p className="text-6xl">No Current Tutors</p>
+          <p className="text-2xl mt-2">
             Please go to the{" "}
             <Link href="/admin/add-tutor" passHref>
               <span className="text-primary">&quot;Add Tutor&quot; </span>
@@ -166,6 +247,7 @@ const Scrollbar = () => {
                 tutorName={student.email}
                 subjects={student.subjects}
                 onDelete={handleDelete}
+                onModify={handleModifyClick}
                 key={student.id}
               />
             ))}
@@ -177,21 +259,47 @@ const Scrollbar = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modify Request
+                Modify Tutor
               </ModalHeader>
               <ModalBody>
                 {selectedRequest && (
                   <>
-                    <p>
-                      <strong>Name:</strong> {selectedRequest.name}
-                    </p>
-                    <p>
-                      <strong>Email:</strong> {selectedRequest.email}
-                    </p>
-                    <p>
-                      <strong>Subjects:</strong>{" "}
-                      {selectedRequest.subjects.join(", ")}
-                    </p>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium                      text-gray-700">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Email
+                      </label>
+                      <input
+                        type="text"
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Subjects (comma separated)
+                      </label>
+                      <Select
+                        isMulti
+                        value={editSubjects}
+                        onChange={setEditSubjects}
+                        options={subjectsOptions}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        placeholder="Select subjects"
+                      />
+                    </div>
                   </>
                 )}
               </ModalBody>

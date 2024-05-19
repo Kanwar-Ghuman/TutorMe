@@ -10,6 +10,7 @@ export default function AcceptStudentCard({
   tutorName,
   subjects,
   onDelete,
+  onModify,
 }) {
   return (
     <Card
@@ -30,7 +31,11 @@ export default function AcceptStudentCard({
             </div>
           </div>
           <div className="flex flex-col space-y-4">
-            <Button color="primary" endContent={<CiEdit />}>
+            <Button
+              color="primary"
+              endContent={<CiEdit />}
+              onPress={() => onModify({ id, studentName, tutorName, subjects })}
+            >
               Modify
             </Button>
             <Button
