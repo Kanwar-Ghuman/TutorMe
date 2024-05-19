@@ -7,14 +7,18 @@ import { PrismaClient } from "@prisma/client";
 const adminEmailList = [
   "popguy1029@gmail.com",
   "keith.decker@franklin.k12.wi.us",
+  "ghumankm@gmail.com",
 ];
 
 const teachersEmailList = [
   "shamit.surana@gmail.com",
   "kanwarmehtab.ghuman@franklinsabers.org",
+  ,
+];
+const studentsEmailList = [
+  "shamit.surana@franklinsabers.org",
   "mcdabg1236@gmail.com",
 ];
-const studentsEmailList = ["shamit.surana@franklinsabers.org"];
 
 function getUserRole(email) {
   // Implement your logic to check if the email belongs to a teacher

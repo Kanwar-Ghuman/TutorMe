@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+.global-overflow-hidden {
+  @apply overflow-hidden;
+}
 
 @layer base {
   :root {
@@ -50,7 +53,6 @@
   }
 }
 
- 
 @layer base {
   * {
     @apply border-border;

@@ -1,26 +1,50 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@nextui-org/button";
+import { CiEdit } from "react-icons/ci";
 
-export default function acceptStudentCard(props) {
+export default function AcceptStudentCard({
+  id,
+  studentName,
+  tutorName,
+  subjects,
+  onDelete,
+  onModify,
+}) {
   return (
-    <Card className="m-4 transition-shadow hover:shadow-md hover:cursor-pointer">
+    <Card
+      id={`card-${id}`}
+      className="m-4 w-full max-w-7xl transition-shadow hover:shadow-md hover:cursor-pointer"
+    >
       <CardContent className="p-4">
         <div className="flex justify-between">
           <div className="flex flex-col space-y-3">
             <div>
-              <span className="font-bold">Student:</span> {props.studentName}
+              <span className="font-bold">Name:</span> {studentName}
             </div>
             <div>
-              <span className="font-bold">Tutor:</span> {props.tutorName}
+              <span className="font-bold">Email:</span> {tutorName}
             </div>
-
-            <CardDescription>Click to view more information</CardDescription>
+            <div>
+              <span className="font-bold">Subjects:</span> {subjects.join(", ")}
+            </div>
           </div>
           <div className="flex flex-col space-y-4">
-            <Button variant="success" className="bg-green-500	hover:bg-green-400">Accept</Button>
-            <Button variant="destructive" className="bg-red-600	hover:bg-red-500">Decline</Button>
+            <Button
+              color="primary"
+              endContent={<CiEdit />}
+              onPress={() => onModify({ id, studentName, tutorName, subjects })}
+            >
+              Modify
+            </Button>
+            <Button
+              color="danger"
+              variant="bordered"
+              onPress={() => onDelete(id)}
+            >
+              Delete Tutor
+            </Button>
           </div>
         </div>
       </CardContent>

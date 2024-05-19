@@ -56,8 +56,8 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center w-full mt-8 p-4">
-        {Array.from({ length: 4 }).map((_, index) => (
+      <div className="flex flex-col items-center w-full">
+        {Array.from({ length: 3 }).map((_, index) => (
           <Card key={index} className="w-[1500px] mb-4 p-4 space-y-5">
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
@@ -80,7 +80,7 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full mt-8 p-4">
+    <div className="flex flex-col items-center w-full">
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
@@ -131,10 +131,6 @@ const PastRequests = () => {
                     </p>
                     <p>
                       <strong>Subject:</strong> {selectedRequest.subject}
-                    </p>
-                    <p>
-                      <strong>Gender Preference:</strong>{" "}
-                      {selectedRequest.genderPref}
                     </p>
                   </>
                 )}

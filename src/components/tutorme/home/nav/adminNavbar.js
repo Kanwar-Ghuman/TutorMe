@@ -4,7 +4,7 @@ import { BaseNavbar } from "./baseNavbar";
 export async function AdminNavbar({ user }) {
   const menuItems = [
     { label: "Dashboard", link: "/admin/dashboard" },
-    { label: "Create a Request", link: "/teacher/request/create" },
+    { label: "Add Tutor", link: "/admin/add-tutor" },
   ];
 
   const profile = [
@@ -19,9 +19,7 @@ export async function AdminNavbar({ user }) {
       className: "h-14 gap-2",
       link: "/profile",
     },
-    { key: "settings", label: "Settings", link: "/settings" },
-    { key: "team_settings", label: "Team Settings", link: "/team-settings" },
-    { key: "analytics", label: "Analytics", link: "/analytics" },
+
     { key: "logout", label: "Log Out", color: "danger" },
   ];
 
