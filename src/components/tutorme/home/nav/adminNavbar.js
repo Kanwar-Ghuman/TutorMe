@@ -4,7 +4,7 @@ import { BaseNavbar } from "./baseNavbar";
 export async function AdminNavbar({ user }) {
   const menuItems = [
     { label: "Dashboard", link: "/admin/dashboard" },
-    { label: "Create a Request", link: "/teacher/request/create" },
+    { label: "Add Tutor", link: "/admin/add-tutor" },
   ];
 
   const profile = [

@@ -1,41 +1,43 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-import { useState } from "react";
 import AcceptStudentCard from "../../../components/request/accept/acceptStudentCard";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 
 function Scrollbar() {
-  const defStudentArr = [];
-  for (let i = 1; i <= 10; i++) {
-    let arr = ["student " + i, "tutor " + i, i];
-    defStudentArr.push(arr);
-  }
+  const [studentArr, setStudentArr] = useState([]);
+  const [updateArr, setUpdateArr] = useState([]);
+  const [listStudent, setListStudent] = useState([]);
+  const [isReversed, setIsReversed] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  let [updateArr, setUpdateArr] = useState(defStudentArr);
-  let [listStudent, setListStudent] = useState(
-    updateArr.map((student) => (
-      <>
-        {/* <>{console.log(student)}</> */}
-        <AcceptStudentCard
-          studentName={student[0]}
-          tutorName={student[1]}
-          key={student[3]}
-        />
-      </>
-    ))
-  );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/tutors");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setStudentArr(data);
+        setUpdateArr(data);
+        display(data, isReversed);
+      } catch (error) {
+        console.error("Failed to fetch tutor requests:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  let [isReversed, setIsReversed] = useState(false);
+    fetchData();
+  }, []);
 
   const reverseStudent = () => {
     setIsReversed(!isReversed);
@@ -43,30 +45,19 @@ function Scrollbar() {
   };
 
   const search = (value) => {
-    let returnArr = [];
-    for (let i = 0; i < defStudentArr.length; i++) {
-      if (innerSearch(defStudentArr[i], value) == true) {
-        returnArr.push(defStudentArr[i]);
-      }
-    }
+    const returnArr = studentArr.filter((student) =>
+      innerSearch(student, value)
+    );
     setUpdateArr(returnArr);
     display(returnArr, isReversed);
   };
 
   const innerSearch = (arr, value) => {
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (stringSearch(arr[i], value) == true) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const stringSearch = (str, value) => {
-    if (str.indexOf(value) >= 0) {
-      return true;
-    }
-    return false;
+    return (
+      arr.name.includes(value) ||
+      arr.email.includes(value) ||
+      arr.subjects.some((subject) => subject.includes(value))
+    );
   };
 
   const display = (returnArr, reverse) => {
@@ -75,18 +66,19 @@ function Scrollbar() {
       myTempArr.reverse();
     }
     setListStudent(
-      myTempArr.map((student) => (
-        <>
-          {/* <>{console.log(student)}</> */}
-          <AcceptStudentCard
-            studentName={student[0]}
-            tutorName={student[1]}
-            key={student[3]}
-          />
-        </>
+      myTempArr.map((student, index) => (
+        <AcceptStudentCard
+          studentName={student.name}
+          tutorName={student.email}
+          key={index}
+        />
       ))
     );
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="h-[87vh]">
@@ -117,7 +109,6 @@ function Scrollbar() {
         </div>
       </div>
       <div className="flex flex-col overflow-auto max-h-[90%]">
-        {/* student is studentArr[index] */}
         {listStudent}
       </div>
     </div>
