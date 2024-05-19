@@ -1,7 +1,8 @@
-("use-client");
+"use-client";
 import React from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
-import ScrollBar from "./scrollBar";
+
+import ScrollBar from "@/components/tutorme/home/admin/scrollBar";
 
 const AcceptRequest = () => {
   return (

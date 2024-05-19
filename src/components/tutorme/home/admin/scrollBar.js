@@ -11,19 +11,12 @@ import {
   Button,
 } from "@nextui-org/react";
 import Link from "next/link";
-import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Spinner } from "@nextui-org/react";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
-import { BsExclamationCircle } from "react-icons/bs";
 import { cn } from "@/lib/utils";
-import AcceptStudentCard from "../../../components/request/accept/acceptStudentCard";
+import AcceptStudentCard from "@/components/request/accept/acceptStudentCard";
 
 const Scrollbar = () => {
   const [studentArr, setStudentArr] = useState([]);
@@ -234,31 +227,16 @@ const Scrollbar = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-row m-4 justify-between items-center w-full">
+          <div className="flex flex-row m-4 justify-center items-center w-full">
             <Input
               type="text"
               id="inputSearch"
-              placeholder="Filter"
+              placeholder="Search"
               className="w-[80%]"
               onKeyUp={(event) => {
                 search(event.target.value);
               }}
             />
-            <div className="flex items-center gap-[3%]">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">Filter</Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="grid gap-4">first name</div>
-                  <div className="grid gap-4">last name</div>
-                  <div className="grid gap-4">student id</div>
-                </PopoverContent>
-              </Popover>
-              <Button variant="outline" type="button" onClick={reverseStudent}>
-                <HiOutlineArrowsUpDown />
-              </Button>
-            </div>
           </div>
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
             {listStudent.map((student) => (

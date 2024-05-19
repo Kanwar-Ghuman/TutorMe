@@ -1,40 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { BsArchive, BsInbox } from "react-icons/bs";
+import { PiStudent } from "react-icons/pi";
+import { IoIosGitPullRequest } from "react-icons/io";
 import React from "react";
 
-//to do list
-import { BsListCheck } from "react-icons/bs";
-//bin
-import { BsTrash } from "react-icons/bs";
-//archive
+const SideButton = ({ theLink, theName, theIcon }) => {
+  const pathname = usePathname();
+  const isActive = pathname === theLink;
 
-import { BsArchive } from "react-icons/bs";
-//inbox
-import { BsInbox } from "react-icons/bs";
-
-import { MdOutlineArchive } from "react-icons/md";
-//current
-import { IoFileTrayFullOutline } from "react-icons/io5";
-import { PiStudent } from "react-icons/pi";
-import { Pi } from "lucide-react";
-
-const SideButton = (props) => {
   return (
     <div className="flex flex-row ml-[4%] h-[100] mr-[5%]">
       <Link
-        href={props.theLink}
-        // type="button"
-        className="flex gap-2 items-center flex-row rounded-lg mt-[3%] transition duration-150 hover:bg-slate-200 shadow w-full h-[4vh] "
+        href={theLink}
+        className={`flex gap-2 items-center flex-row rounded-lg mt-[3%] transition duration-150 w-full h-[4vh] ${
+          isActive ? "bg-primary" : "hover:bg-slate-200"
+        }`}
       >
-        <props.theIcon className="ml-[2vh]" />
-        {props.theName}
+        {React.createElement(theIcon, { className: "ml-[2vh]" })}
+
+        {theName}
       </Link>
     </div>
   );
 };
 
-const sideBar = () => {
+const SideBar = () => {
   return (
     <div className="flex-col mt-[3%] h-full">
       <SideButton
@@ -42,19 +35,23 @@ const sideBar = () => {
         theIcon={PiStudent}
         theLink="/admin/dashboard"
       />
-      <SideButton theName="bin" theIcon={BsTrash} theLink="/auth/login" />
       <SideButton
-        theName="archive"
-        theIcon={BsArchive}
-        theLink="/admin/dashboard"
+        theName="Past Requests"
+        theIcon={IoIosGitPullRequest}
+        theLink="/admin/past-request"
       />
       <SideButton
-        theName="pending"
+        theName="Archive"
+        theIcon={BsArchive}
+        theLink="/admin/archive"
+      />
+      <SideButton
+        theName="Pending"
         theIcon={BsInbox}
-        theLink="/admin/dashboard"
+        theLink="/admin/pending"
       />
     </div>
   );
 };
 
-export default sideBar;
+export default SideBar;
