@@ -1,25 +1,27 @@
 "use client";
 
 import { useState } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button as NextUIButton,
+  useDisclosure,
+} from "@nextui-org/react";
 
 import { FormDropDownInput } from "@/components/tutorme/inputs/FormDropDownInput";
 import { FormInput } from "@/components/tutorme/inputs/FormInput";
-
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-
 import { BsExclamationCircle } from "react-icons/bs";
-
-import { createTutorRequestSchema } from "@/lib/forms/schemas";
 import { cn } from "@/lib/utils";
 
 const CreateRequest = () => {
-  // Your base page content goes here3
   const defaultValues = {
     studentName: "",
     studentEmail: "",
@@ -28,14 +30,15 @@ const CreateRequest = () => {
   };
 
   const form = useForm({
-    // resolver: zodResolver(createTutorRequestSchema),
     defaultValues,
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
   const [error, setError] = useState("");
+  const [submittedData, setSubmittedData] = useState(null);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const router = useRouter();
 
   async function onSubmit(data) {
     setLoading(true);
@@ -57,27 +60,37 @@ const CreateRequest = () => {
       console.log(responseData);
 
       setSuccess(true);
-
+      setSubmittedData(data);
       form.reset(defaultValues);
+      onOpen();
 
       setTimeout(() => {
         setSuccess(false);
       }, 2000);
     } catch (err) {
-      const errors = await err.json();
-      console.log(errors.error);
-      setError(JSON.stringify(errors.error));
+      console.log(err);
+      setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   }
+
+  const handleReturnToDashboard = () => {
+    router.push("/teacher/dashboard");
+  };
+
   return (
     <>
-      <div class="flex items-center justify-center m-4 pt-8">
+      <div className="flex items-center justify-center m-4 pt-8">
         <div className="w-full md:w-1/2">
           <h1 className="text-2xl mb-10">Request A Tutor</h1>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className={cn("space-y-8", {
+                "opacity-50 pointer-events-none": loading,
+              })}
+            >
               <FormInput
                 name="studentName"
                 label="Student Name"
@@ -85,6 +98,7 @@ const CreateRequest = () => {
                 description="Use the format 'First Last' (e.g. 'Alice Jones')"
                 form={form}
                 isRequired
+                disabled={loading}
               />
               <FormInput
                 name="studentEmail"
@@ -93,6 +107,7 @@ const CreateRequest = () => {
                 description="Enter the student's email address"
                 form={form}
                 isRequired
+                disabled={loading}
               />
 
               <FormDropDownInput
@@ -145,6 +160,7 @@ const CreateRequest = () => {
                 form={form}
                 description="What subject does your student need help with?"
                 isRequired
+                disabled={loading}
               />
               <FormDropDownInput
                 name="genderPreference"
@@ -161,6 +177,7 @@ const CreateRequest = () => {
                 form={form}
                 description="Does your student prefer a certain tutor gender?"
                 isRequired
+                disabled={loading}
               />
               <p
                 className={cn("text-danger fill-danger", error ? "" : "hidden")}
@@ -191,6 +208,48 @@ const CreateRequest = () => {
           </Form>
         </div>
       </div>
+
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Request Successfully Made ✅
+              </ModalHeader>
+              <ModalBody>
+                {submittedData && (
+                  <>
+                    <p>
+                      <strong>Student Name:</strong> {submittedData.studentName}
+                    </p>
+                    <p>
+                      <strong>Student Email:</strong>{" "}
+                      {submittedData.studentEmail}
+                    </p>
+                    <p>
+                      <strong>Subject:</strong> {submittedData.subject}
+                    </p>
+                    <p>
+                      <strong>Gender Preference:</strong>{" "}
+                      {submittedData.genderPreference}
+                    </p>
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <NextUIButton color="primary" onPress={handleReturnToDashboard}>
+                  Return to Dashboard
+                </NextUIButton>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };

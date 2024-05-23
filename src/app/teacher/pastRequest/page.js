@@ -98,18 +98,6 @@ const PastRequests = () => {
               <p>Subject: {request.subject}</p>
               <p>Gender Preference: {request.genderPref} </p>
             </CardBody>
-            <CardFooter className="space-x-4">
-              <Button color="danger" variant="bordered">
-                Delete Request
-              </Button>
-              <Button
-                color="primary"
-                endContent={<CiEdit />}
-                onPress={() => handleModifyClick(request)}
-              >
-                Modify
-              </Button>
-            </CardFooter>
           </Card>
         ))
       )}
