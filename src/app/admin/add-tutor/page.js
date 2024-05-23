@@ -118,7 +118,12 @@ const TutorRequest = () => {
         <div className="w-full md:w-1/2">
           <h1 className="text-2xl mb-10">Add A Tutor</h1>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className={cn("space-y-8", {
+                "opacity-50 pointer-events-none": loading,
+              })}
+            >
               <FormInput
                 name="studentName"
                 label="Student Name"
@@ -126,6 +131,7 @@ const TutorRequest = () => {
                 description="Use the format 'First Last' (e.g. 'Alice Jones')"
                 form={form}
                 isRequired
+                disabled={loading}
               />
               <FormInput
                 name="studentEmail"
@@ -134,6 +140,7 @@ const TutorRequest = () => {
                 description="Enter the student's email address"
                 form={form}
                 isRequired
+                disabled={loading}
               />
 
               <Controller
@@ -147,6 +154,7 @@ const TutorRequest = () => {
                     className="basic-multi-select"
                     classNamePrefix="select"
                     placeholder="Select subjects"
+                    isDisabled={loading}
                   />
                 )}
               />
@@ -159,8 +167,8 @@ const TutorRequest = () => {
               </p>
               <Button
                 className={cn("w-full mb-7", {
-                  "bg-green-500": success,
-                  "hover:bg-green-600": success,
+                  "bg-green-300": success,
+                  "hover:bg-green-200": success,
                 })}
                 type="submit"
                 disabled={loading || success}
