@@ -1,9 +1,14 @@
-import {Button} from "@nextui-org/react";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-       <Button>Press me</Button>
-    </>
-  )
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/auth/login");
+  }, [router]);
+
+  return null;
 }

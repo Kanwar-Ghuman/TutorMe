@@ -103,7 +103,7 @@ const TutorRequest = () => {
 
       setTimeout(() => {
         setSuccess(false);
-      }, 2000);
+      }, 4000);
     } catch (err) {
       console.error("Unexpected error:", err);
       setError("An unexpected error occurred.");
