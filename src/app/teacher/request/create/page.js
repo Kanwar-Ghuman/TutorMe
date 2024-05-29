@@ -28,7 +28,7 @@ const CreateRequest = () => {
   };
 
   const form = useForm({
-    // resolver: zodResolver(createTutorRequestSchema),
+    resolver: zodResolver(createTutorRequestSchema),
     defaultValues,
   });
 
