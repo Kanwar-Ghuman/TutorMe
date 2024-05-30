@@ -53,7 +53,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         data: { role: user.role },
       });
 
-      if (user.role == "teacher") {
+      if (user.role == "teacher" || user.role == "admin") {
         let teacher = await prisma.teacher.findUnique({
           where: { userId: user.id },
         });
