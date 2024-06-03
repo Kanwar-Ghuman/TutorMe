@@ -2,8 +2,10 @@ import { Inter } from 'next/font/google'
 import '@/styles/globals.css';
 
 import {Providers} from "./providers";
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] })
+// import Login from 
 
 export const metadata = {
   title: 'NHS TutorMe',
@@ -12,11 +14,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className='w-ful h-full'>
+      <body className='h-full w-full '>
         <Providers>
           {children}
         </Providers>
+        <Link
+          href="/auth/login"
+          className="bg-yellow-300 shadow w-[10vh] h-[5vh] rounded"          
+        >Go to the login page </Link>
       </body>
     </html>
   )
