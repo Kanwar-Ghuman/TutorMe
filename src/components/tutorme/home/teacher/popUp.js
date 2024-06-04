@@ -25,7 +25,7 @@ const OneProgress = (props) => {
 
 
 export default function (props){
-    console.log(props.status)
+    // console.log("the satus is " + props.status)
     return(
         <div className="">
             <ol class="items-center sm:flex s ml-[5%]">
@@ -50,9 +50,9 @@ export default function (props){
                 />
             </ol>
             <div className="flex flex-row">
-            <span className="mr-[13%]">Student</span>                
-            <span className="mr-[13%]">Tutor</span>                
-            <span className="mr-[5%]">Mr.Decker</span>                
+            <span className="mr-[20%]">Student</span>                
+            <span className="mr-[17%]">Tutor</span>                
+            <span className="mr-[10%]">Mr.Decker</span>                
             <span>Completed</span>
             </div>
         </div>

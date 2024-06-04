@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@nextui-org/react";
+import Link from "next/link";
 
 import StatusStudentCard from "@/components/tutorme/home/teacher/statusStudentCard";
 
@@ -73,49 +74,63 @@ const Scrollbar = () => {
   }
 
   function toRatioStatus(status) {
-    if (status == "completed") {
+    if (status == "Completed") {
       return 100;
     }
 
     if (status == "Mr.Decker") {
       return 75;
     }
-    if (status == "tutor") {
+    if (status == "Tutor") {
       return 50;
     }
-    if (status == "student") {
+    if (status == "Student") {
       return 25;
     }
     return 0;
   }
 
   return (
-    <div>
-      {/* /search */}
-      <div className="flex flex-row ml-[5%] justify-start items-center w-full mt-[3%]">
-        <Input
-          type="text"
-          id="inputSearch"
-          placeholder="Search"
-          className="w-[80%]"
-          onKeyUp={(event) => {
-            search(event.target.value);
-          }}
-        />
+    <div className="w-full">
+      {requests.length == 0 ? 
+      <div 
+      className="flex mt-[25%] text-sky-950 flex-col ml-[30%] "
+      >
+        <div className="text-[3vh]">
+          no request made yet
+        </div>
+        <Link href="/teacher/request/create" className="underline hover:text-slate-400 text-slate-600 text-[3vh]">
+          Make a new request
+        </Link>
       </div>
-      <div className="flex flex-col overflow-hidden max-h-[90%] w-full justify-start ml-[3%]">
-        {requests.map((request) => (
-          <StatusStudentCard
-            id={request.id}
-            studentName={request.student}
-            tutorName={request.tutorName}
-            subject={request.subject}
-            status="student"
-            statusNum={toRatioStatus("Mr.Decker")}
-            key={"502033"}
-          />
-        ))}
+      : 
+      <div>
+        <div className="flex flex-row ml-[5%] justify-start items-center w-full mt-[3%]">
+                <Input
+                  type="text"
+                  id="inputSearch"
+                  placeholder="Search"
+                  className="w-[80%]"
+                  onKeyUp={(event) => {
+                    search(event.target.value);
+                  }}
+                />
+        </div>
+        <div className="flex flex-col overflow-hidden max-h-[90%] w-full justify-start ml-[3%]">
+          {requests.map((request) => (
+            <StatusStudentCard
+              id={request.id}
+              studentName={request.student}
+              tutorName={request.tutorName}
+              subject={request.subject}
+              status={request.status}
+              statusNum={toRatioStatus(request.status)}
+              key={"502033"}
+            />
+          ))}
+        </div>
       </div>
+      }
     </div>
   );
 };

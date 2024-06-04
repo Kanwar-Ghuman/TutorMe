@@ -19,7 +19,8 @@ model TutorRequest {
   subject        String
   genderPref     String?
   additionalInfo String?
-  
+  status         String?
+
   isActive         Boolean @default(true)
 
   tutor   Tutor?  @relation(fields: [tutorId], references: [id])

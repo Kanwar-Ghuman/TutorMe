@@ -14,15 +14,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className='w-ful h-full'>
-      <body className='h-full w-full '>
+    <html lang="en">
+      <body>
         <Providers>
           {children}
         </Providers>
-        <Link
-          href="/auth/login"
-          className="bg-yellow-300 shadow w-[10vh] h-[5vh] rounded"          
-        >Go to the login page </Link>
       </body>
     </html>
   )
