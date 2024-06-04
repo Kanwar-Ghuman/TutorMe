@@ -27,7 +27,7 @@ export async function GET(req) {
       studentEmail: true,
       subject: true,
       genderPref: true,
-      status: true
+      // status: true
     },
   });
 

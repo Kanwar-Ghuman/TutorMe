@@ -123,9 +123,9 @@ const Scrollbar = () => {
               studentName={request.student}
               tutorName={request.tutorName}
               subject={request.subject}
-              status={request.status}
-              statusNum={toRatioStatus(request.status)}
-              key={"502033"}
+              status={"Mr.Decker"}
+              statusNum={toRatioStatus("Mr.Decker")}
+              key={request.key}
             />
           ))}
         </div>

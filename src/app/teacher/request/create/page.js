@@ -14,7 +14,9 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-// import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { createTutorRequestSchema } from "@/lib/forms/schemas";
 
 import { FormDropDownInput } from "@/components/tutorme/inputs/FormDropDownInput";
 import { FormInput } from "@/components/tutorme/inputs/FormInput";
@@ -29,6 +31,7 @@ const CreateRequest = () => {
     studentEmail: "",
     subject: "",
     genderPreference: "",
+    status: "Student",
   };
 
   const form = useForm({

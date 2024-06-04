@@ -19,7 +19,6 @@ model TutorRequest {
   subject        String
   genderPref     String?
   additionalInfo String?
-  status         String?
 
   isActive         Boolean @default(true)
 
