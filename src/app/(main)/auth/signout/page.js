@@ -1,12 +1,12 @@
 import { getProviders } from "next-auth/react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
+
 import LoginPage from "@/components/tutorme/auth/login";
 import { redirect } from "next/navigation";
 import SignOut from "./signout";
+import { auth } from "@/auth";
 
 export default async function Signout(context) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session) {
     return redirect("/auth/login");
