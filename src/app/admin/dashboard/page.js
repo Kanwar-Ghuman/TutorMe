@@ -3,8 +3,10 @@ import React from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
 
 import ScrollBar from "@/components/tutorme/home/admin/scrollBar";
-
-const AcceptRequest = () => {
+import { SendEmail } from "@/hooks/email/brevo";
+// import { Button } from "@nextui-org/button";
+const AcceptRequest = async() => {
+  await SendEmail()
   return (
     <div className="scroll-hide h-[100vh]">
       <div className="flex w-100 space-x-4 p-4">
