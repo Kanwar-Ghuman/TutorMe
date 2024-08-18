@@ -12,7 +12,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
+  ModalFooter, 
   useDisclosure,
 } from "@nextui-org/react";
 
@@ -56,9 +56,9 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center w-full">
-        {Array.from({ length: 3 }).map((_, index) => (
-          <Card key={index} className="w-[1500px] mb-4 p-4 space-y-5">
+      <div className="flex flex-row flex-wrap w-full py-5">
+        {Array.from({ length: 9 }).map((_, index) => (
+          <Card key={index} className="w-[1500px] sm:w-[300px] h-[200px] mb-4 p-4 space-y-5 mx-5">
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
             </Skeleton>
@@ -80,20 +80,20 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-wrap flex-row w-full p-5"> 
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
         requests.map((request) => (
-          <Card key={request.id} className="w-[1500px] mb-4">
+          <Card key={request.id} className="w-[1500px] mb-4 sm:w-[300px] h-[200px] mx-5">
             <strong>
-              <CardHeader className="text-black-700 text-m">
+              <CardHeader className="text-black-700 text-m items-center justify-center">
                 {request.student}
               </CardHeader>
             </strong>
-            <CardBody>
+            <CardBody className="text-blue-600 gap-4">
               <p>Email: {request.studentEmail}</p>
               <p>Subject: {request.subject}</p>
               <p>Gender Preference: {request.genderPref} </p>
