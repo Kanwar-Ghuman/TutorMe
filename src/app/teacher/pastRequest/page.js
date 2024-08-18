@@ -128,6 +128,9 @@ const PastRequests = () => {
                 ): (<p>No Preference</p>))} 
               </div>
             </CardBody>
+            <CardFooter>
+              <Button auto color="warning" icon={CiEdit} onClick={() => handleModifyClick(request)} size="sm">Modify</Button>
+            </CardFooter>
           </Card>
         ))
       )}
