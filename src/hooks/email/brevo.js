@@ -5,7 +5,6 @@ export const SendEmail = () => {
   let defaultClient = brevo.ApiClient.instance;
 
   let apiKey = defaultClient.authentications['apiKey'];
-  apiKey.apiKey = process.env.BREVO_KEY;
 
   let apiInstance = new brevo.TransactionalEmailsApi();
   let sendSmtpEmail = new brevo.SendSmtpEmail();
