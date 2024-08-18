@@ -1,26 +1,65 @@
-// const brevo = require('@getbrevo/brevo');
-import * as brevo from "@getbrevo/brevo"
+import { createTransport } from "nodemailer";
 
-export const SendEmail = () => {
-  let defaultClient = brevo.ApiClient.instance;
+const transporter = createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  auth: {
+    user: "heyanantraj@gmail.com",
+    pass: process.env.BREVO_KEY,
+  },
+});
 
-  let apiKey = defaultClient.authentications['apiKey'];
-
-  let apiInstance = new brevo.TransactionalEmailsApi();
-  let sendSmtpEmail = new brevo.SendSmtpEmail();
-
-  sendSmtpEmail.subject = "My {{params.subject}}";
-  sendSmtpEmail.htmlContent = "<html><body><h1>Common: This is my first transactional email {{params.parameter}}</h1></body></html>";
-  sendSmtpEmail.sender = { "name": "John", "email": "heyanantraj@gmail.com" };
-  sendSmtpEmail.to = [
-    { "email": "anant.raj@franklinsabers.org", "name": "Anant" }
-  ];
-  sendSmtpEmail.replyTo = { "email": "heyanantraj@gmail.com", "name": "heyanantraj" };
-  sendSmtpEmail.headers = { "tutorme": "tutorme-1212" };
-  sendSmtpEmail.params = { "parameter": "Test Email", "subject": "Hello world" };
-  apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data) {
-    console.log('API called successfully. Returned data: ' + JSON.stringify(data));
-  }, function(error) {
-    console.error(error);
+export async function SendEmail() {
+  await transporter.sendMail({
+    from: "noreply@powergrader.com",
+    to: "anant.raj@franklinsabers.org",
+    subject: "Verify your email",
+    html: `<!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #FFFFFF;
+                color: #1E1E1E;
+            }
+            .container {
+                width: 100%;
+                margin: 0 auto;
+                background-color: #FFFFFF;
+            }
+            .header {
+                background-color: #3751FF;
+                color: #FFFFFF;
+                padding: 20px;
+                text-align: center;
+            }
+            .content {
+                padding: 20px;
+                text-align: center;
+            }
+            .verification-code {
+                font-size: 20px;
+                font-weight: bold;
+                color: #3751FF;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>PowerGrader</h1>
+            </div>
+            <div class="content">
+                <p>Hello,</p>
+                <p>Please verify your email address by entering the code below:</p>
+                <p>Thank you for using PowerGrader!</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `,
   });
 }
