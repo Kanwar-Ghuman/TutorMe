@@ -80,7 +80,7 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-row w-full ">
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
