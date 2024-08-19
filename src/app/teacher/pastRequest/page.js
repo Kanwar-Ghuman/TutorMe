@@ -66,7 +66,7 @@ const PastRequests = () => {
     if (
       ["IM1", "IM2", "IM3", "Precalc", "Calc AB", "Calc BC"].includes(subject)
     ) {
-      return <TbMath size={20} />;
+      return <TbMath size={20} className="mt-1" />;
     } else if (
       [
         "Physics",
@@ -77,9 +77,9 @@ const PastRequests = () => {
         "AP Biology",
       ].includes(subject)
     ) {
-      return <HiMiniBeaker size={20} />;
+      return <HiMiniBeaker size={20} className="mt-1" />;
     } else if (subject.includes("Spanish") || subject.includes("German")) {
-      return <IoLanguageOutline size={20} />;
+      return <IoLanguageOutline size={20} className="mt-1" />;
     }
     return <PiBooks size={20} />; // Default icon
   };
@@ -132,19 +132,19 @@ const PastRequests = () => {
             <CardBody className="text-black gap-4 overflow-hidden">
               <div className="flex items-center gap-1">
                 <p className="mr-[.9rem]">Email</p>
-                <IoEllipsisVerticalOutline size={20} />
+                <IoEllipsisVerticalOutline size={20} className="mt-1" />
                 <p>{request.studentEmail}</p>
-                <MdOutlineEmail size={20} />
+                <MdOutlineEmail size={20} className="mt-1" />
               </div>
               <div className="flex items-center gap-1">
                 <p>Subject</p>
-                <IoEllipsisVerticalOutline size={20} />
+                <IoEllipsisVerticalOutline size={20} className="mt-1" />
                 <p>{request.subject}</p>
                 {getSubjectIcon(request.subject)}
               </div>
               <div className="flex items-center gap-1">
                 <p>Gender</p>
-                <IoEllipsisVerticalOutline size={20} />
+                <IoEllipsisVerticalOutline size={20} className="mt-1" />
                 {request.genderPref === "F" ? (
                   <p>Female</p>
                 ) : request.genderPref === "M" ? (
