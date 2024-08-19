@@ -64,6 +64,28 @@ const PastRequests = () => {
     onClose();
   };
 
+  const getSubjectIcon = (subject) => {
+    if (
+      ["IM1", "IM2", "IM3", "Precalc", "Calc AB", "Calc BC"].includes(subject)
+    ) {
+      return <TbMath size={20} className="mt-1"/>;
+    } else if (
+      [
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "AP Physics",
+        "AP Chemistry",
+        "AP Biology",
+      ].includes(subject)
+    ) {
+      return <HiMiniBeaker size={20} className="mt-1"/>;
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return <IoLanguageOutline size={20} className="mt-1"/>;
+    }
+    return <PiBooks size={20}  />; // Default icon
+  };
+
   if (loading) {
     return (
       <div className="flex flex-row flex-wrap w-full py-5">
@@ -114,7 +136,7 @@ const PastRequests = () => {
                 <p>Subject</p>
                 <IoEllipsisVerticalOutline size={20} className="mt-1"/>
                 <p>{request.subject}</p>
-                <IoLanguageOutline size={20} className="mt-1"/>
+                {getSubjectIcon(request.subject)}
               </div>
               <div className="flex items-center gap-1">
                 <p>Gender</p>
