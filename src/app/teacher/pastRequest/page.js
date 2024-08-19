@@ -147,7 +147,6 @@ const PastRequests = () => {
               endContent={<CiEdit size="20"/>}
               onClick={() => handleModifyClick(request)}
             >
-              
             </Button>
             </CardFooter>
           </Card>
@@ -167,10 +166,14 @@ const PastRequests = () => {
                       <strong>Student Name:</strong> {selectedRequest.student}
                     </p>
                     <p>
-                      <strong>Email:</strong> {selectedRequest.studentEmail}
+                      <strong>Subject:</strong> {selectedRequest.subject}
                     </p>
                     <p>
-                      <strong>Subject:</strong> {selectedRequest.subject}
+                      <strong>Gender:</strong> {selectedRequest.genderPref === "F" ? (
+                  Female
+                ): (selectedRequest.genderPref === "M" ? (
+                  Male
+                ): (No))} 
                     </p>
                   </>
                 )}
