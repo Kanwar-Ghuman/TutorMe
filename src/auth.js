@@ -10,6 +10,7 @@ const adminEmailList = [
   "ghumankm@gmail.com",
   "heyanantraj@gmail.com",
   "ameen.almousa@franklinsabers.org",
+  "rohanpeddamallu@gmail.com",
 ];
 
 const teachersEmailList = [
@@ -17,6 +18,8 @@ const teachersEmailList = [
   "kanwarmehtab.ghuman@franklinsabers.org",
   "anant.raj@franklinsabers.org",
   "ameenalmousa0@gmail.com",
+  "rohan.peddamallu@franklinsabers.org",
+
   ,
 ];
 const studentsEmailList = [
