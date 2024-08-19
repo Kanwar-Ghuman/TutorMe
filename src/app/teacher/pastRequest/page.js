@@ -5,7 +5,11 @@ import { MdOutlineEmail, MdOutlineDeleteForever } from "react-icons/md";
 import { BsGenderMale, BsGenderFemale } from "react-icons/bs";
 import { PiBooks } from "react-icons/pi";
 import { RxDividerVertical } from "react-icons/rx";
-import { IoEllipsisVerticalOutline } from "react-icons/io5";
+import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
+import { TbMath } from "react-icons/tb";
+import { HiMiniBeaker } from "react-icons/hi2";
+
+
 
 import {
   Card,
@@ -100,17 +104,17 @@ const PastRequests = () => {
               </CardHeader>
             </strong>
             <CardBody className="text-black gap-4 overflow-hidden">
-              <div className="flex items-center gap-1 mr-8">   
-                <p>Email</p>    
+              <div className="flex items-center gap-1">   
+                <p className="mr-[.9rem]">Email</p>    
                 <IoEllipsisVerticalOutline size={20}/> 
                 <p>{request.studentEmail}</p>
-                <MdOutlineEmail/>     
+                <MdOutlineEmail size={20}/>     
                 </div>
               <div className="flex items-center gap-1">
                 <p>Subject</p>
                 <IoEllipsisVerticalOutline size={20}/>
                 <p>{request.subject}</p>
-                <PiBooks />
+                <IoLanguageOutline size={20}/>
               </div>
               <div className="flex items-center gap-1">
                 <p>Gender</p>
