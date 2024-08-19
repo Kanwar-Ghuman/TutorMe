@@ -106,19 +106,19 @@ const PastRequests = () => {
             <CardBody className="text-black gap-4 overflow-hidden">
               <div className="flex items-center gap-1">   
                 <p className="mr-[.9rem]">Email</p>    
-                <IoEllipsisVerticalOutline size={20}/> 
+                <IoEllipsisVerticalOutline size={20} className="mt-1"/> 
                 <p>{request.studentEmail}</p>
-                <MdOutlineEmail size={20}/>     
+                <MdOutlineEmail size={20} className="mt-1"/>     
                 </div>
               <div className="flex items-center gap-1">
                 <p>Subject</p>
-                <IoEllipsisVerticalOutline size={20}/>
+                <IoEllipsisVerticalOutline size={20} className="mt-1"/>
                 <p>{request.subject}</p>
-                <IoLanguageOutline size={20}/>
+                <IoLanguageOutline size={20} className="mt-1"/>
               </div>
               <div className="flex items-center gap-1">
                 <p>Gender</p>
-                <IoEllipsisVerticalOutline size={20}/>
+                <IoEllipsisVerticalOutline size={20} className="mt-1"/>
                 {request.genderPref === "F" ? (
                   <p>Female</p>
                 ): (request.genderPref === "M" ? (
