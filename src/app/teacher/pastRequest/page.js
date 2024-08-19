@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MdOutlineEmail } from "react-icons/md";
+import { MdOutlineEmail, MdOutlineDeleteForever } from "react-icons/md";
 import { BsGenderMale, BsGenderFemale } from "react-icons/bs";
 import { PiBooks } from "react-icons/pi";
 import { RxDividerVertical } from "react-icons/rx";
@@ -64,7 +64,7 @@ const PastRequests = () => {
     return (
       <div className="flex flex-row flex-wrap w-full py-5">
         {Array.from({ length: 9 }).map((_, index) => (
-          <Card key={index} className="w-[1500px] sm:w-[400px] h-[200px] mb-4 p-4 space-y-5 mx-5">
+          <Card key={index} className="w-[1500px] sm:w-[300px] h-[220px] mb-4 p-4 space-y-5 mx-5">
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
             </Skeleton>
@@ -93,24 +93,33 @@ const PastRequests = () => {
         </div>
       ) : (
         requests.map((request) => (
-          <Card key={request.id} className="w-[1500px] mb-4 sm:w-[300px] h-[210px] mx-4 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 overflow-hidden">
+          <Card key={request.id} className="w-[1500px] mb-8 sm:w-[400px] h-[220px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 overflow-hidden">
             <strong>
               <CardHeader className="text-black-700 text-m items-center justify-center">
                 {request.student}
               </CardHeader>
             </strong>
-            <CardBody className="text-black gap-4">
-              <div className="flex items-center gap-1">       
-                <MdOutlineEmail/>       
-                <IoEllipsisVerticalOutline size={20}/>
+            <CardBody className="text-black gap-4 overflow-hidden">
+              <div className="flex items-center gap-1">   
+                <p>Email</p>    
+                <IoEllipsisVerticalOutline size={20}/> 
                 <p>{request.studentEmail}</p>
+                <MdOutlineEmail/>     
                 </div>
               <div className="flex items-center gap-1">
-                <PiBooks />
+                <p>Subject</p>
                 <IoEllipsisVerticalOutline size={20}/>
                 <p>{request.subject}</p>
+                <PiBooks />
               </div>
               <div className="flex items-center gap-2">
+                <p>Gender</p>
+                <IoEllipsisVerticalOutline size={20}/>
+                {request.genderPref === "F" ? (
+                  <p>Female</p>
+                ): (request.genderPref === "M" ? (
+                  <p>Male</p>
+                ): (<p>No Preference</p>))} 
                 {request.genderPref === "F" ? (
                   <BsGenderFemale />
                 ): request.genderPref === "M" ? (
@@ -120,16 +129,26 @@ const PastRequests = () => {
                   <BsGenderMale />
                   </>
                   )}
-                  <IoEllipsisVerticalOutline size={20}/>
-                {request.genderPref === "F" ? (
-                  <p>Female</p>
-                ): (request.genderPref === "M" ? (
-                  <p>Male</p>
-                ): (<p>No Preference</p>))} 
               </div>
             </CardBody>
-            <CardFooter>
-              <Button auto color="warning" icon={CiEdit} onClick={() => handleModifyClick(request)} size="sm">Modify</Button>
+            <CardFooter className="justify-end gap-4">
+            <Button
+              color="danger"
+              variant="bordered"
+              size="sm"
+              icon={MdOutlineDeleteForever}
+              endContent={<MdOutlineDeleteForever size="20"/>}
+              
+            >
+              
+            </Button>  
+            <Button
+              auto color="primary" icon={CiEdit} size="sm"
+              endContent={<CiEdit size="20"/>}
+              onClick={() => handleModifyClick(request)}
+            >
+              
+            </Button>
             </CardFooter>
           </Card>
         ))
