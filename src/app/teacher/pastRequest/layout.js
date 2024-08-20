@@ -8,7 +8,7 @@ const TeacherLayout = ({ children }) => {
     <div className="flex flex-grow min-h-screen">
       <SideNav />
       <Divider orientation="vertical" className="h-auto ml-6" />
-      <div className="">{children}</div>
+      {children}
     </div>
   );
 };
