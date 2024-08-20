@@ -25,6 +25,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Progress,
 } from "@nextui-org/react";
 
 import { CiEdit } from "react-icons/ci";
@@ -196,6 +197,7 @@ const PastRequests = () => {
         </div>
       ) : (
         requests.map((request) => (
+
           <Card
             key={request.id}
             className="w-[1500px] mb-8 sm:w-[400px] h-[220px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 overflow-hidden"
@@ -229,7 +231,16 @@ const PastRequests = () => {
                   <p>No Preference</p>
                 )}
               </div>
-            </CardBody>
+              <div className="">
+                <p className="text-center pb-2">Status</p>
+              {request.subject === "Chemistry" ? (<div>
+                <p className="text-center pb-2" >Completed</p>
+                <Progress color="success" aria-label="Loading..." value={100} className="max-w-md"/></div>) : (request.subject === "AP Physics" ? (<div> 
+                <p className="text-center pb-2">Confirmed</p>
+                <Progress color="warning" aria-label="Loading..." value={75} className="max-w-md"/></div>) : (<div><p className="text-center pb-2">Pending</p><Progress color="danger" aria-label="Loading..." value={30} className="max-w-md"/></div>))}
+
+              </div>
+                  </CardBody>
             <CardFooter className="justify-end gap-4">
               <Button
                 color="danger"
@@ -248,6 +259,7 @@ const PastRequests = () => {
                 onClick={() => handleModifyClick(request)}
               ></Button>
             </CardFooter>
+            
           </Card>
         ))
       )}
@@ -343,5 +355,4 @@ const PastRequests = () => {
     </div>
   );
 };
-
-export default PastRequests;
+ export default PastRequests;
