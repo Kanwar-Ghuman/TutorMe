@@ -237,7 +237,6 @@ const PastRequests = () => {
                     <p className="text-center pb-2">Completed</p>
                     <Progress
                       color="success"
-                      aria-label="Loading..."
                       value={100}
                       className="max-w-md"
                     />
@@ -245,22 +244,12 @@ const PastRequests = () => {
                 ) : request.subject === "AP Physics" ? (
                   <div>
                     <p className="text-center pb-2">Confirmed</p>
-                    <Progress
-                      color="warning"
-                      aria-label="Loading..."
-                      value={75}
-                      className="max-w-md"
-                    />
+                    <Progress color="warning" value={75} className="max-w-md" />
                   </div>
                 ) : (
                   <div>
                     <p className="text-center pb-2">Pending</p>
-                    <Progress
-                      color="danger"
-                      aria-label="Loading..."
-                      value={30}
-                      className="max-w-md"
-                    />
+                    <Progress color="danger" value={30} className="max-w-md" />
                   </div>
                 )}
               </div>
