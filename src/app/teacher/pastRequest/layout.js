@@ -5,10 +5,10 @@ import { Divider } from "@nextui-org/react";
 
 const TeacherLayout = ({ children }) => {
   return (
-    <div className="flex flex-row">
+    <div className="flex  min-h-screen">
       <SideNav />
-      <Divider orientation="vertical" className="h-screen" />
-      <div className="flex-grow">{children}</div>
+      <Divider orientation="vertical" className="h-auto ml-6" />
+      <div className="">{children}</div>
     </div>
   );
 };
