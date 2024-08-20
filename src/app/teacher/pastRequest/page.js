@@ -8,6 +8,9 @@ import { RxDividerVertical } from "react-icons/rx";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
+import { Select } from "react-select";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 import {
   Card,
@@ -33,6 +36,12 @@ const PastRequests = () => {
   const [error, setError] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editSubject, setEditSubject] = useState("");
+  const [editGenderPref, setEditGenderPref] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -54,13 +63,80 @@ const PastRequests = () => {
     fetchRequests();
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/teacher/tutor-request/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete request");
+      }
+      setRequests((prev) => prev.filter((request) => request.id !== id));
+    } catch (error) {
+      console.error("Failed to delete request:", error);
+    }
+  };
+
   const handleModifyClick = (request) => {
     setSelectedRequest(request);
+    setEditName(request.student);
+    setEditEmail(request.studentEmail);
+    setEditSubject(request.subject);
+    setEditGenderPref(request.genderPref);
     onOpen();
   };
 
-  const handleSaveClick = () => {
-    onClose();
+  const handleSaveClick = async () => {
+    setFormLoading(true);
+    setError("");
+
+    const updatedRequest = {
+      studentName: editName,
+      studentEmail: editEmail,
+      subject: editSubject,
+      genderPreference: editGenderPref,
+    };
+
+    try {
+      const response = await fetch(
+        `/api/teacher/tutor-request/${selectedRequest.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedRequest),
+        }
+      );
+
+      if (!response.ok) {
+        const errors = await response.json();
+        console.log(errors.error);
+        setError(JSON.stringify(errors.error));
+        return;
+      }
+
+      const updatedData = await response.json();
+      setRequests((prev) =>
+        prev.map((request) =>
+          request.id === selectedRequest.id
+            ? { ...request, ...updatedRequest }
+            : request
+        )
+      );
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+        onClose();
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to update request:", error);
+      setError("An unexpected error occurred.");
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   const getSubjectIcon = (subject) => {
@@ -115,7 +191,6 @@ const PastRequests = () => {
 
   return (
     <div className="flex flex-wrap flex-row w-full p-5 ">
-
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
@@ -173,6 +248,7 @@ const PastRequests = () => {
                 size="sm"
                 icon={MdOutlineDeleteForever}
                 endContent={<MdOutlineDeleteForever size="20" />}
+                onClick={() => handleDelete(request.id)}
               ></Button>
               <Button
                 auto
@@ -197,20 +273,53 @@ const PastRequests = () => {
               <ModalBody>
                 {selectedRequest && (
                   <>
-                    <p>
-                      <strong>Student Name:</strong> {selectedRequest.student}
-                    </p>
-                    <p>
-                      <strong>Subject:</strong> {selectedRequest.subject}
-                    </p>
-                    <p>
-                      <strong>Gender Preference:</strong>{" "}
-                      {selectedRequest.genderPref === "M"
-                        ? "Male"
-                        : selectedRequest.genderPref === "F"
-                        ? "Female"
-                        : "No Preference"}
-                    </p>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Student Name
+                      </label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Student Email
+                      </label>
+                      <input
+                        type="text"
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Subject
+                      </label>
+                      <input
+                        type="text"
+                        value={editSubject}
+                        onChange={(e) => setEditSubject(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Gender Preference
+                      </label>
+                      <select
+                        value={editGenderPref}
+                        onChange={(e) => setEditGenderPref(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      >
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                        <option value="N">No Preference</option>
+                      </select>
+                    </div>
                   </>
                 )}
               </ModalBody>
@@ -218,8 +327,25 @@ const PastRequests = () => {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={handleSaveClick}>
-                  Save
+                <Button
+                  color="primary"
+                  onPress={handleSaveClick}
+                  disabled={formLoading || success}
+                  className={cn("", {
+                    "bg-green-500": success,
+                    "hover:bg-green-600": success,
+                  })}
+                >
+                  {formLoading ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Please wait
+                    </>
+                  ) : success ? (
+                    "Success"
+                  ) : (
+                    "Save"
+                  )}
                 </Button>
               </ModalFooter>
             </>
