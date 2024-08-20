@@ -232,7 +232,7 @@ const PastRequests = () => {
                 )}
               </div>
               <div className="">
-                <p className="text-center pb-2">Status</p>
+                <p className="text-center pb-2 b font-bold">Status</p>
               {request.subject === "Chemistry" ? (<div>
                 <p className="text-center pb-2" >Completed</p>
                 <Progress color="success"  value={100} className="max-w-md"/></div>) : (request.subject === "AP Physics" ? (<div> 
