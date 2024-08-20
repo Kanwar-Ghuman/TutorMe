@@ -213,7 +213,7 @@ const PastRequests = () => {
         {Array.from({ length: 9 }).map((_, index) => (
           <Card
             key={index}
-            className="w-[1500px] sm:w-[300px] h-[220px] mb-4 p-4 space-y-5 mx-5"
+            className=" w-[1500px] sm:w-[400px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
           >
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
