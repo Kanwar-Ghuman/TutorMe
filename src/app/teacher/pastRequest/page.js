@@ -12,6 +12,7 @@ import { Select } from "react-select";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
+
 import {
   Card,
   CardHeader,
@@ -62,6 +63,51 @@ const PastRequests = () => {
 
     fetchRequests();
   }, []);
+
+  const subjectsOptions = [
+    {
+      label: "Math",
+      options: [
+        { value: "IM1", label: "IM1" },
+        { value: "IM2", label: "IM2" },
+        { value: "IM3", label: "IM3" },
+        { value: "Precalc", label: "Precalculus" },
+        { value: "Calc AB", label: "AP Calculus AB" },
+        { value: "Calc BC", label: "AP Calculus BC" },
+      ],
+    },
+    {
+      label: "Science",
+      options: [
+        { value: "Physics", label: "Physics" },
+        { value: "Chemistry", label: "Chemistry" },
+        { value: "Biology", label: "Biology" },
+        { value: "AP Physics", label: "AP Physics" },
+        { value: "AP Chemistry", label: "AP Chemistry" },
+        { value: "AP Biology", label: "AP Biology" },
+      ],
+    },
+    {
+      label: "Spanish",
+      options: [
+        { value: "Spanish 1", label: "Spanish 1" },
+        { value: "Spanish 2", label: "Spanish 2" },
+        { value: "Spanish 3", label: "Spanish 3" },
+        { value: "Spanish 4", label: "Spanish 4" },
+        { value: "Spanish 5", label: "Spanish 5" },
+      ],
+    },
+    {
+      label: "German",
+      options: [
+        { value: "German 1", label: "German 1" },
+        { value: "German 2", label: "German 2" },
+        { value: "German 3", label: "German 3" },
+        { value: "German 4", label: "German 4" },
+        { value: "German 5", label: "German 5" },
+      ],
+    },
+  ];
 
   const handleDelete = async (id) => {
     try {
@@ -199,7 +245,7 @@ const PastRequests = () => {
         requests.map((request) => (
           <Card
             key={request.id}
-            className="w-[1500px] mb-8 sm:w-[400px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 overflow-hidden"
+            className="overflow-hidden w-[1500px] mb-8 sm:w-[400px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
           >
             <strong>
               <CardHeader className="text-black-700 text-m items-center justify-center">
@@ -309,13 +355,16 @@ const PastRequests = () => {
                     </div>
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700">
-                        Subject
+                        Subjects (comma separated)
                       </label>
-                      <input
-                        type="text"
+                      <Select
+                        isMulti
                         value={editSubject}
                         onChange={(e) => setEditSubject(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        options={subjectsOptions}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        placeholder="Select subjects"
                       />
                     </div>
                     <div className="mb-4">
