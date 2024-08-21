@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Controller,useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
 import {
   Modal,
@@ -11,7 +12,7 @@ import {
   ModalFooter,
   useDisclosure,
   Button,
-  Dropdown, 
+  Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
@@ -39,12 +40,21 @@ const Scrollbar = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editSubjects, setEditSubjects] = useState([]);
 
-const defaultValues = {
-  subjects: [],
-};
+  const defaultValues = {
+    subjects: [],
+  };
   const form = useForm({
     defaultValues,
   });
+
+  const CustomPlaceholder = () => {
+    return (
+      <div className="flex items-center">
+        <FaSearch className="mr-2" />
+        <span>Search</span>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -240,40 +250,47 @@ const defaultValues = {
         </div>
       ) : (
         <>
-       <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
-       <Form {...form}>
-        <form>
-        <Controller
-        name="subjects"
-        
-        control={form.control}
-        render={({ field }) => (
-        <Select 
-                  
-                  options={subjectsOptions}
-                  className=" min-w-[15%] h-10 px-4 basic-multi-select "
-                  classNamePrefix="select"
-                  placeholder="Filter"
-                  isDisabled={loading}
-                  isClearable = {true}
+          <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
+            <Form {...form}>
+              <form>
+                <Controller
+                  name="subjects"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select
+                      options={subjectsOptions}
+                      className="min-w-[15%] h-10 px-4 basic-multi-select"
+                      classNamePrefix="select"
+                      placeholder={
+                        <div className="flex items-center">
+                          <IoFilter className="mr-2" />
+                          <span>Filter</span>
+                        </div>
+                      }
+                      isDisabled={loading}
+                      isClearable={true}
+                    />
+                  )}
                 />
-        )}
-        />
-        </form>
-        </Form>
+              </form>
+            </Form>
 
-      
-  <Input
-    type="text"
-    id="inputSearch"
-    placeholder="Search"
-    className="w-2/3 h-10 px-4 border "
-    onKeyUp={(event) => {
-      search(event.target.value);
-    }}
-  />
-</div>
-
+            <Input
+              type="text"
+              id="inputSearch"
+              classNamePrefix="input"
+              placeholder={
+                <div>
+                  <IoSearchOutline className="icon" />
+                  <span>Search</span>
+                </div>
+              }
+              className="w-2/3 h-10 px-4 border "
+              onKeyUp={(event) => {
+                search(event.target.value);
+              }}
+            />
+          </div>
 
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
             {listStudent.map((student) => (
