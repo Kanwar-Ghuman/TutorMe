@@ -245,21 +245,19 @@ const PastRequests = () => {
     );
   }
 
-  
-
   return (
-    <div className="flex flex-wrap flex-row w-full p-9">
-          <div className="w-full justify-center items-start flex flex-row">
-            <Input
-              type="text"
-              id="inputSearch"
-              placeholder="Search"
-              className="w-[80%]"
-              onKeyUp={(event) => {
-                search(event.target.value);
-              }}
-            />
-          </div>
+    <div className="flex flex-wrap flex-row w-full p-8">
+      <div className="w-full justify-center items-start flex flex-row ">
+        <Input
+          type="text"
+          id="inputSearch"
+          placeholder="Search"
+          className="w-[80%]"
+          onKeyUp={(event) => {
+            search(event.target.value);
+          }}
+        />
+      </div>
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
@@ -268,7 +266,6 @@ const PastRequests = () => {
         requests.map((request) => (
           <Card
             key={request.id}
-
             className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
           >
             <strong>
@@ -301,7 +298,6 @@ const PastRequests = () => {
                 )}
               </div>
               <div className="">
-
                 <p className="text-center pb-2">Status</p>
                 {request.subject === "Chemistry" ? (
                   <div>
