@@ -8,9 +8,10 @@ import { RxDividerVertical } from "react-icons/rx";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
-import { Select } from "react-select";
+
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import Select from "react-select";
 
 import {
   Card,
@@ -18,6 +19,7 @@ import {
   CardBody,
   CardFooter,
   Button,
+  Input,
   Skeleton,
   Modal,
   ModalContent,
@@ -42,6 +44,7 @@ const PastRequests = () => {
   const [editGenderPref, setEditGenderPref] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -63,6 +66,51 @@ const PastRequests = () => {
     fetchRequests();
   }, []);
 
+  const subjectsOptions = [
+    {
+      label: "Math",
+      options: [
+        { value: "IM1", label: "IM1" },
+        { value: "IM2", label: "IM2" },
+        { value: "IM3", label: "IM3" },
+        { value: "Precalc", label: "Precalculus" },
+        { value: "Calc AB", label: "AP Calculus AB" },
+        { value: "Calc BC", label: "AP Calculus BC" },
+      ],
+    },
+    {
+      label: "Science",
+      options: [
+        { value: "Physics", label: "Physics" },
+        { value: "Chemistry", label: "Chemistry" },
+        { value: "Biology", label: "Biology" },
+        { value: "AP Physics", label: "AP Physics" },
+        { value: "AP Chemistry", label: "AP Chemistry" },
+        { value: "AP Biology", label: "AP Biology" },
+      ],
+    },
+    {
+      label: "Spanish",
+      options: [
+        { value: "Spanish 1", label: "Spanish 1" },
+        { value: "Spanish 2", label: "Spanish 2" },
+        { value: "Spanish 3", label: "Spanish 3" },
+        { value: "Spanish 4", label: "Spanish 4" },
+        { value: "Spanish 5", label: "Spanish 5" },
+      ],
+    },
+    {
+      label: "German",
+      options: [
+        { value: "German 1", label: "German 1" },
+        { value: "German 2", label: "German 2" },
+        { value: "German 3", label: "German 3" },
+        { value: "German 4", label: "German 4" },
+        { value: "German 5", label: "German 5" },
+      ],
+    },
+  ];
+
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`/api/teacher/tutor-request/${id}`, {
@@ -81,7 +129,11 @@ const PastRequests = () => {
     setSelectedRequest(request);
     setEditName(request.student);
     setEditEmail(request.studentEmail);
-    setEditSubject(request.subject);
+    setEditSubject(
+      request.subject
+        .split(",")
+        .map((subj) => ({ value: subj.trim(), label: subj.trim() }))
+    );
     setEditGenderPref(request.genderPref);
     onOpen();
   };
@@ -89,11 +141,14 @@ const PastRequests = () => {
   const handleSaveClick = async () => {
     setFormLoading(true);
     setError("");
+    setIsProcessing(true);
 
     const updatedRequest = {
       studentName: editName,
       studentEmail: editEmail,
-      subject: editSubject,
+      subject: Array.isArray(editSubject)
+        ? editSubject.map((subject) => subject.value).join(", ")
+        : editSubject.value,
       genderPreference: editGenderPref,
     };
 
@@ -136,6 +191,7 @@ const PastRequests = () => {
       setError("An unexpected error occurred.");
     } finally {
       setFormLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -158,16 +214,16 @@ const PastRequests = () => {
     } else if (subject.includes("Spanish") || subject.includes("German")) {
       return <IoLanguageOutline size={20} className="mt-1" />;
     }
-    return <PiBooks size={20} />; // Default icon
+    return <PiBooks size={20} />;
   };
 
   if (loading) {
     return (
-      <div className="flex flex-row flex-wrap w-full py-5">
+      <div className="flex flex-row flex-wrap w-full p-5 ">
         {Array.from({ length: 9 }).map((_, index) => (
           <Card
             key={index}
-            className="w-[1500px] sm:w-[300px] h-[220px] mb-4 p-4 space-y-5 mx-5"
+            className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
           >
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
@@ -189,18 +245,31 @@ const PastRequests = () => {
     );
   }
 
+  
+
   return (
-    <div className="flex flex-wrap flex-row w-full p-5 ">
+    <div className="flex flex-wrap flex-row w-full p-9">
+          <div className="w-full justify-center items-start flex flex-row">
+            <Input
+              type="text"
+              id="inputSearch"
+              placeholder="Search"
+              className="w-[80%]"
+              onKeyUp={(event) => {
+                search(event.target.value);
+              }}
+            />
+          </div>
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
         requests.map((request) => (
-
           <Card
             key={request.id}
-            className="w-[1500px] mb-8 sm:w-[400px] h-[330px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 overflow-hidden"
+
+            className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
           >
             <strong>
               <CardHeader className="text-black-700 text-m items-center justify-center">
@@ -232,15 +301,30 @@ const PastRequests = () => {
                 )}
               </div>
               <div className="">
-                <p className="text-center pb-2 b font-bold">Status</p>
-              {request.subject === "Chemistry" ? (<div>
-                <p className="text-center pb-2" >Completed</p>
-                <Progress color="success"  value={100} className="max-w-md"/></div>) : (request.subject === "AP Physics" ? (<div> 
-                <p className="text-center pb-2">Confirmed</p>
-                <Progress color="warning"  value={75} className="max-w-md"/></div>) : (<div><p className="text-center pb-2">Pending</p><Progress color="danger"  value={30} className="max-w-md"/></div>))}
 
+                <p className="text-center pb-2">Status</p>
+                {request.subject === "Chemistry" ? (
+                  <div>
+                    <p className="text-center pb-2">Completed</p>
+                    <Progress
+                      color="success"
+                      value={100}
+                      className="max-w-md"
+                    />
+                  </div>
+                ) : request.subject === "AP Physics" ? (
+                  <div>
+                    <p className="text-center pb-2">Confirmed</p>
+                    <Progress color="warning" value={75} className="max-w-md" />
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-center pb-2">Pending</p>
+                    <Progress color="danger" value={30} className="max-w-md" />
+                  </div>
+                )}
               </div>
-                  </CardBody>
+            </CardBody>
             <CardFooter className="justify-end gap-4">
               <Button
                 color="danger"
@@ -259,11 +343,10 @@ const PastRequests = () => {
                 onClick={() => handleModifyClick(request)}
               ></Button>
             </CardFooter>
-            
           </Card>
         ))
       )}
-      <Modal isOpen={isOpen} onOpenChange={onClose}>
+      <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -282,6 +365,7 @@ const PastRequests = () => {
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
                       />
                     </div>
                     <div className="mb-4">
@@ -293,17 +377,23 @@ const PastRequests = () => {
                         value={editEmail}
                         onChange={(e) => setEditEmail(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
                       />
                     </div>
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-gray-700">
-                        Subject
+                        Subjects (comma separated)
                       </label>
-                      <input
-                        type="text"
+                      <Select
                         value={editSubject}
-                        onChange={(e) => setEditSubject(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        onChange={(selectedOptions) =>
+                          setEditSubject(selectedOptions)
+                        }
+                        options={subjectsOptions}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        placeholder="Select subjects"
+                        isDisabled={isProcessing}
                       />
                     </div>
                     <div className="mb-4">
@@ -314,6 +404,7 @@ const PastRequests = () => {
                         value={editGenderPref}
                         onChange={(e) => setEditGenderPref(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
                       >
                         <option value="M">Male</option>
                         <option value="F">Female</option>
@@ -324,13 +415,18 @@ const PastRequests = () => {
                 )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  disabled={isProcessing}
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
                   onPress={handleSaveClick}
-                  disabled={formLoading || success}
+                  disabled={formLoading || success || isProcessing}
                   className={cn("", {
                     "bg-green-500": success,
                     "hover:bg-green-600": success,
@@ -355,4 +451,4 @@ const PastRequests = () => {
     </div>
   );
 };
- export default PastRequests;
+export default PastRequests;
