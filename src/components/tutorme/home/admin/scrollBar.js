@@ -274,22 +274,18 @@ const Scrollbar = () => {
                 />
               </form>
             </Form>
-
-            <Input
-              type="text"
-              id="inputSearch"
-              classNamePrefix="input"
-              placeholder={
-                <div>
-                  <IoSearchOutline className="icon" />
-                  <span>Search</span>
-                </div>
-              }
-              className="w-2/3 h-10 px-4 border "
-              onKeyUp={(event) => {
-                search(event.target.value);
-              }}
-            />
+            <div className="relative w-2/3">
+              <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                type="text"
+                id="inputSearch"
+                placeholder="Search"
+                className="w-full h-10 pl-10 pr-4 border"
+                onKeyUp={(event) => {
+                  search(event.target.value);
+                }}
+              />
+            </div>
           </div>
 
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
