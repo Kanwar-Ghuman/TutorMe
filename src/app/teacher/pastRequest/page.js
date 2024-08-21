@@ -8,10 +8,10 @@ import { RxDividerVertical } from "react-icons/rx";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
-import  Select  from "react-select";
+
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-
+import Select from "react-select";
 
 import {
   Card,
@@ -44,6 +44,7 @@ const PastRequests = () => {
   const [editGenderPref, setEditGenderPref] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -128,7 +129,11 @@ const PastRequests = () => {
     setSelectedRequest(request);
     setEditName(request.student);
     setEditEmail(request.studentEmail);
-    setEditSubject(request.subject);
+    setEditSubject(
+      request.subject
+        .split(",")
+        .map((subj) => ({ value: subj.trim(), label: subj.trim() }))
+    );
     setEditGenderPref(request.genderPref);
     onOpen();
   };
@@ -136,11 +141,14 @@ const PastRequests = () => {
   const handleSaveClick = async () => {
     setFormLoading(true);
     setError("");
+    setIsProcessing(true);
 
     const updatedRequest = {
       studentName: editName,
       studentEmail: editEmail,
-      subject: editSubject,
+      subject: Array.isArray(editSubject)
+        ? editSubject.map((subject) => subject.value).join(", ")
+        : editSubject.value,
       genderPreference: editGenderPref,
     };
 
@@ -183,6 +191,7 @@ const PastRequests = () => {
       setError("An unexpected error occurred.");
     } finally {
       setFormLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -210,7 +219,7 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-row flex-wrap w-full p-5">
+      <div className="flex flex-row flex-wrap w-full p-5 ">
         {Array.from({ length: 9 }).map((_, index) => (
           <Card
             key={index}
@@ -335,7 +344,7 @@ const PastRequests = () => {
           </Card>
         ))
       )}
-      <Modal isOpen={isOpen} onOpenChange={onClose}>
+      <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -354,6 +363,7 @@ const PastRequests = () => {
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
                       />
                     </div>
                     <div className="mb-4">
@@ -365,6 +375,7 @@ const PastRequests = () => {
                         value={editEmail}
                         onChange={(e) => setEditEmail(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
                       />
                     </div>
                     <div className="mb-4">
@@ -372,13 +383,15 @@ const PastRequests = () => {
                         Subjects (comma separated)
                       </label>
                       <Select
-                        isMulti
                         value={editSubject}
-                        onChange={(e) => setEditSubject(e.target.value)}
+                        onChange={(selectedOptions) =>
+                          setEditSubject(selectedOptions)
+                        }
                         options={subjectsOptions}
                         className="basic-multi-select"
                         classNamePrefix="select"
                         placeholder="Select subjects"
+                        isDisabled={isProcessing}
                       />
                     </div>
                     <div className="mb-4">
@@ -389,6 +402,7 @@ const PastRequests = () => {
                         value={editGenderPref}
                         onChange={(e) => setEditGenderPref(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
                       >
                         <option value="M">Male</option>
                         <option value="F">Female</option>
@@ -399,13 +413,18 @@ const PastRequests = () => {
                 )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  disabled={isProcessing}
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
                   onPress={handleSaveClick}
-                  disabled={formLoading || success}
+                  disabled={formLoading || success || isProcessing}
                   className={cn("", {
                     "bg-green-500": success,
                     "hover:bg-green-600": success,
