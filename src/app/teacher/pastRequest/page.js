@@ -8,6 +8,7 @@ import { RxDividerVertical } from "react-icons/rx";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
+
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
@@ -18,6 +19,7 @@ import {
   CardBody,
   CardFooter,
   Button,
+  Input,
   Skeleton,
   Modal,
   ModalContent,
@@ -221,7 +223,7 @@ const PastRequests = () => {
         {Array.from({ length: 9 }).map((_, index) => (
           <Card
             key={index}
-            className="overflow-hidden w-[1500px] sm:w-[400px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
+            className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
           >
             <Skeleton className="rounded-lg">
               <div className="h-24 rounded-lg bg-default-300"></div>
@@ -243,8 +245,21 @@ const PastRequests = () => {
     );
   }
 
+  
+
   return (
-    <div className="flex flex-wrap flex-row w-full p-5 ">
+    <div className="flex flex-wrap flex-row w-full p-9">
+          <div className="w-full justify-center items-start flex flex-row">
+            <Input
+              type="text"
+              id="inputSearch"
+              placeholder="Search"
+              className="w-[80%]"
+              onKeyUp={(event) => {
+                search(event.target.value);
+              }}
+            />
+          </div>
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
@@ -253,7 +268,7 @@ const PastRequests = () => {
         requests.map((request) => (
           <Card
             key={request.id}
-            className="overflow-hidden w-[1500px] mb-8 sm:w-[400px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+            className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
           >
             <strong>
               <CardHeader className="text-black-700 text-m items-center justify-center">
