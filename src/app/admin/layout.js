@@ -10,6 +10,7 @@ async function Layout({ children }) {
   if (!response.isValid) return response.error;
   const user = response.user;
 
+
   return (
     <div>
       <AdminNavbar user={user} />
