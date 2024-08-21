@@ -268,6 +268,7 @@ const PastRequests = () => {
         requests.map((request) => (
           <Card
             key={request.id}
+
             className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
           >
             <strong>
@@ -300,6 +301,7 @@ const PastRequests = () => {
                 )}
               </div>
               <div className="">
+
                 <p className="text-center pb-2">Status</p>
                 {request.subject === "Chemistry" ? (
                   <div>

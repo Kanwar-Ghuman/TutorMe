@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Controller,useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
 import {
   Modal,
   ModalContent,
@@ -9,6 +11,10 @@ import {
   ModalFooter,
   useDisclosure,
   Button,
+  Dropdown, 
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -32,6 +38,13 @@ const Scrollbar = () => {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editSubjects, setEditSubjects] = useState([]);
+
+const defaultValues = {
+  subjects: [],
+};
+  const form = useForm({
+    defaultValues,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -213,7 +226,7 @@ const Scrollbar = () => {
   }
 
   return (
-    <div className="h-[87vh] flex flex-col items-center overflow-hidden">
+    <div className="h-[87vh] flex flex-col items-center ">
       {listStudent.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-6xl">No Current Tutors</p>
@@ -227,17 +240,41 @@ const Scrollbar = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-row m-4 justify-center items-center w-full">
-            <Input
-              type="text"
-              id="inputSearch"
-              placeholder="Search"
-              className="w-[80%]"
-              onKeyUp={(event) => {
-                search(event.target.value);
-              }}
-            />
-          </div>
+       <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
+       <Form {...form}>
+        <form>
+        <Controller
+        name="subjects"
+        
+        control={form.control}
+        render={({ field }) => (
+        <Select 
+                  
+                  options={subjectsOptions}
+                  className=" min-w-[15%] h-10 px-4 basic-multi-select "
+                  classNamePrefix="select"
+                  placeholder="Filter"
+                  isDisabled={loading}
+                  isClearable = {true}
+                />
+        )}
+        />
+        </form>
+        </Form>
+
+      
+  <Input
+    type="text"
+    id="inputSearch"
+    placeholder="Search"
+    className="w-2/3 h-10 px-4 border "
+    onKeyUp={(event) => {
+      search(event.target.value);
+    }}
+  />
+</div>
+
+
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
             {listStudent.map((student) => (
               <AcceptStudentCard
