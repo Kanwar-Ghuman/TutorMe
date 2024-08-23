@@ -10,6 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@nextui-org/button";
 import { CiEdit } from "react-icons/ci";
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
+import { Dna } from "lucide-react";
+import { GiMaterialsScience } from "react-icons/gi";
 
 export default function AcceptStudentCard({
   id,
@@ -23,8 +25,8 @@ export default function AcceptStudentCard({
     IM: <TbMath size={20} />,
     Precalc: <TbMathMax size={20} />,
     Calc: <TbMathIntegralX size={20} />,
-    Physics: <HiMiniBeaker size={20} />,
-    Biology: <HiMiniBeaker size={20} />,
+    Physics: <GiMaterialsScience size={20} />,
+    Biology: <Dna size={20} />,
     Chemistry: <HiMiniBeaker size={20} />,
     Language: <IoLanguageOutline size={20} />,
     Other: <PiBooks size={20} />,
