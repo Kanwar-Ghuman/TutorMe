@@ -8,13 +8,18 @@ import { RxDividerVertical } from "react-icons/rx";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
+import { Controller, useForm } from "react-hook-form";
+import { IoFilter, IoSearchOutline } from "react-icons/io5";
+
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
 import { Dna } from "lucide-react";
 import { GiMaterialsScience } from "react-icons/gi";
 
+
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
+import { Form } from "@/components/ui/form";
 
 import {
   Card,
@@ -68,6 +73,14 @@ const PastRequests = () => {
 
     fetchRequests();
   }, []);
+
+  const defaultValues = {
+    subjects: [],
+  };
+
+  const form = useForm({
+    defaultValues,
+  });
 
   const subjectsOptions = [
     {
@@ -230,128 +243,172 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-row flex-wrap w-full p-5 ">
-        {Array.from({ length: 9 }).map((_, index) => (
-          <Card
-            key={index}
-            className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
-          >
-            <Skeleton className="rounded-lg">
-              <div className="h-24 rounded-lg bg-default-300"></div>
-            </Skeleton>
-            <div className="space-y-3">
-              <Skeleton className="w-3/5 rounded-lg">
-                <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+      <div className="flex flex-col flex-wrap w-full p-8 items-center">
+        <Skeleton className="rounded-lg w-2/3 mb-4">
+          <div className="h-8 w-2/3 rounded-lg bg-default-300 items-center py-3"></div>
+        </Skeleton>
+        <div className="flex flex-row flex-wrap py-4">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <Card
+              key={index}
+              className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
+            >
+              <Skeleton className="rounded-lg">
+                <div className="h-24 rounded-lg bg-default-300"></div>
               </Skeleton>
-              <Skeleton className="w-4/5 rounded-lg">
-                <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-              </Skeleton>
-              <Skeleton className="w-2/5 rounded-lg">
-                <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-              </Skeleton>
-            </div>
-          </Card>
-        ))}
+              <div className="space-y-3">
+                <Skeleton className="w-3/5 rounded-lg">
+                  <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-4/5 rounded-lg">
+                  <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-2/5 rounded-lg">
+                  <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+                </Skeleton>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap flex-row w-full p-8">
-      <div className="w-full justify-center items-start flex flex-row ">
-        <Input
-          type="text"
-          id="inputSearch"
-          placeholder="Search"
-          className="w-[80%]"
-          onKeyUp={(event) => {
-            search(event.target.value);
-          }}
-        />
+    <div className="flex flex-wrap flex-row items-start w-full p-4">
+      <div className="w-full justify-center items-start flex flex-row mb-8">
+        <Form {...form}>
+          <form>
+            <Controller
+              name="subjects"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  options={subjectsOptions}
+                  className="min-w-[15%] h-10 px-4 basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder={
+                    <div className="flex items-center">
+                      <IoFilter className="mr-2" />
+                      <span>Filter</span>
+                    </div>
+                  }
+                  isDisabled={loading}
+                  isClearable={true}
+                />
+              )}
+            />
+          </form>
+        </Form>
+        <div className="relative w-2/3">
+          <Input
+            type="text"
+            id="inputSearch"
+            placeholder="Search"
+            className="w-[90%]"
+            onKeyUp={(event) => {
+              search(event.target.value);
+            }}
+            startContent={
+              <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+            }
+          />
+        </div>
+
       </div>
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
-        requests.map((request) => (
-          <Card
-            key={request.id}
-            className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
-          >
-            <strong>
-              <CardHeader className="text-black-700 text-m items-center justify-center">
-                {request.student}
-              </CardHeader>
-            </strong>
-            <CardBody className="text-black gap-4 overflow-hidden">
-              <div className="flex items-center gap-1">
-                <p className="mr-[.9rem]">Email</p>
-                <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                <p>{request.studentEmail}</p>
-                <MdOutlineEmail size={20} className="mt-1" />
-              </div>
-              <div className="flex items-center gap-1">
-                <p>Subject</p>
-                <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                <p>{request.subject}</p>
-                {getSubjectIcon(request.subject)}
-              </div>
-              <div className="flex items-center gap-1">
-                <p>Gender</p>
-                <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                {request.genderPref === "F" ? (
-                  <p>Female</p>
-                ) : request.genderPref === "M" ? (
-                  <p>Male</p>
-                ) : (
-                  <p>No Preference</p>
-                )}
-              </div>
-              <div className="">
-                <p className="text-center pb-2">Status</p>
-                {request.subject === "Chemistry" ? (
-                  <div>
-                    <p className="text-center pb-2">Completed</p>
-                    <Progress
-                      color="success"
-                      value={100}
-                      className="max-w-md"
-                    />
-                  </div>
-                ) : request.subject === "AP Physics" ? (
-                  <div>
-                    <p className="text-center pb-2">Confirmed</p>
-                    <Progress color="warning" value={75} className="max-w-md" />
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-center pb-2">Pending</p>
-                    <Progress color="danger" value={30} className="max-w-md" />
-                  </div>
-                )}
-              </div>
-            </CardBody>
-            <CardFooter className="justify-end gap-4">
-              <Button
-                color="danger"
-                variant="bordered"
-                size="sm"
-                icon={MdOutlineDeleteForever}
-                endContent={<MdOutlineDeleteForever size="20" />}
-                onClick={() => handleDelete(request.id)}
-              ></Button>
-              <Button
-                auto
-                color="primary"
-                icon={CiEdit}
-                size="sm"
-                endContent={<CiEdit size="20" />}
-                onClick={() => handleModifyClick(request)}
-              ></Button>
-            </CardFooter>
-          </Card>
-        ))
+        <div className="flex flex-row flex-wrap sm:mx-18 mx-15">
+          {requests.map((request) => (
+            <Card
+              key={request.id}
+              className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+            >
+              <strong>
+                <CardHeader className="text-black-700 text-m items-center justify-center">
+                  {request.student}
+                </CardHeader>
+              </strong>
+              <CardBody className="text-black gap-4 overflow-hidden">
+                <div className="flex items-center gap-1">
+                  <p className="mr-[.9rem]">Email</p>
+                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                  <p>{request.studentEmail}</p>
+                  <MdOutlineEmail size={20} className="mt-1" />
+                </div>
+                <div className="flex items-center gap-1">
+                  <p>Subject</p>
+                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                  <p>{request.subject}</p>
+                  {getSubjectIcon(request.subject)}
+                </div>
+                <div className="flex items-center gap-1">
+                  <p>Gender</p>
+                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                  {request.genderPref === "F" ? (
+                    <p>Female</p>
+                  ) : request.genderPref === "M" ? (
+                    <p>Male</p>
+                  ) : (
+                    <p>No Preference</p>
+                  )}
+                </div>
+                <div className="">
+                  <p className="text-center pb-2">Status</p>
+                  {request.subject === "Chemistry" ? (
+                    <div>
+                      <p className="text-center pb-2">Completed</p>
+                      <Progress
+                        color="success"
+                        value={100}
+                        className="max-w-md"
+                      />
+                    </div>
+                  ) : request.subject === "AP Physics" ? (
+                    <div>
+                      <p className="text-center pb-2">Confirmed</p>
+                      <Progress
+                        color="warning"
+                        value={75}
+                        className="max-w-md"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-center pb-2">Pending</p>
+                      <Progress
+                        color="danger"
+                        value={30}
+                        className="max-w-md"
+                      />
+                    </div>
+                  )}
+                </div>
+              </CardBody>
+              <CardFooter className="justify-end gap-4">
+                <Button
+                  color="danger"
+                  variant="bordered"
+                  size="sm"
+                  icon={MdOutlineDeleteForever}
+                  endContent={<MdOutlineDeleteForever size="20" />}
+                  onClick={() => handleDelete(request.id)}
+                ></Button>
+                <Button
+                  auto
+                  color="primary"
+                  icon={CiEdit}
+                  size="sm"
+                  endContent={<CiEdit size="20" />}
+                  onClick={() => handleModifyClick(request)}
+                ></Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
       )}
       <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
         <ModalContent>
