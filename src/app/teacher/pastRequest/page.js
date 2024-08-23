@@ -8,10 +8,13 @@ import { RxDividerVertical } from "react-icons/rx";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
+import { Controller, useForm } from "react-hook-form";
+import { IoFilter, IoSearchOutline } from "react-icons/io5";
 
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
+import { Form } from "@/components/ui/form";
 
 import {
   Card,
@@ -65,6 +68,14 @@ const PastRequests = () => {
 
     fetchRequests();
   }, []);
+
+  const defaultValues = {
+    subjects: [],
+  };
+
+  const form = useForm({
+    defaultValues,
+  });
 
   const subjectsOptions = [
     {
@@ -246,17 +257,49 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-wrap flex-col w-full mt-4 p-4 ">
+    <div className="flex flex-wrap flex-row items-start w-full p-4 ">
       <div className="w-full justify-center items-start flex flex-row mb-8">
-        <Input
-          type="text"
-          id="inputSearch"
-          placeholder="Search"
-          className="w-[70%]"
-          onKeyUp={(event) => {
-            search(event.target.value);
-          }}
-        />
+        <Form {...form}>
+          <form>
+            <Controller
+              name="subjects"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  options={subjectsOptions}
+                  className="min-w-[15%] h-10 px-4 basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder={
+                    <div className="flex items-center">
+                      <IoFilter className="mr-2" />
+                      <span>Filter</span>
+                    </div>
+                  }
+                  isDisabled={loading}
+                  isClearable={true}
+                />
+              )}
+            />
+          </form>
+        </Form>
+        <div className="relative w-2/3">
+          <IoSearchOutline
+            size={20}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          />
+          <Input
+            type="text"
+            id="inputSearch"
+            placeholder="Search"
+            className="w-[90%]"
+            onKeyUp={(event) => {
+              search(event.target.value);
+            }}
+            startContent={
+              <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+            }
+          />
+        </div>
       </div>
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
