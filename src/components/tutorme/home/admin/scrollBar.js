@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Controller,useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
 import {
   Modal,
@@ -11,7 +12,7 @@ import {
   ModalFooter,
   useDisclosure,
   Button,
-  Dropdown, 
+  Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
@@ -39,9 +40,11 @@ const Scrollbar = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editSubjects, setEditSubjects] = useState([]);
 
-const defaultValues = {
-  subjects: [],
-};
+  const [filteredStudents, setFilteredStudents] = useState([]);
+
+  const defaultValues = {
+    subjects: [],
+  };
   const form = useForm({
     defaultValues,
   });
@@ -55,7 +58,7 @@ const defaultValues = {
         }
         const data = await response.json();
         setStudentArr(data);
-        setUpdateArr(data);
+        setFilteredStudents(data);
         display(data, isReversed);
       } catch (error) {
         console.error("Failed to fetch tutor requests:", error);
@@ -76,7 +79,8 @@ const defaultValues = {
     const returnArr = studentArr.filter((student) =>
       innerSearch(student, value)
     );
-    setUpdateArr(returnArr);
+    setFilteredStudents(returnArr);
+
     display(returnArr, isReversed);
   };
 
@@ -227,7 +231,7 @@ const defaultValues = {
 
   return (
     <div className="h-[87vh] flex flex-col items-center ">
-      {listStudent.length === 0 ? (
+      {studentArr.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-6xl">No Current Tutors</p>
           <p className="text-2xl mt-2">
@@ -240,53 +244,60 @@ const defaultValues = {
         </div>
       ) : (
         <>
-       <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
-       <Form {...form}>
-        <form>
-        <Controller
-        name="subjects"
-        
-        control={form.control}
-        render={({ field }) => (
-        <Select 
-                  
-                  options={subjectsOptions}
-                  className=" min-w-[15%] h-10 px-4 basic-multi-select "
-                  classNamePrefix="select"
-                  placeholder="Filter"
-                  isDisabled={loading}
-                  isClearable = {true}
+          <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
+            <Form {...form}>
+              <form>
+                <Controller
+                  name="subjects"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select
+                      options={subjectsOptions}
+                      className="min-w-[15%] h-10 px-4 basic-multi-select"
+                      classNamePrefix="select"
+                      placeholder={
+                        <div className="flex items-center">
+                          <IoFilter className="mr-2" />
+                          <span>Filter</span>
+                        </div>
+                      }
+                      isDisabled={loading}
+                      isClearable={true}
+                    />
+                  )}
                 />
-        )}
-        />
-        </form>
-        </Form>
-
-      
-  <Input
-    type="text"
-    id="inputSearch"
-    placeholder="Search"
-    className="w-2/3 h-10 px-4 border "
-    onKeyUp={(event) => {
-      search(event.target.value);
-    }}
-  />
-</div>
-
+              </form>
+            </Form>
+            <div className="relative w-2/3">
+              <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                type="text"
+                id="inputSearch"
+                placeholder="Search"
+                className="w-full h-10 pl-10 pr-4 border"
+                onKeyUp={(event) => {
+                  search(event.target.value);
+                }}
+              />
+            </div>
+          </div>
 
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
-            {listStudent.map((student) => (
-              <AcceptStudentCard
-                id={student.id}
-                studentName={student.name}
-                tutorName={student.email}
-                subjects={student.subjects}
-                onDelete={handleDelete}
-                onModify={handleModifyClick}
-                key={student.id}
-              />
-            ))}
+            {filteredStudents.length === 0 ? (
+              <p className="text-2xl mt-4">No matching tutors found</p>
+            ) : (
+              filteredStudents.map((student) => (
+                <AcceptStudentCard
+                  id={student.id}
+                  studentName={student.name}
+                  tutorName={student.email}
+                  subjects={student.subjects}
+                  onDelete={handleDelete}
+                  onModify={handleModifyClick}
+                  key={student.id}
+                />
+              ))
+            )}
           </div>
         </>
       )}
