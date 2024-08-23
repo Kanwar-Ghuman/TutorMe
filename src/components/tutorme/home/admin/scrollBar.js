@@ -40,21 +40,14 @@ const Scrollbar = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editSubjects, setEditSubjects] = useState([]);
 
+  const [filteredStudents, setFilteredStudents] = useState([]);
+
   const defaultValues = {
     subjects: [],
   };
   const form = useForm({
     defaultValues,
   });
-
-  const CustomPlaceholder = () => {
-    return (
-      <div className="flex items-center">
-        <FaSearch className="mr-2" />
-        <span>Search</span>
-      </div>
-    );
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +58,7 @@ const Scrollbar = () => {
         }
         const data = await response.json();
         setStudentArr(data);
-        setUpdateArr(data);
+        setFilteredStudents(data);
         display(data, isReversed);
       } catch (error) {
         console.error("Failed to fetch tutor requests:", error);
@@ -86,7 +79,8 @@ const Scrollbar = () => {
     const returnArr = studentArr.filter((student) =>
       innerSearch(student, value)
     );
-    setUpdateArr(returnArr);
+    setFilteredStudents(returnArr);
+
     display(returnArr, isReversed);
   };
 
@@ -237,7 +231,7 @@ const Scrollbar = () => {
 
   return (
     <div className="h-[87vh] flex flex-col items-center ">
-      {listStudent.length === 0 ? (
+      {studentArr.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-6xl">No Current Tutors</p>
           <p className="text-2xl mt-2">
@@ -289,17 +283,21 @@ const Scrollbar = () => {
           </div>
 
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
-            {listStudent.map((student) => (
-              <AcceptStudentCard
-                id={student.id}
-                studentName={student.name}
-                tutorName={student.email}
-                subjects={student.subjects}
-                onDelete={handleDelete}
-                onModify={handleModifyClick}
-                key={student.id}
-              />
-            ))}
+            {filteredStudents.length === 0 ? (
+              <p className="text-2xl mt-4">No matching tutors found</p>
+            ) : (
+              filteredStudents.map((student) => (
+                <AcceptStudentCard
+                  id={student.id}
+                  studentName={student.name}
+                  tutorName={student.email}
+                  subjects={student.subjects}
+                  onDelete={handleDelete}
+                  onModify={handleModifyClick}
+                  key={student.id}
+                />
+              ))
+            )}
           </div>
         </>
       )}
