@@ -37,16 +37,16 @@ const SideNav = () => {
   return (
     <div className="flex-col mt-4 w-64 h-full p-4 bg-white">
       <SideButton
-        theName="Dashboard"
+        theName="Tutor Requests"
         theIcon={MdDashboard}
-        theLink="/teacher/dashboard"
-        isActive={currentPath === "/teacher/dashboard"}
+        theLink="/teacher/pastRequest"
+        isActive={currentPath === "/teacher/pastRequest"}
       />
       <SideButton
         theName="Past Requests"
         theIcon={FaCodePullRequest}
-        theLink="/teacher/pastRequest"
-        isActive={currentPath === "/teacher/pastRequest"}
+        theLink="/teacher/dashboard"
+        isActive={currentPath === "/teacher/dashboard"}
       />
     </div>
   );

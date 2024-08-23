@@ -230,34 +230,39 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-row flex-wrap w-full p-5">
-        {Array.from({ length: 9 }).map((_, index) => (
-          <Card
-            key={index}
-            className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
-          >
-            <Skeleton className="rounded-lg">
-              <div className="h-24 rounded-lg bg-default-300"></div>
-            </Skeleton>
-            <div className="space-y-3">
-              <Skeleton className="w-3/5 rounded-lg">
-                <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+      <div className="flex flex-col flex-wrap w-full p-8 items-center">
+        <Skeleton className="rounded-lg w-2/3 mb-4">
+          <div className="h-8 w-2/3 rounded-lg bg-default-300 items-center py-3"></div>
+        </Skeleton>
+        <div className="flex flex-row flex-wrap py-4">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <Card
+              key={index}
+              className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
+            >
+              <Skeleton className="rounded-lg">
+                <div className="h-24 rounded-lg bg-default-300"></div>
               </Skeleton>
-              <Skeleton className="w-4/5 rounded-lg">
-                <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-              </Skeleton>
-              <Skeleton className="w-2/5 rounded-lg">
-                <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-              </Skeleton>
-            </div>
-          </Card>
-        ))}
+              <div className="space-y-3">
+                <Skeleton className="w-3/5 rounded-lg">
+                  <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-4/5 rounded-lg">
+                  <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+                </Skeleton>
+                <Skeleton className="w-2/5 rounded-lg">
+                  <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+                </Skeleton>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap flex-row items-start w-full p-4 ">
+    <div className="flex flex-wrap flex-row items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
         <Form {...form}>
           <form>
@@ -283,10 +288,6 @@ const PastRequests = () => {
           </form>
         </Form>
         <div className="relative w-2/3">
-          <IoSearchOutline
-            size={20}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-          />
           <Input
             type="text"
             id="inputSearch"
