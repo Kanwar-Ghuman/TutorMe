@@ -48,7 +48,7 @@ const StudentCard = ({
   };
 
   return (
-    <Card className="overflow-hidden w-full mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105">
+    <Card className="w-full h-[320px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105">
       <CardHeader className="text-black-700  items-center justify-center">
         <strong>{student}</strong>
       </CardHeader>
@@ -103,7 +103,7 @@ const StudentCard = ({
           size="sm"
           icon={MdOutlineDeleteForever}
           endContent={<MdOutlineDeleteForever size="20" />}
-          onClick={() => onDelete(id)}
+          // onClick={() => onDelete(id)}
         ></Button>
         <Button
           auto
@@ -111,9 +111,9 @@ const StudentCard = ({
           icon={CiEdit}
           size="sm"
           endContent={<CiEdit size="20" />}
-          onClick={() =>
-            onModify({ id, student, studentEmail, subject, genderPref })
-          }
+          // onClick={() =>
+          //   onModify({ id, student, studentEmail, subject, genderPref })
+          // }
         ></Button>
       </CardFooter>
     </Card>
