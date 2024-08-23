@@ -9,15 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { BsExclamationCircle } from "react-icons/bs";
 import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createTutorSchema } from "@/lib/forms/schemas";
 
 const TutorRequest = () => {
   const defaultValues = {
     studentName: "",
     studentEmail: "",
-    subjects: [],
+    studentSubjects: [],
   };
 
   const form = useForm({
+    resolver: zodResolver(createTutorSchema),
     defaultValues,
   });
 
@@ -78,7 +81,7 @@ const TutorRequest = () => {
       {
         name: data.studentName,
         email: data.studentEmail,
-        subjects: data.subjects.map((subject) => subject.value),
+        subjects: data.studentSubjects.map((subject) => subject.value),
       },
     ];
 
@@ -144,18 +147,25 @@ const TutorRequest = () => {
               />
 
               <Controller
-                name="subjects"
+                name="studentSubjects"
                 control={form.control}
                 render={({ field }) => (
-                  <Select
-                    {...field}
-                    isMulti
-                    options={subjectsOptions}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Select subjects"
-                    isDisabled={loading}
-                  />
+                  <div>
+                    <Select
+                      {...field}
+                      isMulti
+                      options={subjectsOptions}
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                      placeholder="Select subjects"
+                      isDisabled={loading}
+                    />
+                    {form.formState.errors.studentSubjects && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {form.formState.errors.studentSubjects.message}
+                      </p>
+                    )}
+                  </div>
                 )}
               />
 
