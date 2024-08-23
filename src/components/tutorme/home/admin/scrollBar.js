@@ -39,6 +39,8 @@ const Scrollbar = () => {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editSubjects, setEditSubjects] = useState([]);
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
@@ -70,9 +72,39 @@ const Scrollbar = () => {
     fetchData();
   }, []);
 
-  const reverseStudent = () => {
-    setIsReversed(!isReversed);
-    display(updateArr, !isReversed);
+  useEffect(() => {
+    if (studentArr.length > 0) {
+      filterStudents();
+    }
+  }, [selectedSubjects, searchTerm, studentArr]);
+
+  const filterStudents = () => {
+    if (!studentArr) return;
+    let filtered = studentArr;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter((student) => innerSearch(student, searchTerm));
+    }
+
+    // Filter by selected subjects
+    if (selectedSubjects.length > 0) {
+      filtered = filtered.filter((student) =>
+        selectedSubjects.every((subject) =>
+          student.subjects.includes(subject.value)
+        )
+      );
+    }
+
+    setFilteredStudents(filtered);
+  };
+
+  const handleSubjectChange = (selectedOptions) => {
+    setSelectedSubjects(selectedOptions || []); // Ensure it's always an array
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const search = (value) => {
@@ -267,6 +299,8 @@ const Scrollbar = () => {
                       }
                       isDisabled={loading}
                       isClearable={true}
+                      onChange={handleSubjectChange}
+                      value={selectedSubjects}
                     />
                   )}
                 />
@@ -279,6 +313,8 @@ const Scrollbar = () => {
                 id="inputSearch"
                 placeholder="Search"
                 className="w-full h-10 pl-10 pr-4 border"
+                onChange={handleSearchChange}
+                value={searchTerm}
                 onKeyUp={(event) => {
                   search(event.target.value);
                 }}
@@ -288,7 +324,9 @@ const Scrollbar = () => {
 
           <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
             {filteredStudents.length === 0 ? (
-              <p className="text-2xl mt-4">No matching tutors found</p>
+              <p className="text-2xl mt-4">
+                No tutors found with this criteria
+              </p>
             ) : (
               filteredStudents.map((student) => (
                 <AcceptStudentCard
