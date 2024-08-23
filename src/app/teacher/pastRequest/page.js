@@ -219,7 +219,7 @@ const PastRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-row flex-wrap w-full p-5 ">
+      <div className="flex flex-row flex-wrap w-full p-5">
         {Array.from({ length: 9 }).map((_, index) => (
           <Card
             key={index}
@@ -246,13 +246,13 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-wrap flex-col w-full mt-4 p-4">
+    <div className="flex flex-wrap flex-col w-full mt-4 p-4 ">
       <div className="w-full justify-center items-start flex flex-row mb-8">
         <Input
           type="text"
           id="inputSearch"
           placeholder="Search"
-          className="w-[80%]"
+          className="w-[70%]"
           onKeyUp={(event) => {
             search(event.target.value);
           }}
@@ -263,7 +263,7 @@ const PastRequests = () => {
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
-        <div className="flex flex-row flex-wrap">
+        <div className="flex flex-row flex-wrap sm:mx-18 mx-15">
           {requests.map((request) => (
             <Card
               key={request.id}
