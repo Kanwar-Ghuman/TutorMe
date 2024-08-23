@@ -11,7 +11,7 @@ const AcceptRequest = () => {
         <div className="w-[20%] shadow-md rounded-lg h-full">
           <SideBar />
         </div>
-        <div className="w-[80%] h-full">
+        <div className="w-[80%] h-full overflow-hidden">
           <PastRequests />
         </div>
       </div>

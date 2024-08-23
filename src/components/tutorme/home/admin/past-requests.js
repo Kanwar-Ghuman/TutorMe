@@ -11,6 +11,7 @@ const PastRequests = () => {
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -34,18 +35,25 @@ const PastRequests = () => {
   }, []);
 
   const search = (value) => {
+    const searchTerm = value.toLowerCase().trim();
     const returnArr = studentArr.filter((student) =>
-      innerSearch(student, value)
+      innerSearch(student, searchTerm)
     );
     setUpdateArr(returnArr);
+    setNoResults(returnArr.length === 0);
     display(returnArr, isReversed);
   };
 
-  const innerSearch = (student, value) => {
-    return (
-      student.student.includes(value) ||
-      student.studentEmail.includes(value) ||
-      student.subject.includes(value)
+  const innerSearch = (student, searchTerm) => {
+    const searchFields = [
+      student.student,
+      student.studentEmail,
+      student.subject,
+      student.teacher?.user?.name,
+    ];
+
+    return searchFields.some(
+      (field) => field && field.toLowerCase().includes(searchTerm)
     );
   };
 
@@ -65,8 +73,10 @@ const PastRequests = () => {
     );
   }
 
+  // ... existing code ...
+
   return (
-    <div className="h-full w-full flex flex-col items-center ">
+    <div className="h-full w-full flex flex-col items-center">
       <>
         <div className="flex flex-row m-4 justify-center items-center w-full">
           <Input
@@ -79,20 +89,26 @@ const PastRequests = () => {
             }}
           />
         </div>
-        <div className="flex flex-col max-h-full w-full items-center ">
-          <div className="overflow-scroll max-h-[90vh] w-full">
-            {listStudent.map((student) => (
-              <StudentCard
-                id={student.id}
-                student={student.student}
-                studentEmail={student.studentEmail}
-                subject={student.subject}
-                genderPref={student.genderPref}
-                teacherName={student.teacher?.user?.name}
-                key={student.id}
-              />
-            ))}
-          </div>
+        <div className="w-full overflow-y-auto max-h-[calc(100vh-120px)]">
+          {noResults ? (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-gray-500 text-lg">No results found</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+              {listStudent.map((student) => (
+                <StudentCard
+                  id={student.id}
+                  student={student.student}
+                  studentEmail={student.studentEmail}
+                  subject={student.subject}
+                  genderPref={student.genderPref}
+                  teacherName={student.teacher?.user?.name}
+                  key={student.id}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </>
     </div>
