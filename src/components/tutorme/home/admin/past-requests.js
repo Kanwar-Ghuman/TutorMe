@@ -65,8 +65,10 @@ const PastRequests = () => {
     );
   }
 
+  // ... existing code ...
+
   return (
-    <div className="h-full w-full flex flex-col items-center ">
+    <div className="h-full w-full flex flex-col items-center">
       <>
         <div className="flex flex-row m-4 justify-center items-center w-full">
           <Input
@@ -79,8 +81,8 @@ const PastRequests = () => {
             }}
           />
         </div>
-        <div className="flex flex-row max-h-full w-full items-center ">
-          <div className="overflow-scroll max-h-[90vh] w-full">
+        <div className="w-full overflow-y-auto max-h-[calc(100vh-120px)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             {listStudent.map((student) => (
               <StudentCard
                 id={student.id}
@@ -97,6 +99,8 @@ const PastRequests = () => {
       </>
     </div>
   );
+
+  // ... existing code ...
 };
 
 export default PastRequests;

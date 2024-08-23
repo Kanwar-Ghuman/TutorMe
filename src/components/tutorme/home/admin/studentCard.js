@@ -6,14 +6,40 @@ import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
 import { PiBooks } from "react-icons/pi";
-import { Card, CardHeader, CardBody, CardFooter, Button, Progress } from "@nextui-org/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Button,
+  Progress,
+} from "@nextui-org/react";
 import { CiEdit } from "react-icons/ci";
 
-const StudentCard = ({ id, student, studentEmail, subject, genderPref, onDelete, onModify }) => {
+const StudentCard = ({
+  id,
+  student,
+  studentEmail,
+  subject,
+  genderPref,
+  onDelete,
+  onModify,
+}) => {
   const getSubjectIcon = (subject) => {
-    if (["IM1", "IM2", "IM3", "Precalc", "Calc AB", "Calc BC"].includes(subject)) {
+    if (
+      ["IM1", "IM2", "IM3", "Precalc", "Calc AB", "Calc BC"].includes(subject)
+    ) {
       return <TbMath size={20} className="mt-1" />;
-    } else if (["Physics", "Chemistry", "Biology", "AP Physics", "AP Chemistry", "AP Biology"].includes(subject)) {
+    } else if (
+      [
+        "Physics",
+        "Chemistry",
+        "Biology",
+        "AP Physics",
+        "AP Chemistry",
+        "AP Biology",
+      ].includes(subject)
+    ) {
       return <HiMiniBeaker size={20} className="mt-1" />;
     } else if (subject.includes("Spanish") || subject.includes("German")) {
       return <IoLanguageOutline size={20} className="mt-1" />;
@@ -22,8 +48,8 @@ const StudentCard = ({ id, student, studentEmail, subject, genderPref, onDelete,
   };
 
   return (
-    <Card className= "overflow-hidden w-full mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105">
-      <CardHeader className="text-black-700 text-m items-center justify-center">
+    <Card className="overflow-hidden w-full mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105">
+      <CardHeader className="text-black-700  items-center justify-center">
         <strong>{student}</strong>
       </CardHeader>
       <CardBody className="text-black gap-4 overflow-hidden">
@@ -85,7 +111,9 @@ const StudentCard = ({ id, student, studentEmail, subject, genderPref, onDelete,
           icon={CiEdit}
           size="sm"
           endContent={<CiEdit size="20" />}
-          onClick={() => onModify({ id, student, studentEmail, subject, genderPref })}
+          onClick={() =>
+            onModify({ id, student, studentEmail, subject, genderPref })
+          }
         ></Button>
       </CardFooter>
     </Card>
