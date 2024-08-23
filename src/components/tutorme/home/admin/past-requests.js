@@ -79,7 +79,7 @@ const PastRequests = () => {
             }}
           />
         </div>
-        <div className="flex flex-col max-h-full w-full items-center ">
+        <div className="flex flex-row max-h-full w-full items-center ">
           <div className="overflow-scroll max-h-[90vh] w-full">
             {listStudent.map((student) => (
               <StudentCard
