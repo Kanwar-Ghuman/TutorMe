@@ -76,19 +76,23 @@ const Scrollbar = () => {
   };
 
   const search = (value) => {
+    const searchTerm = value.toLowerCase().trim();
     const returnArr = studentArr.filter((student) =>
-      innerSearch(student, value)
+      innerSearch(student, searchTerm)
     );
     setFilteredStudents(returnArr);
-
     display(returnArr, isReversed);
   };
 
-  const innerSearch = (student, value) => {
-    return (
-      student.name.includes(value) ||
-      student.email.includes(value) ||
-      student.subjects.some((subject) => subject.includes(value))
+  const innerSearch = (student, searchTerm) => {
+    const searchFields = [
+      student.name,
+      student.email,
+      ...(student.subjects || []),
+    ];
+
+    return searchFields.some(
+      (field) => field && field.toLowerCase().includes(searchTerm)
     );
   };
 
