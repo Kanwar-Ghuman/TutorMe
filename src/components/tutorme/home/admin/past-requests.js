@@ -81,18 +81,16 @@ const PastRequests = () => {
     <div className="h-full w-full flex flex-col items-center">
       <>
         <div className="flex flex-row m-4 justify-center items-center w-full">
-        <Select
-                      
-                      className="min-w-[15%] h-10 px-4 basic-multi-select"
-                      classNamePrefix="select"
-                      placeholder={
-                        <div className="flex items-center">
-                          <IoFilter className="mr-2" />
-                          <span>Filter</span>
-                        </div>
-                      }
-                      
-                    />
+          <Select
+            className="min-w-[15%] h-10 px-4 basic-multi-select"
+            classNamePrefix="select"
+            placeholder={
+              <div className="flex items-center">
+                <IoFilter className="mr-2" />
+                <span>Filter By Subject</span>
+              </div>
+            }
+          />
           <Input
             type="text"
             id="inputSearch"

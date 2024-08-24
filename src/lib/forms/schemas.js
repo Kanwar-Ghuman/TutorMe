@@ -48,3 +48,29 @@ export const createTutorSchema = z.object({
     .array(z.string({ required_error: "Subject is required" }))
     .min(1, "At least one subject must be selected"),
 });
+
+export const createTutorSchemaReal = z.object({
+  studentsName: z
+    .string({
+      required_error: "Name is required",
+    })
+    .refine((value) => {
+      const nameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
+      return nameRegex.test(value);
+    }, "Please enter the full name in the format 'First Last'"),
+  studentsEmail: z
+    .string({
+      required_error: "Email address is required",
+    })
+    .email({
+      message: "Please enter a valid email address",
+    }),
+  studentsSubjects: z
+    .array(
+      z.object({
+        value: z.string(),
+        label: z.string(),
+      })
+    )
+    .min(1, "At least one subject must be selected"),
+});

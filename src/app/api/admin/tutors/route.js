@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { createTutorSchema } from "@/lib/forms/schemas";
+import { createTutorSchemaReal } from "@/lib/forms/schemas";
 import { validateForm } from "@/lib/forms/helpers";
 import { getBackendPermission } from "@/lib/auth/roles";
 
@@ -16,7 +16,14 @@ export async function POST(req) {
   console.log("User:", user);
   try {
     for (var tutor of data) {
-      const validation = validateForm(createTutorSchema, tutor);
+      const validation = validateForm(createTutorSchemaReal, {
+        studentsName: tutor.name,
+        studentsEmail: tutor.email,
+        studentsSubjects: tutor.subjects.map((subject) => ({
+          value: subject,
+          label: subject,
+        })),
+      });
       if (!validation.isValid) return validation.error;
     }
     let tutors = [];
@@ -51,7 +58,7 @@ export async function POST(req) {
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: error }, { status: 500 }); // TODO: change this to more generic error message
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 

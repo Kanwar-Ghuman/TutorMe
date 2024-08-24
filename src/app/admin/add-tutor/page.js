@@ -10,17 +10,17 @@ import { Form } from "@/components/ui/form";
 import { BsExclamationCircle } from "react-icons/bs";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createTutorSchema } from "@/lib/forms/schemas";
+import { createTutorSchemaReal } from "@/lib/forms/schemas";
 
 const TutorRequest = () => {
   const defaultValues = {
-    studentName: "",
-    studentEmail: "",
-    studentSubjects: [],
+    studentsName: "",
+    studentsEmail: "",
+    studenstSubjects: [],
   };
 
   const form = useForm({
-    resolver: zodResolver(createTutorSchema),
+    resolver: zodResolver(createTutorSchemaReal),
     defaultValues,
   });
 
@@ -79,11 +79,13 @@ const TutorRequest = () => {
 
     const formattedData = [
       {
-        name: data.studentName,
-        email: data.studentEmail,
-        subjects: data.studentSubjects.map((subject) => subject.value),
+        name: data.studentsName,
+        email: data.studentsEmail,
+        subjects: data.studentsSubjects.map((subject) => subject.value),
       },
     ];
+
+    console.log(formattedData);
 
     try {
       const response = await fetch("/api/admin/tutors", {
@@ -96,7 +98,8 @@ const TutorRequest = () => {
 
       if (!response.ok) {
         const errors = await response.json();
-        setError(errors.error);
+        // Convert the error object to a string
+        setError(JSON.stringify(errors.error));
         return;
       }
 
@@ -128,7 +131,7 @@ const TutorRequest = () => {
               })}
             >
               <FormInput
-                name="studentName"
+                name="studentsName"
                 label="Student Name"
                 placeholder="Alice Jones"
                 description="Use the format 'First Last' (e.g. 'Alice Jones')"
@@ -137,7 +140,7 @@ const TutorRequest = () => {
                 disabled={loading}
               />
               <FormInput
-                name="studentEmail"
+                name="studentsEmail"
                 label="Student Email Address"
                 placeholder="student@franklinsabers.org"
                 description="Enter the student's email address"
@@ -147,7 +150,7 @@ const TutorRequest = () => {
               />
 
               <Controller
-                name="studentSubjects"
+                name="studentsSubjects"
                 control={form.control}
                 render={({ field }) => (
                   <div>
@@ -160,9 +163,9 @@ const TutorRequest = () => {
                       placeholder="Select subjects"
                       isDisabled={loading}
                     />
-                    {form.formState.errors.studentSubjects && (
+                    {form.formState.errors.studentsSubjects && (
                       <p className="text-red-500 text-sm mt-1">
-                        {form.formState.errors.studentSubjects.message}
+                        {form.formState.errors.studentsSubjects.message}
                       </p>
                     )}
                   </div>
@@ -173,7 +176,9 @@ const TutorRequest = () => {
                 className={cn("text-danger fill-danger", error ? "" : "hidden")}
               >
                 <BsExclamationCircle />
-                <span>{error}</span>
+                <span>
+                  {typeof error === "string" ? error : JSON.stringify(error)}
+                </span>
               </p>
               <Button
                 className={cn("w-full mb-7", {

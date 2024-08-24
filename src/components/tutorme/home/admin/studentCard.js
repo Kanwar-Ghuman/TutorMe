@@ -63,7 +63,7 @@ const StudentCard = ({
   };
 
   return (
-    <Card className="w-10/12 sm:full h-[360px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
+    <Card className="w-10/12 sm:full h-[360px] bg-white shadow-md  border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
       <CardHeader className="text-black-700  items-center justify-center">
         <strong>{student}</strong>
       </CardHeader>
@@ -113,7 +113,7 @@ const StudentCard = ({
               <strong className="text-center pb-2 flex item-center justify-start items-center">
                 Confirmed
               </strong>
-              <Progress color="warning" value={75} className="max-w-md" />
+              <Progress value={75} className="max-w-md" />
               <div className="flex justify-between pt-1">
                 <p className="text-gray-400">Waiting for you to confirm</p>
                 <div className="flex justify-end">
