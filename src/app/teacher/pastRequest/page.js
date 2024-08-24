@@ -10,10 +10,12 @@ import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
 import { Dna } from "lucide-react";
 import { GiMaterialsScience } from "react-icons/gi";
+import { MdOutlinePending } from "react-icons/md";
 
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
@@ -353,33 +355,60 @@ const PastRequests = () => {
                   )}
                 </div>
                 <div className="">
-                  <p className="text-center pb-2">Status</p>
+                  {/* <div className="flex justify-center">
+                    <strong className="text-center pb-2">Status</strong>
+                  </div> */}
                   {request.subject === "Chemistry" ? (
                     <div>
-                      <p className="text-center pb-2">Completed</p>
+                      <strong className="text-center pb-2 flex item-center justify-start items-center">
+                        Completed
+                      </strong>
                       <Progress
                         color="success"
                         value={100}
                         className="max-w-md"
                       />
+                      <div className="flex">
+                        <p>You are all good to go!</p>
+                        <div className="flex justify-end justify-items-end">
+                          <FaRegCheckCircle
+                            size={30}
+                            className="text-green-600"
+                          />
+                        </div>
+                      </div>
                     </div>
                   ) : request.subject === "AP Physics" ? (
                     <div>
-                      <p className="text-center pb-2">Confirmed</p>
+                      <strong className="text-center pb-2 flex item-center justify-start items-center">
+                        Confirmed
+                      </strong>
                       <Progress
                         color="warning"
                         value={75}
                         className="max-w-md"
                       />
+                      <div className="flex justify-end">
+                        <MdOutlinePending
+                          size={30}
+                          className="text-orange-600"
+                        />
+                      </div>
                     </div>
                   ) : (
-                    <div>
-                      <p className="text-center pb-2">Pending</p>
+                    <div className="">
+                      <strong className="text-center pb-2 flex item-center justify-start items-center">
+                        Pending
+                      </strong>
+
                       <Progress
                         color="danger"
                         value={30}
                         className="max-w-md"
                       />
+                      <div className="flex justify-end">
+                        <MdOutlinePending size={30} className="text-red-600" />
+                      </div>
                     </div>
                   )}
                 </div>

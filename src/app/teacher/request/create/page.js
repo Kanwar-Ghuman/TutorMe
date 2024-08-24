@@ -79,7 +79,7 @@ const CreateRequest = () => {
   }
 
   const handleReturnToDashboard = () => {
-    router.push("/teacher/dashboard");
+    router.push("/teacher/pastRequest");
   };
 
   return (
