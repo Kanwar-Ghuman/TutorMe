@@ -95,7 +95,7 @@ const PastRequests = () => {
               <p className="text-gray-500 text-lg">No results found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-8 p-4 mx-auto max-w-6xl">
               {listStudent.map((student) => (
                 <StudentCard
                   id={student.id}
