@@ -58,7 +58,7 @@ const StudentCard = ({
   };
 
   return (
-    <Card className="w-full h-[320px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105">
+    <Card className="w-full h-[320px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
       <CardHeader className="text-black-700  items-center justify-center">
         <strong>{student}</strong>
       </CardHeader>
