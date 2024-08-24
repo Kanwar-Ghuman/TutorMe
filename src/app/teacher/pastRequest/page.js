@@ -15,7 +15,6 @@ import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
 import { Dna } from "lucide-react";
 import { GiMaterialsScience } from "react-icons/gi";
 
-
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
@@ -275,7 +274,7 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-wrap flex-row items-start w-full p-4">
+    <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
         <Form {...form}>
           <form>
@@ -300,21 +299,18 @@ const PastRequests = () => {
             />
           </form>
         </Form>
-        <div className="relative w-2/3">
-          <Input
-            type="text"
-            id="inputSearch"
-            placeholder="Search"
-            className="w-[90%]"
-            onKeyUp={(event) => {
-              search(event.target.value);
-            }}
-            startContent={
-              <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
-            }
-          />
-        </div>
-
+        <Input
+          type="text"
+          id="inputSearch"
+          placeholder="Search"
+          className="w-[90%]"
+          onKeyUp={(event) => {
+            search(event.target.value);
+          }}
+          startContent={
+            <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+          }
+        />
       </div>
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
