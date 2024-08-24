@@ -8,6 +8,11 @@ import { HiMiniBeaker } from "react-icons/hi2";
 import { GiMaterialsScience } from "react-icons/gi";
 import { Dna } from "lucide-react";
 import { PiBooks } from "react-icons/pi";
+import { FaCheck } from "react-icons/fa6";
+import { MdAssignment } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { CalendarCheck } from "lucide-react";
+import { MdOutlinePending } from "react-icons/md";
 import {
   Card,
   CardHeader,
@@ -58,11 +63,11 @@ const StudentCard = ({
   };
 
   return (
-    <Card className="w-full h-[320px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
+    <Card className="w-10/12 sm:full h-[360px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
       <CardHeader className="text-black-700  items-center justify-center">
         <strong>{student}</strong>
       </CardHeader>
-      <CardBody className="text-black gap-4 overflow-hidden">
+      <CardBody className="text-black gap-4 overflow-hidden ">
         <div className="flex items-center gap-1">
           <p className="mr-[.9rem]">Email</p>
           <IoEllipsisVerticalOutline size={20} className="mt-1" />
@@ -87,44 +92,76 @@ const StudentCard = ({
           )}
         </div>
         <div className="">
-          <p className="text-center pb-2">Status</p>
+          {/* <div className="flex justify-center">
+                    <strong className="text-center pb-2">Status</strong>
+                  </div> */}
           {subject === "Chemistry" ? (
             <div>
-              <p className="text-center pb-2">Completed</p>
+              <strong className="text-center pb-2 flex item-center justify-start items-center">
+                Completed
+              </strong>
               <Progress color="success" value={100} className="max-w-md" />
+              <div className="flex justify-between pt-1">
+                <p className="text-gray-400">You are all good to go!</p>
+                <div className="justify-end">
+                  <FaRegCheckCircle size={25} className="text-green-600" />
+                </div>
+              </div>
             </div>
           ) : subject === "AP Physics" ? (
             <div>
-              <p className="text-center pb-2">Confirmed</p>
+              <strong className="text-center pb-2 flex item-center justify-start items-center">
+                Confirmed
+              </strong>
               <Progress color="warning" value={75} className="max-w-md" />
+              <div className="flex justify-between pt-1">
+                <p className="text-gray-400">Waiting for you to confirm</p>
+                <div className="flex justify-end">
+                  <CalendarCheck size={25} className="text-orange-600" />
+                </div>
+              </div>
             </div>
           ) : (
-            <div>
-              <p className="text-center pb-2">Pending</p>
+            <div className="">
+              <strong className="text-center pb-2 flex item-center justify-start items-center">
+                Pending
+              </strong>
+
               <Progress color="danger" value={30} className="max-w-md" />
+              <div className="flex justify-between pt-1">
+                <p className="text-gray-400">Waiting for tutor to confirm</p>
+                <div className="flex justify-end">
+                  <MdOutlinePending size={30} className="text-red-600" />
+                </div>
+              </div>
             </div>
           )}
         </div>
       </CardBody>
-      <CardFooter className="justify-end gap-4">
+      <CardFooter className="justify-between gap-2 mb-2">
         <Button
-          color="danger"
-          variant="bordered"
-          size="sm"
-          icon={MdOutlineDeleteForever}
-          endContent={<MdOutlineDeleteForever size="20" />}
+          className="bg-gradient-to-tr from-primary to-yellow-200"
+          size="lg"
+          icon={MdAssignment}
+          endContent={<MdAssignment size="20" />}
+
           // onClick={() => onDelete(id)}
-        ></Button>
+        >
+          Assign
+        </Button>
         <Button
           auto
-          color="primary"
-          icon={CiEdit}
-          size="sm"
-          endContent={<CiEdit size="20" />}
+          className="bg-gradient-to-tr from-green-600 to-green-300 text-white"
+          icon={FaCheck}
+          size="lg"
+          endContent={<FaCheck size="15" />}
+
           // onClick={() =>
           //   onModify({ id, student, studentEmail, subject, genderPref })
           // }
-        ></Button>
+        >
+          Confirm
+        </Button>
       </CardFooter>
     </Card>
   );

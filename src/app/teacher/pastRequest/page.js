@@ -14,7 +14,6 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { CalendarCheck } from "lucide-react";
 
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
-import { Check, Dna } from "lucide-react";
 import { GiMaterialsScience } from "react-icons/gi";
 import { MdOutlinePending } from "react-icons/md";
 
