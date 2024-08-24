@@ -368,11 +368,11 @@ const PastRequests = () => {
                         value={100}
                         className="max-w-md"
                       />
-                      <div className="flex">
-                        <p>You are all good to go!</p>
-                        <div className="flex justify-end justify-items-end">
+                      <div className="flex justify-between pt-1">
+                        <p className="text-gray-400">You are all good to go!</p>
+                        <div className="justify-end">
                           <FaRegCheckCircle
-                            size={30}
+                            size={25}
                             className="text-green-600"
                           />
                         </div>
@@ -388,11 +388,16 @@ const PastRequests = () => {
                         value={75}
                         className="max-w-md"
                       />
-                      <div className="flex justify-end">
-                        <MdOutlinePending
-                          size={30}
-                          className="text-orange-600"
-                        />
+                      <div className="flex justify-between pt-1">
+                        <p className="text-gray-400">
+                          Waiting for Mr.Decker to confirm
+                        </p>
+                        <div className="flex justify-end">
+                          <MdOutlinePending
+                            size={30}
+                            className="text-orange-600"
+                          />
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -406,8 +411,16 @@ const PastRequests = () => {
                         value={30}
                         className="max-w-md"
                       />
-                      <div className="flex justify-end">
-                        <MdOutlinePending size={30} className="text-red-600" />
+                      <div className="flex justify-between pt-1">
+                        <p className="text-gray-400">
+                          Waiting for tutor to confirm
+                        </p>
+                        <div className="flex justify-end">
+                          <MdOutlinePending
+                            size={30}
+                            className="text-red-600"
+                          />
+                        </div>
                       </div>
                     </div>
                   )}
