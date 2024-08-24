@@ -1,19 +1,41 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Spinner } from "@nextui-org/react";
-import { Input } from "@/components/ui/input";
 import StudentCard from "./studentCard";
 import { IoFilter } from "react-icons/io5";
-import Select from "react-select";
+import { cn } from "@/lib/utils";
+import {
+  Button,
+  Select,
+  Input,
+  Spinner,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 
 const PastRequests = () => {
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentArr, setStudentArr] = useState([]);
   const [updateArr, setUpdateArr] = useState([]);
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [noResults, setNoResults] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [error, setError] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editSubject, setEditSubject] = useState("");
+  const [editGenderPref, setEditGenderPref] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -35,6 +57,11 @@ const PastRequests = () => {
 
     fetchRequests();
   }, []);
+
+  const handleAssign = (student) => {
+    setSelectedStudent(student);
+    onOpen();
+  };
 
   const search = (value) => {
     const searchTerm = value.toLowerCase().trim();
@@ -87,7 +114,7 @@ const PastRequests = () => {
             placeholder={
               <div className="flex items-center">
                 <IoFilter className="mr-2" />
-                <span>Filter By Subject</span>
+                <span>Filter</span>
               </div>
             }
           />
@@ -117,12 +144,115 @@ const PastRequests = () => {
                   genderPref={student.genderPref}
                   teacherName={student.teacher?.user?.name}
                   key={student.id}
+                  onAssign={handleAssign}
                 />
               ))}
             </div>
           )}
         </div>
       </>
+      <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Modify Request
+              </ModalHeader>
+              <ModalBody>
+                {selectedRequest && (
+                  <>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Student Name
+                      </label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Student Email
+                      </label>
+                      <input
+                        type="text"
+                        value={editEmail}
+                        onChange={(e) => setEditEmail(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Subjects (comma separated)
+                      </label>
+                      <Select
+                        value={editSubject}
+                        onChange={(selectedOptions) =>
+                          setEditSubject(selectedOptions)
+                        }
+                        options={subjectsOptions}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        placeholder="Select subjects"
+                        isDisabled={isProcessing}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Gender Preference
+                      </label>
+                      <select
+                        value={editGenderPref}
+                        onChange={(e) => setEditGenderPref(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        disabled={isProcessing}
+                      >
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                        <option value="N">No Preference</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  disabled={isProcessing}
+                >
+                  Close
+                </Button>
+                <Button
+                  color="primary"
+                  //onPress={handleSaveClick}
+                  disabled={formLoading || success || isProcessing}
+                  className={cn("", {
+                    "bg-green-500": success,
+                    "hover:bg-green-600": success,
+                  })}
+                >
+                  {formLoading ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                      Please wait
+                    </>
+                  ) : success ? (
+                    "Success"
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
