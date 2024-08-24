@@ -3,8 +3,10 @@
 import React from "react";
 import { MdOutlineEmail, MdOutlineDeleteForever } from "react-icons/md";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
-import { TbMath } from "react-icons/tb";
+import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
+import { GiMaterialsScience } from "react-icons/gi";
+import { Dna } from "lucide-react";
 import { PiBooks } from "react-icons/pi";
 import {
   Card,
@@ -25,26 +27,34 @@ const StudentCard = ({
   onDelete,
   onModify,
 }) => {
+  const subjectIconMap = {
+    IM: <TbMath size={20} />,
+    Precalc: <TbMathMax size={20} />,
+    Calc: <TbMathIntegralX size={20} />,
+    Physics: <GiMaterialsScience size={20} />,
+    Biology: <Dna size={20} />,
+    Chemistry: <HiMiniBeaker size={20} />,
+    Language: <IoLanguageOutline size={20} />,
+    Other: <PiBooks size={20} />,
+  };
+
   const getSubjectIcon = (subject) => {
-    if (
-      ["IM1", "IM2", "IM3", "Precalc", "Calc AB", "Calc BC"].includes(subject)
-    ) {
-      return <TbMath size={20} className="mt-1" />;
-    } else if (
-      [
-        "Physics",
-        "Chemistry",
-        "Biology",
-        "AP Physics",
-        "AP Chemistry",
-        "AP Biology",
-      ].includes(subject)
-    ) {
-      return <HiMiniBeaker size={20} className="mt-1" />;
+    if (["IM1", "IM2", "IM3"].includes(subject)) {
+      return subjectIconMap.IM;
+    } else if (subject === "Precalc") {
+      return subjectIconMap.Precalc;
+    } else if (["Calc AB", "Calc BC"].includes(subject)) {
+      return subjectIconMap.Calc;
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return subjectIconMap.Physics;
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return subjectIconMap.Biology;
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return subjectIconMap.Chemistry;
     } else if (subject.includes("Spanish") || subject.includes("German")) {
-      return <IoLanguageOutline size={20} className="mt-1" />;
+      return subjectIconMap.Language;
     }
-    return <PiBooks size={20} />;
+    return subjectIconMap.Other;
   };
 
   return (

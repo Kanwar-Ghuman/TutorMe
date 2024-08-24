@@ -135,7 +135,6 @@ const Scrollbar = () => {
     }
     setListStudent(myTempArr);
   };
-
   const handleDelete = async (id) => {
     try {
       const cardElement = document.getElementById(`card-${id}`);
@@ -149,6 +148,10 @@ const Scrollbar = () => {
           throw new Error("Failed to delete request");
         }
         setListStudent((prev) => prev.filter((student) => student.id !== id));
+        setFilteredStudents((prev) =>
+          prev.filter((student) => student.id !== id)
+        );
+        setStudentArr((prev) => prev.filter((student) => student.id !== id));
       }, 500);
     } catch (error) {
       console.error("Failed to delete tutor:", error);
