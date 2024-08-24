@@ -11,9 +11,10 @@ import { HiMiniBeaker } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { CalendarCheck } from "lucide-react";
 
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
-import { Dna } from "lucide-react";
+import { Check, Dna } from "lucide-react";
 import { GiMaterialsScience } from "react-icons/gi";
 import { MdOutlinePending } from "react-icons/md";
 
@@ -393,8 +394,8 @@ const PastRequests = () => {
                           Waiting for Mr.Decker to confirm
                         </p>
                         <div className="flex justify-end">
-                          <MdOutlinePending
-                            size={30}
+                          <CalendarCheck
+                            size={25}
                             className="text-orange-600"
                           />
                         </div>
