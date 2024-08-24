@@ -31,15 +31,16 @@ const SideBar = () => {
   return (
     <div className="flex-col mt-[3%] h-full">
       <SideButton
+        theName="Tutor Requests"
+        theIcon={IoIosGitPullRequest}
+        theLink="/admin/past-request"
+      />
+      <SideButton
         theName="Tutors"
         theIcon={PiStudent}
         theLink="/admin/dashboard"
       />
-      <SideButton
-        theName="Past Requests"
-        theIcon={IoIosGitPullRequest}
-        theLink="/admin/past-request"
-      />
+
       {/* <SideButton
         theName="Archive"
         theIcon={BsArchive}
