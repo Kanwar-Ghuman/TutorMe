@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineEmail, MdOutlineDeleteForever } from "react-icons/md";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
@@ -20,6 +20,8 @@ import {
   CardFooter,
   Button,
   Progress,
+  useDisclosure,
+  onAssign,
 } from "@nextui-org/react";
 import { CiEdit } from "react-icons/ci";
 
@@ -31,7 +33,15 @@ const StudentCard = ({
   genderPref,
   onDelete,
   onModify,
+  onAssign,
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [requests, setRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
+  const handleModifyClick = (request) => {
+    onOpen();
+  };
   const subjectIconMap = {
     IM: <TbMath size={20} />,
     Precalc: <TbMathMax size={20} />,
@@ -144,6 +154,9 @@ const StudentCard = ({
           size="lg"
           icon={MdAssignment}
           endContent={<MdAssignment size="20" />}
+          onClick={() =>
+            onAssign({ id, student, studentEmail, subject, genderPref })
+          }
 
           // onClick={() => onDelete(id)}
         >
