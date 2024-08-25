@@ -121,7 +121,7 @@ const PastRequests = () => {
           <Input
             type="text"
             id="inputSearch"
-            placeholder="Search"
+            placeholder="Search for request"
             className="w-[60%]"
             onKeyUp={(event) => {
               search(event.target.value);
@@ -134,7 +134,7 @@ const PastRequests = () => {
               <p className="text-gray-500 text-lg">No results found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-x-10 gap-x-20 gap-y-10 p-4 mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-x-10 gap-x-20 gap-y-10 p-4 mx-auto max-w-7xl">
               {listStudent.map((student) => (
                 <StudentCard
                   id={student.id}
