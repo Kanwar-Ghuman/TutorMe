@@ -109,12 +109,12 @@ const PastRequests = () => {
       <>
         <div className="flex flex-row m-4 justify-center items-center w-full">
           <Select
-            className="min-w-[15%] h-10 px-4 basic-multi-select"
+            className="w-[18%] h-10 px-4 basic-multi-select"
             classNamePrefix="select"
             placeholder={
               <div className="flex items-center">
                 <IoFilter className="mr-2" />
-                <span>Filter</span>
+                <span>Filter By Subject</span>
               </div>
             }
           />
