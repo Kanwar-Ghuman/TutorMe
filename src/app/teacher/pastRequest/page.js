@@ -16,6 +16,7 @@ import { CalendarCheck } from "lucide-react";
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
 import { GiMaterialsScience } from "react-icons/gi";
 import { MdOutlinePending } from "react-icons/md";
+import { Dna } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";

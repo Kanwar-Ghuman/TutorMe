@@ -7,7 +7,6 @@ import { validateForm } from "@/lib/forms/helpers";
 const prisma = new PrismaClient();
 
 export async function GET(req, { params }) {
-  // existing GET code
   const response = await getBackendPermission("admin");
   if (!response.isValid) return response.error;
 

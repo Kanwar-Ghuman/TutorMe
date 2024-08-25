@@ -195,9 +195,25 @@ const Scrollbar = () => {
       }
 
       const updatedData = await response.json();
-      setListStudent((prev) =>
+
+      // Ensure the updated data has the correct structure
+      const formattedUpdatedData = {
+        id: selectedRequest.id,
+        name: updatedData.name || editName,
+        email: updatedData.email || editEmail,
+        subjects:
+          updatedData.subjects || editSubjects.map((subject) => subject.value),
+      };
+
+      // Update the state immediately
+      setFilteredStudents((prev) =>
         prev.map((student) =>
-          student.id === selectedRequest.id ? updatedData : student
+          student.id === selectedRequest.id ? formattedUpdatedData : student
+        )
+      );
+      setStudentArr((prev) =>
+        prev.map((student) =>
+          student.id === selectedRequest.id ? formattedUpdatedData : student
         )
       );
 
@@ -336,7 +352,7 @@ const Scrollbar = () => {
                   id={student.id}
                   studentName={student.name}
                   tutorName={student.email}
-                  subjects={student.subjects}
+                  subjects={student.subjects || []}
                   onDelete={handleDelete}
                   onModify={handleModifyClick}
                   key={student.id}
