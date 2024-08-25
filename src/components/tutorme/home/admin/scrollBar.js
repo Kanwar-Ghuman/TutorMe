@@ -285,7 +285,7 @@ const Scrollbar = () => {
   }
 
   return (
-    <div className="h-[87vh] flex flex-col items-center ">
+    <div className="h-full flex flex-col  ">
       {studentArr.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-6xl">No Current Tutors</p>
@@ -299,7 +299,7 @@ const Scrollbar = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
+          <div className="flex flex-row m-4 justify-center items-center w-full space-x-4">
             <Form {...form}>
               <form>
                 <Controller
@@ -341,23 +341,27 @@ const Scrollbar = () => {
             </div>
           </div>
 
-          <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
+          <div className="flex-1 overflow-y-auto ">
             {filteredStudents.length === 0 ? (
-              <p className="text-2xl mt-4">
+              <p className="text-2xl mt-4 text-center">
                 No tutors found with this criteria
               </p>
             ) : (
-              filteredStudents.map((student) => (
-                <AcceptStudentCard
-                  id={student.id}
-                  studentName={student.name}
-                  tutorName={student.email}
-                  subjects={student.subjects || []}
-                  onDelete={handleDelete}
-                  onModify={handleModifyClick}
-                  key={student.id}
-                />
-              ))
+              <div className="flex justify-center">
+                <div className="space-y-4 px-4  w-full max-w-7xl">
+                  {filteredStudents.map((student) => (
+                    <AcceptStudentCard
+                      id={student.id}
+                      studentName={student.name}
+                      tutorName={student.email}
+                      subjects={student.subjects || []}
+                      onDelete={handleDelete}
+                      onModify={handleModifyClick}
+                      key={student.id}
+                    />
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         </>
