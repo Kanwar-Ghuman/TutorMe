@@ -21,7 +21,7 @@ import { Dna } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
-
+import ReactSelect from "react-select";
 import {
   Card,
   CardHeader,
@@ -321,7 +321,7 @@ const PastRequests = () => {
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[40%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[90%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
                 <CardHeader className="text-black-700 text-m items-center justify-center">
@@ -491,7 +491,7 @@ const PastRequests = () => {
                       <label className="block text-sm font-medium text-gray-700">
                         Subjects (comma separated)
                       </label>
-                      <Select
+                      <ReactSelect
                         value={editSubject}
                         onChange={(selectedOptions) =>
                           setEditSubject(selectedOptions)
