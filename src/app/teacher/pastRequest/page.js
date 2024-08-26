@@ -20,7 +20,6 @@ import { Dna } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import Select from "react-select";
 import { Form } from "@/components/ui/form";
 
 import {
@@ -31,6 +30,8 @@ import {
   Button,
   Input,
   Skeleton,
+  Select,
+  SelectItem,
   Modal,
   ModalContent,
   ModalHeader,
@@ -279,29 +280,21 @@ const PastRequests = () => {
   return (
     <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
-        <Form {...form}>
-          <form>
-            <Controller
-              name="subjects"
-              control={form.control}
-              render={({ field }) => (
-                <Select
-                  options={subjectsOptions}
-                  className="min-w-[15%] h-10 px-4 basic-multi-select"
-                  classNamePrefix="select"
-                  placeholder={
-                    <div className="flex items-center">
-                      <IoFilter className="mr-2" />
-                      <span>Filter</span>
-                    </div>
-                  }
-                  isDisabled={loading}
-                  isClearable={true}
-                />
-              )}
-            />
-          </form>
-        </Form>
+        <Select
+          className="w-[25%] h-10 px-4 basic-multi-select"
+          options=""
+          classNamePrefix="select"
+          placeholder={
+            <div className="flex items-center">
+              <IoFilter className="mr-2" />
+              <span>Filter By Subject</span>
+            </div>
+          }
+        >
+          {subjectsOptions.map((subject) => (
+            <SelectItem key={subject.key}>{subject.label}</SelectItem>
+          ))}
+        </Select>
         <Input
           type="text"
           id="inputSearch"
