@@ -306,7 +306,7 @@ const PastRequests = () => {
           type="text"
           id="inputSearch"
           placeholder="Search"
-          className="w-[90%]"
+          className="sm:w-[50%] w-[60%]"
           onKeyUp={(event) => {
             search(event.target.value);
           }}
@@ -320,11 +320,11 @@ const PastRequests = () => {
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
-        <div className="flex flex-row flex-wrap sm:mx-18 mx-15">
+        <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3">
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[375px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[40%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
                 <CardHeader className="text-black-700 text-m items-center justify-center">
