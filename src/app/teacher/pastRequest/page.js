@@ -324,7 +324,7 @@ const PastRequests = () => {
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[375px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
                 <CardHeader className="text-black-700 text-m items-center justify-center">
@@ -345,7 +345,7 @@ const PastRequests = () => {
                   {getSubjectIcon(request.subject)}
                 </div>
                 <div className="flex items-center gap-1">
-                  <p>Gender</p>
+                  <p>Gender Preference</p>
                   <IoEllipsisVerticalOutline size={20} className="mt-1" />
                   {request.genderPref === "F" ? (
                     <p>Female</p>
@@ -355,10 +355,17 @@ const PastRequests = () => {
                     <p>No Preference</p>
                   )}
                 </div>
-                <div className="">
-                  {/* <div className="flex justify-center">
-                    <strong className="text-center pb-2">Status</strong>
-                  </div> */}
+                <div className="flex items-center justify-center flex-col">
+                  <h1 className="text-center font-bold">Tutor</h1>
+                  {request.subject === "Chemistry" ? (
+                    <p>John A</p>
+                  ) : request.subject === "AP Physics" ? (
+                    <p>John A</p>
+                  ) : (
+                    <p>Not Yet Matched</p>
+                  )}
+                </div>
+                <div>
                   {request.subject === "Chemistry" ? (
                     <div>
                       <strong className="text-center pb-2 flex item-center justify-start items-center">

@@ -36,7 +36,6 @@ const PastRequests = () => {
   const [editGenderPref, setEditGenderPref] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -60,6 +59,7 @@ const PastRequests = () => {
 
   const handleAssign = (student) => {
     setSelectedStudent(student);
+
     onOpen();
   };
 
@@ -151,73 +151,27 @@ const PastRequests = () => {
           )}
         </div>
       </>
-      <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
+      <Modal isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modify Request
+                Assign Tutor
               </ModalHeader>
               <ModalBody>
-                {selectedRequest && (
-                  <>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Student Name
-                      </label>
-                      <input
-                        type="text"
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        disabled={isProcessing}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Student Email
-                      </label>
-                      <input
-                        type="text"
-                        value={editEmail}
-                        onChange={(e) => setEditEmail(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        disabled={isProcessing}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Subjects (comma separated)
-                      </label>
-                      <Select
-                        value={editSubject}
-                        onChange={(selectedOptions) =>
-                          setEditSubject(selectedOptions)
-                        }
-                        options={subjectsOptions}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        placeholder="Select subjects"
-                        isDisabled={isProcessing}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Gender Preference
-                      </label>
-                      <select
-                        value={editGenderPref}
-                        onChange={(e) => setEditGenderPref(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        disabled={isProcessing}
-                      >
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                        <option value="N">No Preference</option>
-                      </select>
-                    </div>
-                  </>
-                )}
+                <>
+                  <div className="mb-4">
+                    <p className="pb-2">
+                      Manually assign a tutor for this request
+                    </p>
+                    <Select
+                      value={editSubject}
+                      className="basic-multi-select"
+                      classNamePrefix="select"
+                      placeholder="Select Tutor"
+                    />
+                  </div>
+                </>
               </ModalBody>
               <ModalFooter>
                 <Button

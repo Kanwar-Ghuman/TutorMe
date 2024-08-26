@@ -20,6 +20,11 @@ import {
   CardFooter,
   Button,
   Progress,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   useDisclosure,
   onAssign,
 } from "@nextui-org/react";
@@ -35,9 +40,24 @@ const StudentCard = ({
   onModify,
   onAssign,
 }) => {
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [studentArr, setStudentArr] = useState([]);
+  const [updateArr, setUpdateArr] = useState([]);
+  const [listStudent, setListStudent] = useState([]);
+  const [isReversed, setIsReversed] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [noResults, setNoResults] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [requests, setRequests] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [error, setError] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editSubject, setEditSubject] = useState("");
+  const [editGenderPref, setEditGenderPref] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleModifyClick = (request) => {
     onOpen();
@@ -73,110 +93,119 @@ const StudentCard = ({
   };
 
   return (
-    <Card className="w-10/12 sm:full h-[360px] bg-white shadow-md  border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
-      <CardHeader className="text-black-700  items-center justify-center">
-        <strong>{student}</strong>
-      </CardHeader>
-      <CardBody className="text-black gap-4 overflow-hidden ">
-        <div className="flex items-center gap-1">
-          <p className="mr-[.9rem]">Email</p>
-          <IoEllipsisVerticalOutline size={20} className="mt-1" />
-          <p>{studentEmail}</p>
-          <MdOutlineEmail size={20} className="mt-1" />
-        </div>
-        <div className="flex items-center gap-1">
-          <p>Subject</p>
-          <IoEllipsisVerticalOutline size={20} className="mt-1" />
-          <p>{subject}</p>
-          {getSubjectIcon(subject)}
-        </div>
-        <div className="flex items-center gap-1">
-          <p>Gender</p>
-          <IoEllipsisVerticalOutline size={20} className="mt-1" />
-          {genderPref === "F" ? (
-            <p>Female</p>
-          ) : genderPref === "M" ? (
-            <p>Male</p>
-          ) : (
-            <p>No Preference</p>
-          )}
-        </div>
-        <div className="">
-          {/* <div className="flex justify-center">
-                    <strong className="text-center pb-2">Status</strong>
-                  </div> */}
-          {subject === "Chemistry" ? (
-            <div>
-              <strong className="text-center pb-2 flex item-center justify-start items-center">
-                Completed
-              </strong>
-              <Progress color="success" value={100} className="max-w-lg" />
-              <div className="flex justify-between pt-1">
-                <p className="text-gray-400">You are all good to go!</p>
-                <div className="justify-end">
-                  <FaRegCheckCircle size={25} className="text-green-600" />
+    <div>
+      <Card className="w-10/12 sm:full h-[385px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
+        <CardHeader className="text-black-700  items-center justify-center">
+          <strong>{student}</strong>
+        </CardHeader>
+        <CardBody className="text-black gap-4 overflow-hidden ">
+          <div className="flex items-center gap-1">
+            <p className="mr-[.9rem]">Email</p>
+            <IoEllipsisVerticalOutline size={20} className="mt-1" />
+            <p>{studentEmail}</p>
+            <MdOutlineEmail size={20} className="mt-1" />
+          </div>
+          <div className="flex items-center gap-1">
+            <p>Subject</p>
+            <IoEllipsisVerticalOutline size={20} className="mt-1" />
+            <p>{subject}</p>
+            {getSubjectIcon(subject)}
+          </div>
+          <div className="flex items-center gap-1">
+            <p>Gender Preference</p>
+            <IoEllipsisVerticalOutline size={20} className="mt-1" />
+            {genderPref === "F" ? (
+              <p>Female</p>
+            ) : genderPref === "M" ? (
+              <p>Male</p>
+            ) : (
+              <p>No Preference</p>
+            )}
+          </div>
+          <div>
+            <div className="flex items-center justify-center flex-col">
+              <h1 className="text-center font-bold">Tutor</h1>
+              {subject === "Chemistry" ? (
+                <p>John A</p>
+              ) : subject === "AP Physics" ? (
+                <p>John A</p>
+              ) : (
+                <p>Not Yet Matched</p>
+              )}
+            </div>
+            {subject === "Chemistry" ? (
+              <div>
+                <strong className="text-center pb-2 flex item-center justify-start items-center">
+                  Completed
+                </strong>
+                <Progress color="success" value={100} className="max-w-md" />
+                <div className="flex justify-between pt-1">
+                  <p className="text-gray-400">You are all good to go!</p>
+                  <div className="justify-end">
+                    <FaRegCheckCircle size={25} className="text-green-600" />
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : subject === "AP Physics" ? (
-            <div>
-              <strong className="text-center pb-2 flex item-center justify-start items-center">
-                Confirmed
-              </strong>
-              <Progress value={75} className="max-w-lg" />
-              <div className="flex justify-between pt-1">
-                <p className="text-gray-400">Waiting for you to confirm</p>
-                <div className="flex justify-end">
-                  <CalendarCheck size={25} className="text-orange-600" />
+            ) : subject === "AP Physics" ? (
+              <div>
+                <strong className="text-center pb-2 flex item-center justify-start items-center">
+                  Confirmed
+                </strong>
+                <Progress color="warning" value={75} className="max-w-md" />
+                <div className="flex justify-between pt-1">
+                  <p className="text-gray-400">Waiting for you to confirm</p>
+                  <div className="flex justify-end">
+                    <CalendarCheck size={25} className="text-orange-600" />
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="">
-              <strong className="text-center pb-2 flex item-center justify-start items-center">
-                Pending
-              </strong>
+            ) : (
+              <div className="">
+                <strong className="text-center pb-2 flex item-center justify-start items-center">
+                  Pending
+                </strong>
 
-              <Progress color="danger" value={30} className="max-w-lg" />
-              <div className="flex justify-between pt-1">
-                <p className="text-gray-400">Waiting for tutor to confirm</p>
-                <div className="flex justify-end">
-                  <MdOutlinePending size={30} className="text-red-600" />
+                <Progress color="danger" value={30} className="max-w-md" />
+                <div className="flex justify-between pt-1">
+                  <p className="text-gray-400">Waiting for tutor to confirm</p>
+                  <div className="flex justify-end">
+                    <MdOutlinePending size={30} className="text-red-600" />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </CardBody>
-      <CardFooter className="justify-between gap-2 mb-2">
-        <Button
-          className="bg-gradient-to-tr from-primary to-yellow-200"
-          size="lg"
-          icon={MdAssignment}
-          endContent={<MdAssignment size="20" />}
-          onClick={() =>
-            onAssign({ id, student, studentEmail, subject, genderPref })
-          }
+            )}
+          </div>
+        </CardBody>
+        <CardFooter className="justify-between gap-2 mb-2">
+          <Button
+            className="bg-gradient-to-tr from-primary to-yellow-200"
+            size="md"
+            icon={MdAssignment}
+            endContent={<MdAssignment size="20" />}
+            onClick={() =>
+              onAssign({ id, student, studentEmail, subject, genderPref })
+            }
 
-          // onClick={() => onDelete(id)}
-        >
-          Assign
-        </Button>
-        <Button
-          auto
-          className="bg-gradient-to-tr from-green-600 to-green-300 text-white"
-          icon={FaCheck}
-          size="lg"
-          endContent={<FaCheck size="15" />}
+            // onClick={() => onDelete(id)}
+          >
+            Assign
+          </Button>
+          <Button
+            auto
+            className="bg-gradient-to-tr from-green-600 to-green-300 text-white"
+            icon={FaCheck}
+            size="md"
+            endContent={<FaCheck size="15" />}
 
-          // onClick={() =>
-          //   onModify({ id, student, studentEmail, subject, genderPref })
-          // }
-        >
-          Confirm
-        </Button>
-      </CardFooter>
-    </Card>
+            // onClick={() =>
+            //   onModify({ id, student, studentEmail, subject, genderPref })
+            // }
+          >
+            Confirm
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 
