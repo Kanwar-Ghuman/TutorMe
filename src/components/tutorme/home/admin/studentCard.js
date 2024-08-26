@@ -110,7 +110,7 @@ const StudentCard = ({
               <strong className="text-center pb-2 flex item-center justify-start items-center">
                 Completed
               </strong>
-              <Progress color="success" value={100} className="max-w-md" />
+              <Progress color="success" value={100} className="max-w-lg" />
               <div className="flex justify-between pt-1">
                 <p className="text-gray-400">You are all good to go!</p>
                 <div className="justify-end">
@@ -123,7 +123,7 @@ const StudentCard = ({
               <strong className="text-center pb-2 flex item-center justify-start items-center">
                 Confirmed
               </strong>
-              <Progress value={75} className="max-w-md" />
+              <Progress value={75} className="max-w-lg" />
               <div className="flex justify-between pt-1">
                 <p className="text-gray-400">Waiting for you to confirm</p>
                 <div className="flex justify-end">
@@ -137,7 +137,7 @@ const StudentCard = ({
                 Pending
               </strong>
 
-              <Progress color="danger" value={30} className="max-w-md" />
+              <Progress color="danger" value={30} className="max-w-lg" />
               <div className="flex justify-between pt-1">
                 <p className="text-gray-400">Waiting for tutor to confirm</p>
                 <div className="flex justify-end">
