@@ -291,9 +291,13 @@ const PastRequests = () => {
             </div>
           }
         >
-          {subjectsOptions.map((subject) => (
-            <SelectItem key={subject.key}>{subject.label}</SelectItem>
-          ))}
+          {subjectsOptions.flatMap((group) =>
+            group.options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))
+          )}
         </Select>
         <Input
           type="text"
