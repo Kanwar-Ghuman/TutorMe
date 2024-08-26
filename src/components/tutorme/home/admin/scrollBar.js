@@ -330,7 +330,7 @@ const Scrollbar = () => {
               <Input
                 type="text"
                 id="inputSearch"
-                placeholder="Search"
+                placeholder="Search for tutor"
                 className="w-full h-10 pl-10 pr-4 border"
                 onChange={handleSearchChange}
                 value={searchTerm}
