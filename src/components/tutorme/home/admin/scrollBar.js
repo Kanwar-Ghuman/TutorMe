@@ -27,7 +27,6 @@ import AcceptStudentCard from "@/components/request/accept/acceptStudentCard";
 
 const Scrollbar = () => {
   const [studentArr, setStudentArr] = useState([]);
-  const [updateArr, setUpdateArr] = useState([]);
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -41,6 +40,7 @@ const Scrollbar = () => {
   const [editSubjects, setEditSubjects] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
@@ -169,7 +169,7 @@ const Scrollbar = () => {
   };
 
   const handleSaveClick = async () => {
-    setformLoading(true);
+    setIsSubmitting(true);
     setError("");
 
     const updatedTutor = {
@@ -227,7 +227,7 @@ const Scrollbar = () => {
       console.error("Failed to update tutor:", error);
       setError("An unexpected error occurred.");
     } finally {
-      setformLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -375,63 +375,82 @@ const Scrollbar = () => {
               </ModalHeader>
               <ModalBody>
                 {selectedRequest && (
-                  <>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
+                  <div className="relative">
+                    {isSubmitting && (
+                      <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                        <Spinner size="lg" />
+                      </div>
+                    )}
+                    <div
+                      className={
+                        isSubmitting ? "pointer-events-none opacity-50" : ""
+                      }
+                    >
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
+                        <input
+                          type="text"
+                          value={editEmail}
+                          onChange={(e) => setEditEmail(e.target.value)}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Subjects
+                        </label>
+                        <Select
+                          isMulti
+                          value={editSubjects}
+                          onChange={setEditSubjects}
+                          options={subjectsOptions}
+                          className="basic-multi-select"
+                          classNamePrefix="select"
+                          placeholder="Select subjects"
+                          isDisabled={isSubmitting}
+                        />
+                      </div>
                     </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Email
-                      </label>
-                      <input
-                        type="text"
-                        value={editEmail}
-                        onChange={(e) => setEditEmail(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Subjects (comma separated)
-                      </label>
-                      <Select
-                        isMulti
-                        value={editSubjects}
-                        onChange={setEditSubjects}
-                        options={subjectsOptions}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        placeholder="Select subjects"
-                      />
-                    </div>
-                  </>
+                  </div>
                 )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  disabled={isSubmitting}
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
                   onPress={handleSaveClick}
-                  disabled={loading || success}
+                  disabled={isSubmitting || success}
                   className={cn("", {
                     "bg-green-500": success,
                     "hover:bg-green-600": success,
                   })}
                 >
-                  {loading ? (
+                  {isSubmitting ? (
                     <>
-                      <Loader2 className="animate-spin" />
-                      Please wait
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
                     </>
                   ) : success ? (
                     "Success"
