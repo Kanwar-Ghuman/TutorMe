@@ -6,7 +6,6 @@ import { IoFilter } from "react-icons/io5";
 import { cn } from "@/lib/utils";
 import {
   Button,
-  Select,
   Input,
   Spinner,
   Modal,
@@ -16,6 +15,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
+import Select from "react-select";
 
 const PastRequests = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -36,6 +36,8 @@ const PastRequests = () => {
   const [editGenderPref, setEditGenderPref] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [tutors, setTutors] = useState([]);
+
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -55,6 +57,23 @@ const PastRequests = () => {
     };
 
     fetchRequests();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/tutors");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setTutors(data);
+      } catch (error) {
+        console.error("Failed to fetch tutors:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleAssign = (student) => {
@@ -169,6 +188,16 @@ const PastRequests = () => {
                       className="basic-multi-select"
                       classNamePrefix="select"
                       placeholder="Select Tutor"
+                      options={tutors.map((tutor) => ({
+                        value: tutor.id,
+                        label: tutor.name,
+                      }))}
+                      maxMenuHeight={200} // Limit the height of the dropdown menu
+                      menuPlacement="auto" // Automatically adjust menu placement
+                      menuPortalTarget={document.body} // Render menu in a portal
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Ensure menu appears on top
+                      }}
                     />
                   </div>
                 </>
