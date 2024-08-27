@@ -1,13 +1,49 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { sendEmail } from "@/hooks/email/email";
 
 const AcceptRequest = () => {
+  const handleTestEmail = async () => {
+    const result = await sendEmail(
+      "mcdabg1236@gmail.com",
+      "Tutor MEee Testt",
+      "Tutor ME Testt",
+      `<!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                // ... (your existing styles)
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>TutorMe</h1>
+                </div>
+                <div class="content">
+                    <p>Hello,</p>
+                    <p>This is a test email from TutorMe.</p>
+                    <p>Thank you for using TutorMe!</p>
+                </div>
+            </div>
+        </body>
+        </html>`
+    );
+
+    if (result) {
+      alert("Test email sent successfully");
+    } else {
+      alert("Failed to send test email");
+    }
+  };
+
   return (
     <div className="flex flex-col justify-start min-h-screen px-4 sm:px-10 md:px-20 lg:px-32 xl:px-80 pb-[5rem] sm:pb-[10rem] md:pb-[15rem] lg:pb-[20rem] xl:pb-[30rem]">
       <div className="pt-10 sm:pt-12 md:pt-14 lg:pt-16 xl:pt-20">
         <h1 className="text-md sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold">
           <span className="text-[#0E9F6E]">Success!</span> You are now pending
-          approval from Mr. Decker.
+          approval from Mr. Decker
         </h1>
       </div>
       <div className="mt-4 sm:mt-[4rem]">
@@ -56,6 +92,7 @@ const AcceptRequest = () => {
         <Button
           className="text-black bg-cancel-button mt-2 md:mt-4 py-2 px-4 md:py-3 md:px-6 rounded"
           variant="primary"
+          onClick={handleTestEmail}
         >
           Cancel
         </Button>
