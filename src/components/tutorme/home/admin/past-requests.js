@@ -173,7 +173,7 @@ const PastRequests = () => {
       <>
         <div className="flex flex-row m-4 justify-center items-center w-full">
           <Select
-            className="w-[20%] h-10 px-4 basic-multi-select"
+            className="w-[20%] h-10 px-4 basic-multi-select z-50"
             classNamePrefix="select"
             options={subjectsOptions}
             placeholder={
