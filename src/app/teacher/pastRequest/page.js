@@ -30,8 +30,6 @@ import {
   Button,
   Input,
   Skeleton,
-  Select,
-  SelectItem,
   Modal,
   ModalContent,
   ModalHeader,
@@ -281,16 +279,16 @@ const PastRequests = () => {
     <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
         <ReactSelect
-          className="w-[18%] h-10 px-4 basic-multi-select"
+          className=" w-[15%]  h-10 px-4 basic-multi-select"
           options={subjectsOptions}
           classNamePrefix="select"
           placeholder={
             <div className="flex items-center">
               <IoFilter className="mr-2" />
-              <span>Filter By Subject</span>
+              <span>Filter</span>
             </div>
           }
-        ></ReactSelect>
+        />
         <Input
           type="text"
           id="inputSearch"
