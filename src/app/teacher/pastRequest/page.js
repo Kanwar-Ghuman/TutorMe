@@ -321,7 +321,7 @@ const PastRequests = () => {
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[90%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[45%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
                 <CardHeader className="text-black-700 text-m items-center justify-center">
