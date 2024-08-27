@@ -1,14 +1,13 @@
-import * as sgMail from '@sendgrid/mail';
+import * as sgMail from "@sendgrid/mail";
 
 export default function SendEmail() {
-
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
   const msg = {
-    to: 'heyanantraj@gmail.com', // Change to your recipient
-    from: 'heyanantraj@gmail.com', // Change to your verified sender
-    subject: 'This is a simple message',
-    text: 'which contains some text',
+    to: "heyanantraj@gmail.com", // Change to your recipient
+    from: "heyanantraj@gmail.com", // Change to your verified sender
+    subject: "This is a simple message",
+    text: "which contains some text",
     html: `<!DOCTYPE html>
     <html>
     <head>
@@ -56,6 +55,6 @@ export default function SendEmail() {
     </body>
     </html>
     `,
-  }
-  sgMail.send(msg)
+  };
+  sgMail.send(msg);
 }
