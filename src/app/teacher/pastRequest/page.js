@@ -361,7 +361,7 @@ const PastRequests = () => {
                       <Progress
                         color="success"
                         value={100}
-                        className="max-w-md"
+                        className="max-w-xl"
                       />
                       <div className="flex justify-between pt-1">
                         <p className="text-gray-400">You are all good to go!</p>
@@ -381,7 +381,7 @@ const PastRequests = () => {
                       <Progress
                         color="warning"
                         value={75}
-                        className="max-w-md"
+                        className="max-w-xl"
                       />
                       <div className="flex justify-between pt-1">
                         <p className="text-gray-400">
@@ -404,7 +404,7 @@ const PastRequests = () => {
                       <Progress
                         color="danger"
                         value={30}
-                        className="max-w-md"
+                        className="max-w-xl"
                       />
                       <div className="flex justify-between pt-1">
                         <p className="text-gray-400">
