@@ -305,15 +305,15 @@ const PastRequests = () => {
         />
       </div>
       {requests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center h-full ">
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
-        <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3">
+        <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[45%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[38%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
                 <CardHeader className="text-black-700 text-m items-center justify-center">
