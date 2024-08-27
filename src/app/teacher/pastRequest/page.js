@@ -280,9 +280,9 @@ const PastRequests = () => {
   return (
     <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
-        <Select
-          className="w-[25%] h-10 px-4 basic-multi-select"
-          options=""
+        <ReactSelect
+          className="w-[18%] h-10 px-4 basic-multi-select"
+          options={subjectsOptions}
           classNamePrefix="select"
           placeholder={
             <div className="flex items-center">
@@ -290,15 +290,7 @@ const PastRequests = () => {
               <span>Filter By Subject</span>
             </div>
           }
-        >
-          {subjectsOptions.flatMap((group) =>
-            group.options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))
-          )}
-        </Select>
+        ></ReactSelect>
         <Input
           type="text"
           id="inputSearch"
