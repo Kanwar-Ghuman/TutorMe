@@ -311,20 +311,15 @@ const PastRequests = () => {
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[38%] mb-8 h-[375px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
-                <CardHeader className="text-black-700 text-m items-center justify-center">
+                <CardHeader className="text-black-700 text-m items-center justify-center flex-col">
                   {request.student}
+                  <p className="text-gray-400">{request.studentEmail}</p>
                 </CardHeader>
               </strong>
               <CardBody className="text-black gap-4 overflow-hidden">
-                <div className="flex items-center gap-1">
-                  <p className="mr-[.9rem]">Email</p>
-                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                  <p>{request.studentEmail}</p>
-                  <MdOutlineEmail size={20} className="mt-1" />
-                </div>
                 <div className="flex items-center gap-1">
                   <p>Subject</p>
                   <IoEllipsisVerticalOutline size={20} className="mt-1" />
@@ -342,8 +337,9 @@ const PastRequests = () => {
                     <p>No Preference</p>
                   )}
                 </div>
-                <div className="flex items-center justify-center flex-col">
-                  <h1 className="text-center font-bold">Tutor</h1>
+                <div className="flex justify-start flex-row">
+                  <p className="text-center">Tutor</p>
+                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
                   {request.subject === "Chemistry" ? (
                     <p>John A</p>
                   ) : request.subject === "AP Physics" ? (

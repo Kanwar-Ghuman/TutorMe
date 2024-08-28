@@ -94,17 +94,15 @@ const StudentCard = ({
 
   return (
     <div>
-      <Card className="w-10/12 h-[385px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
-        <CardHeader className="text-black-700  items-center justify-center">
+      <Card className="w-10/12 h-[360px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
+        <CardHeader className="text-black-700  items-center justify-center flex-col">
           <strong>{student}</strong>
+          <div className="flex items-center gap-1 flex-row text-gray-400">
+            {" "}
+            <p>{studentEmail}</p>
+          </div>
         </CardHeader>
         <CardBody className="text-black gap-4 overflow-hidden ">
-          <div className="flex items-center gap-1">
-            <p className="mr-[.9rem]">Email</p>
-            <IoEllipsisVerticalOutline size={20} className="mt-1" />
-            <p>{studentEmail}</p>
-            <MdOutlineEmail size={20} className="mt-1" />
-          </div>
           <div className="flex items-center gap-1">
             <p>Subject</p>
             <IoEllipsisVerticalOutline size={20} className="mt-1" />
@@ -122,17 +120,19 @@ const StudentCard = ({
               <p>No Preference</p>
             )}
           </div>
+          <div className="flex items-start justify-start flex-row">
+            <p className="text-center">Tutor</p>
+            <IoEllipsisVerticalOutline size={20} className="mt-1" />
+            {subject === "Chemistry" ? (
+              <p>John A</p>
+            ) : subject === "AP Physics" ? (
+              <p>John A</p>
+            ) : (
+              <p>Not Yet Matched</p>
+            )}
+          </div>
+
           <div>
-            <div className="flex items-center justify-center flex-col">
-              <h1 className="text-center font-bold">Tutor</h1>
-              {subject === "Chemistry" ? (
-                <p>John A</p>
-              ) : subject === "AP Physics" ? (
-                <p>John A</p>
-              ) : (
-                <p>Not Yet Matched</p>
-              )}
-            </div>
             {subject === "Chemistry" ? (
               <div>
                 <strong className="text-center pb-2 flex item-center justify-start items-center">
