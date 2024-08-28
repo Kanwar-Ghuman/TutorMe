@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
+import { EditIcon, DeleteIcon } from "lucide-react";
 import {
   Modal,
   ModalContent,
@@ -16,6 +17,16 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Switch,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  User,
+  Chip,
+  Tooltip,
 } from "@nextui-org/react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -44,6 +55,57 @@ const Scrollbar = () => {
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
+  const [viewMode, setViewMode] = useState("card");
+
+  const renderCell = React.useCallback((tutor, columnKey) => {
+    switch (columnKey) {
+      case "name":
+        return (
+          <User name={tutor.name} description={tutor.email}>
+            {tutor.email}
+          </User>
+        );
+      case "subjects":
+        return (
+          <div className="flex flex-wrap gap-1">
+            {tutor.subjects.map((subject, index) => (
+              <Chip key={index} size="sm">
+                {subject}
+              </Chip>
+            ))}
+          </div>
+        );
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Edit tutor">
+              <span
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                onClick={() => handleModifyClick(tutor)}
+              >
+                <EditIcon />
+              </span>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete tutor">
+              <span
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+                onClick={() => handleDelete(tutor.id)}
+              >
+                <DeleteIcon />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return tutor[columnKey];
+    }
+  }, []);
+
+  const columns = [
+    { name: "NAME", uid: "name" },
+    { name: "SUBJECTS", uid: "subjects" },
+    { name: "ACTIONS", uid: "actions" },
+  ];
   const defaultValues = {
     subjects: [],
   };
@@ -300,6 +362,16 @@ const Scrollbar = () => {
       ) : (
         <>
           <div className="flex flex-row m-4 justify-center items-center w-full space-x-4">
+            <div className="flex justify-end items-center">
+              <Switch
+                checked={viewMode === "table"}
+                onChange={() =>
+                  setViewMode(viewMode === "card" ? "table" : "card")
+                }
+              >
+                {viewMode === "card" ? "Card View" : "Table View"}
+              </Switch>
+            </div>
             <Form {...form}>
               <form>
                 <Controller
@@ -340,15 +412,14 @@ const Scrollbar = () => {
               />
             </div>
           </div>
-
-          <div className="flex-1 overflow-y-auto ">
+          <div className="flex-1 overflow-y-auto">
             {filteredStudents.length === 0 ? (
               <p className="text-2xl mt-4 text-center">
                 No tutors found with this criteria
               </p>
-            ) : (
+            ) : viewMode === "card" ? (
               <div className="flex justify-center">
-                <div className="space-y-4 px-4  w-full max-w-7xl">
+                <div className="space-y-4 px-4 w-full max-w-7xl">
                   {filteredStudents.map((student) => (
                     <AcceptStudentCard
                       id={student.id}
@@ -362,6 +433,28 @@ const Scrollbar = () => {
                   ))}
                 </div>
               </div>
+            ) : (
+              <Table aria-label="Tutors table">
+                <TableHeader columns={columns}>
+                  {(column) => (
+                    <TableColumn
+                      key={column.uid}
+                      align={column.uid === "actions" ? "center" : "start"}
+                    >
+                      {column.name}
+                    </TableColumn>
+                  )}
+                </TableHeader>
+                <TableBody items={filteredStudents}>
+                  {(item) => (
+                    <TableRow key={item.id}>
+                      {(columnKey) => (
+                        <TableCell>{renderCell(item, columnKey)}</TableCell>
+                      )}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             )}
           </div>
         </>

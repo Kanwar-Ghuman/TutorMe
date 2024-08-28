@@ -14,8 +14,19 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  User,
+  Chip,
+  Tooltip,
+  Switch,
 } from "@nextui-org/react";
 import Select from "react-select";
+import { DeleteIcon, EditIcon, EyeIcon } from "lucide-react";
 
 const PastRequests = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -37,6 +48,54 @@ const PastRequests = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [tutors, setTutors] = useState([]);
+
+  const [viewMode, setViewMode] = useState("card");
+
+  const renderCell = React.useCallback((request, columnKey) => {
+    switch (columnKey) {
+      case "student":
+        return (
+          <User name={request.student} description={request.studentEmail}>
+            {request.studentEmail}
+          </User>
+        );
+      case "subject":
+        return <Chip size="sm">{request.subject}</Chip>;
+      case "teacher":
+        return request.teacher?.user?.name || "Unassigned";
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="View Details">
+              <span
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                onClick={() => handleAssign(request)}
+              >
+                <EyeIcon />
+              </span>
+            </Tooltip>
+            <Tooltip content="Edit Request">
+              <span
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                onClick={() => handleAssign(request)}
+              >
+                <EditIcon />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return request[columnKey];
+    }
+  }, []);
+
+  const columns = [
+    { name: "STUDENT", uid: "student" },
+    { name: "SUBJECT", uid: "subject" },
+    { name: "GENDER PREF", uid: "genderPref" },
+    { name: "ASSIGNED TUTOR", uid: "teacher" },
+    { name: "ACTIONS", uid: "actions" },
+  ];
 
   const subjectsOptions = [
     {
@@ -171,6 +230,14 @@ const PastRequests = () => {
   return (
     <div className="h-full w-full flex flex-col items-center">
       <>
+        <div className="flex justify-end items-center">
+          <Switch
+            checked={viewMode === "table"}
+            onChange={() => setViewMode(viewMode === "card" ? "table" : "card")}
+          >
+            {viewMode === "card" ? "Card View" : "Table View"}
+          </Switch>
+        </div>
         <div className="flex flex-row m-4 justify-center items-center w-full">
           <Select
             className="w-[20%] h-10 px-4 basic-multi-select z-50"
@@ -201,7 +268,7 @@ const PastRequests = () => {
             <div className="flex justify-center items-center h-full">
               <p className="text-gray-500 text-lg">No results found</p>
             </div>
-          ) : (
+          ) : viewMode === "card" ? (
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-x-10 gap-x-20 gap-y-10 p-4 mx-auto max-w-7xl">
               {listStudent.map((student) => (
                 <StudentCard
@@ -216,6 +283,28 @@ const PastRequests = () => {
                 />
               ))}
             </div>
+          ) : (
+            <Table aria-label="Past Requests table">
+              <TableHeader columns={columns}>
+                {(column) => (
+                  <TableColumn
+                    key={column.uid}
+                    align={column.uid === "actions" ? "center" : "start"}
+                  >
+                    {column.name}
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody items={listStudent}>
+                {(item) => (
+                  <TableRow key={item.id}>
+                    {(columnKey) => (
+                      <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           )}
         </div>
       </>
