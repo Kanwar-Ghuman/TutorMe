@@ -230,19 +230,22 @@ const PastRequests = () => {
   return (
     <div className="h-full w-full flex flex-col items-center">
       <>
-        <div className="flex justify-end items-center">
-          <Switch
-            checked={viewMode === "table"}
-            onChange={() => setViewMode(viewMode === "card" ? "table" : "card")}
-          >
-            {viewMode === "card" ? "Card View" : "Table View"}
-          </Switch>
-        </div>
         <div className="flex flex-row m-4 justify-center items-center w-full">
+          <div className="flex justify-end items-center">
+            <Switch
+              checked={viewMode === "table"}
+              onChange={() =>
+                setViewMode(viewMode === "card" ? "table" : "card")
+              }
+            >
+              {viewMode === "card" ? "Card View" : "Table View"}
+            </Switch>
+          </div>
           <Select
-            className="w-[20%] h-10 px-4 basic-multi-select z-50"
+            className="w-[13%] h-10 px-4 basic-multi-select z-50"
             classNamePrefix="select"
             options={subjectsOptions}
+            isClearable={true}
             placeholder={
               <div className="flex items-center">
                 <IoFilter className="mr-2" />
