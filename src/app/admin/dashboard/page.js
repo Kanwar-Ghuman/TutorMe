@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
 import ScrollBar from "@/components/tutorme/home/admin/scrollBar";

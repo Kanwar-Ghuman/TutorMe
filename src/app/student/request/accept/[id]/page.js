@@ -8,7 +8,6 @@ const AcceptRequest = () => {
     const result = await sendEmail(
       "mcdabg1236@gmail.com",
       "Tutor MEee Testt",
-      "Tutor ME Testt",
       `<!DOCTYPE html>
         <html>
         <head>
