@@ -176,34 +176,43 @@ const StudentCard = ({
             )}
           </div>
         </CardBody>
-        <CardFooter className="justify-between gap-2 mb-2">
-          <Button
-            className="bg-gradient-to-tr from-primary to-yellow-200"
-            size="md"
-            icon={MdAssignment}
-            endContent={<MdAssignment size="20" />}
-            onClick={() =>
-              onAssign({ id, student, studentEmail, subject, genderPref })
-            }
+        {subject != "Chemistry" || subject === "AP Physics" ? (
+          <CardFooter className="justify-end gap-2 mb-2">
+            {subject === "AP Physics" ? (
+              <Button
+                auto
+                className="bg-gradient-to-tr from-green-600 to-green-300 text-white"
+                icon={FaCheck}
+                size="md"
+                endContent={<FaCheck size="15" />}
 
-            // onClick={() => onDelete(id)}
-          >
-            Assign
-          </Button>
-          <Button
-            auto
-            className="bg-gradient-to-tr from-green-600 to-green-300 text-white"
-            icon={FaCheck}
-            size="md"
-            endContent={<FaCheck size="15" />}
+                // onClick={() =>
+                //   onModify({ id, student, studentEmail, subject, genderPref })
+                // }
+              >
+                Confirm
+              </Button>
+            ) : subject != "Chemistry" ? (
+              <Button
+                className="bg-gradient-to-tr from-primary to-yellow-200"
+                size="md"
+                icon={MdAssignment}
+                endContent={<MdAssignment size="20" />}
+                onClick={() =>
+                  onAssign({ id, student, studentEmail, subject, genderPref })
+                }
 
-            // onClick={() =>
-            //   onModify({ id, student, studentEmail, subject, genderPref })
-            // }
-          >
-            Confirm
-          </Button>
-        </CardFooter>
+                // onClick={() => onDelete(id)}
+              >
+                Assign
+              </Button>
+            ) : (
+              <></>
+            )}
+          </CardFooter>
+        ) : (
+          <></>
+        )}
       </Card>
     </div>
   );

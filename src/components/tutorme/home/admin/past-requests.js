@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import StudentCard from "./studentCard";
-import { IoFilter } from "react-icons/io5";
+import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { cn } from "@/lib/utils";
 import {
   Button,
@@ -191,6 +191,9 @@ const PastRequests = () => {
             onKeyUp={(event) => {
               search(event.target.value);
             }}
+            startContent={
+              <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+            }
           />
         </div>
         <div className="w-full overflow-y-auto max-h-[calc(100vh-120px)]">
