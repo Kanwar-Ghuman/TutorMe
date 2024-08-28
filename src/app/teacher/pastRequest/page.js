@@ -382,10 +382,7 @@ const PastRequests = () => {
                         value={75}
                         className="max-w-xl"
                         classNames={{
-                          base: "max-w-md",
-                          track: "drop-shadow-md border border-default",
-                          indicator:
-                            "bg-gradient-to-r from-yellow-400 to-yellow-500",
+                          indicator: "bg-yellow-400",
                         }}
                       />
                       <div className="flex justify-between pt-1">

@@ -151,7 +151,14 @@ const StudentCard = ({
                 <strong className="text-center pb-2 flex item-center justify-start items-center">
                   Confirmed
                 </strong>
-                <Progress color="warning" value={75} className="max-w-md" />
+                <Progress
+                  color="warning"
+                  value={75}
+                  className="max-w-md"
+                  classNames={{
+                    indicator: "bg-yellow-400",
+                  }}
+                />
                 <div className="flex justify-between pt-1">
                   <p className="text-gray-400">Waiting for you to confirm</p>
                   <div className="flex justify-end">
@@ -204,7 +211,7 @@ const StudentCard = ({
 
                 // onClick={() => onDelete(id)}
               >
-                Assign
+                Assign Tutor
               </Button>
             ) : (
               <></>
