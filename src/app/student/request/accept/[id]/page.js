@@ -4,11 +4,7 @@ import { Button } from "@/components/ui/button";
 import { sendEmail } from "@/hooks/email/email";
 
 const AcceptRequest = () => {
-  const handleTestEmail = async () => {
-    const result = await sendEmail(
-      "ameenalmousa0@gmail.com",
-      "Tutor MEee Testt",
-      `<!DOCTYPE html>
+  const tutorConfirmationEmail = `<!DOCTYPE html>
 <html>
 
 <head>
@@ -90,7 +86,101 @@ const AcceptRequest = () => {
   </div>
 </body>
 
-</html>`
+</html>`;
+
+  const studentConfirmationEmail = `<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .line {
+      display: flex;
+      flex-direction: row;
+      text-align: center;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 5px;
+      color:black;
+    }
+
+    .confirm {
+      background-color: #FACC14;
+      border-radius: 10px;
+      padding: 10px 20px;
+      border: none;
+      border: 1px solid #333;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      color:black;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: start;
+      align-items: start;
+      color:black;
+    }
+
+    .logoStyle {
+      color: #FACC14;
+    }
+    .header span{
+      margin-left: 5px;
+    }
+
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color:black;
+    }
+
+    .subtitle{
+    font-weight: bold;
+    }
+
+    .container{
+    color:black;
+    }
+
+    a:visited {
+  color: inherit; /* Or specify another color, like black */
+  text-decoration: none; /* Optional: removes underlining */
+}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <p class="logo">NHS<span class="logoStyle">TutorMe</span></p>
+      <h1 class="title">Student Confirmation</h1>
+    </div>
+    <div class="content">
+      <p>Hello [name of student]</p>
+      <p>These are the details of your tutoring session: </p>
+      <div class="line">
+        
+        <p><span class="subtitle">Name Of Tutor: </span>  [name of tutor]</p>
+      </div>
+      <div class="line">
+        <p><span class="subtitle">Subject:</span>  AP Physics</p>
+      </div>
+      <p>To confirm this tutoring session, please click the button below:</p>
+      <button class="confirm">Confirm</button>
+
+      <p>Thank you for using TutorMe!</p>
+    </div>
+  </div>
+</body>
+
+</html>`;
+
+  const handleTestEmail = async () => {
+    const result = await sendEmail(
+      "ameenalmousa0@gmail.com",
+      "Tutor MEee Test",
+      studentConfirmationEmail
     );
 
     if (result) {
