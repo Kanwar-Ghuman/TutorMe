@@ -4,7 +4,12 @@ import React, { useState, useEffect } from "react";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { MdAssignment } from "react-icons/md";
-
+import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
+import { HiMiniBeaker } from "react-icons/hi2";
+import { GiMaterialsScience } from "react-icons/gi";
+import { Dna } from "lucide-react";
+import { PiBooks } from "react-icons/pi";
+import { IoLanguageOutline } from "react-icons/io5";
 import { cn } from "@/lib/utils";
 import {
   Button,
@@ -53,6 +58,51 @@ const PastRequests = () => {
 
   const [viewMode, setViewMode] = useState("card");
 
+  const getSubjectIcon = (subject) => {
+    if (["IM1", "IM2", "IM3"].includes(subject)) {
+      return <TbMath size={20} />;
+    } else if (subject === "Precalc") {
+      return <TbMathMax size={20} />;
+    } else if (["Calc AB", "Calc BC", "CalcBC", "CalcAB"].includes(subject)) {
+      return <TbMathIntegralX size={20} />;
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return <GiMaterialsScience size={20} />;
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return <Dna size={20} />;
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return <HiMiniBeaker size={20} />;
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return <IoLanguageOutline size={20} />;
+    }
+    return <PiBooks size={20} />;
+  };
+
+  const getSubjectColor = (subject) => {
+    if (
+      [
+        "IM1",
+        "IM2",
+        "IM3",
+        "Precalc",
+        "Calc AB",
+        "Calc BC",
+        "CalcBC",
+        "CalcAB",
+      ].includes(subject)
+    ) {
+      return "bg-math text-white";
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return "bg-physics text-white";
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return "bg-biology text-white";
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return "bg-chemistry text-white";
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return "bg-language text-white";
+    }
+    return "bg-other text-white";
+  };
+
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
       case "student":
@@ -76,11 +126,31 @@ const PastRequests = () => {
           </User>
         );
       case "subject":
-        return <Chip size="sm">{request.subject}</Chip>;
+        return (
+          <div className="flex items-center gap-2">
+            <Chip
+              size="sm"
+              className={cn(
+                getSubjectColor(request.subject),
+                "flex items-center gap-1 px-2"
+              )}
+              endContent={getSubjectIcon(request.subject)}
+            >
+              {request.subject}
+            </Chip>
+          </div>
+        );
       case "teacher":
         return request.teacher?.user?.name || "Unassigned";
       case "genderPref":
-        return request.genderPref || "No Preference";
+        switch (request.genderPref) {
+          case "F":
+            return "Female";
+          case "M":
+            return "Male";
+          default:
+            return "No Preference";
+        }
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
