@@ -6,7 +6,7 @@ import { sendEmail } from "@/hooks/email/email";
 const AcceptRequest = () => {
   const handleTestEmail = async () => {
     const result = await sendEmail(
-      "mcdabg1236@gmail.com",
+      "rohanpeddamallu@gmail.com",
       "Tutor MEee Testt",
       `<!DOCTYPE html>
         <html>
