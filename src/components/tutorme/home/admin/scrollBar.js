@@ -5,6 +5,13 @@ import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
 import { EditIcon, DeleteIcon } from "lucide-react";
+import { MdAssignment } from "react-icons/md";
+import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
+import { HiMiniBeaker } from "react-icons/hi2";
+import { GiMaterialsScience } from "react-icons/gi";
+import { Dna } from "lucide-react";
+import { PiBooks } from "react-icons/pi";
+import { IoLanguageOutline } from "react-icons/io5";
 import {
   Modal,
   ModalContent,
@@ -57,6 +64,51 @@ const Scrollbar = () => {
 
   const [viewMode, setViewMode] = useState("card");
 
+  const getSubjectIcon = (subject) => {
+    if (["IM1", "IM2", "IM3"].includes(subject)) {
+      return <TbMath size={20} />;
+    } else if (subject === "Precalc") {
+      return <TbMathMax size={20} />;
+    } else if (["Calc AB", "Calc BC", "CalcBC", "CalcAB"].includes(subject)) {
+      return <TbMathIntegralX size={20} />;
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return <GiMaterialsScience size={20} />;
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return <Dna size={20} />;
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return <HiMiniBeaker size={20} />;
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return <IoLanguageOutline size={20} />;
+    }
+    return <PiBooks size={20} />;
+  };
+
+  const getSubjectColor = (subject) => {
+    if (
+      [
+        "IM1",
+        "IM2",
+        "IM3",
+        "Precalc",
+        "Calc AB",
+        "Calc BC",
+        "CalcBC",
+        "CalcAB",
+      ].includes(subject)
+    ) {
+      return "bg-math text-white";
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return "bg-physics text-white";
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return "bg-biology text-white";
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return "bg-chemistry text-white";
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return "bg-language text-white";
+    }
+    return "bg-other text-white";
+  };
+
   const renderCell = React.useCallback((tutor, columnKey) => {
     switch (columnKey) {
       case "name":
@@ -83,7 +135,14 @@ const Scrollbar = () => {
         return (
           <div className="flex flex-wrap gap-1">
             {tutor.subjects.map((subject, index) => (
-              <Chip key={index} size="sm">
+              <Chip
+                size="sm"
+                className={cn(
+                  getSubjectColor(subject),
+                  "flex items-center gap-1 px-2"
+                )}
+                endContent={getSubjectIcon(subject)}
+              >
                 {subject}
               </Chip>
             ))}
@@ -92,7 +151,7 @@ const Scrollbar = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit tutor">
+            <Tooltip content="Modify tutor">
               <span
                 className="text-lg text-default-400 cursor-pointer active:opacity-50"
                 onClick={() => handleModifyClick(tutor)}

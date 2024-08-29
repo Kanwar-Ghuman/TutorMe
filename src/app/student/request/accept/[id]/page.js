@@ -6,62 +6,62 @@ import { sendEmail } from "@/hooks/email/email";
 const AcceptRequest = () => {
   const tutorConfirmationEmail = `<!DOCTYPE html>
 <html>
-
 <head>
   <style>
-    .line {
-      display: flex;
-      flex-direction: row;
-      text-align: center;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 5px;
-      color:black;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
     }
-
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .logoStyle {
+      color: #FACC14;
+    }
+    .title {
+      font-size: 28px;
+      margin-top: 10px;
+    }
+    .content {
+      text-align: center;
+    }
+    .line {
+      margin: 10px 0;
+    }
+    .subtitle {
+      font-weight: bold;
+    }
     .confirm {
       background-color: #FACC14;
       border-radius: 10px;
       padding: 10px 20px;
-      border: none;
       border: 1px solid #333;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       cursor: pointer;
-      color:black;
+      color: black;
+      font-size: 16px;
+      margin-top: 20px;
     }
-
-    .logo {
-      display: flex;
-      justify-content: start;
-      align-items: start;
-      color:black;
+    a, a:visited {
+      color: inherit;
+      text-decoration: none;
     }
-
-    .logoStyle {
-      color: #FACC14;
-    }
-    .header span{
-      margin-left: 5px;
-    }
-
-    .title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color:black;
-    }
-
-    .subtitle{
-    font-weight: bold;
-    }
-
-    a:visited {
-  color: black; /* Or specify another color, like black */
-  text-decoration: none; /* Optional: removes underlining */
-}
   </style>
 </head>
-
 <body>
   <div class="container">
     <div class="header">
@@ -70,22 +70,19 @@ const AcceptRequest = () => {
     </div>
     <div class="content">
       <p>Hello [name of tutor]</p>
-      <p>These are the details of your tutoring session: </p>
+      <p>These are the details of your tutoring session:</p>
       <div class="line">
-        
-        <p><span class="subtitle">Name Of Student: </span>  [name of person getting tutored]</p>
+        <p><span class="subtitle">Name Of Student:</span> [name of person getting tutored]</p>
       </div>
       <div class="line">
-        <p><span class="subtitle">Subject:</span>  AP Physics</p>
+        <p><span class="subtitle">Subject:</span> AP Physics</p>
       </div>
       <p>To confirm this tutoring session, please click the button below:</p>
       <button class="confirm">Confirm</button>
-
       <p>Thank you for using TutorMe!</p>
     </div>
   </div>
 </body>
-
 </html>`;
 
   const studentConfirmationEmail = `<!DOCTYPE html>
@@ -93,60 +90,61 @@ const AcceptRequest = () => {
 
 <head>
   <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 600px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      color: black;
+    }
     .line {
       display: flex;
       flex-direction: row;
-      text-align: center;
       justify-content: flex-start;
       align-items: center;
       gap: 5px;
-      color:black;
+      color: black;
     }
-
     .confirm {
       background-color: #FACC14;
       border-radius: 10px;
       padding: 10px 20px;
-      border: none;
       border: 1px solid #333;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       cursor: pointer;
-      color:black;
+      color: black;
+      display: block;
+      margin: 20px auto;
     }
-
     .logo {
-      display: flex;
-      justify-content: start;
-      align-items: start;
-      color:black;
+      text-align: center;
+      color: black;
+      font-size: 24px;
+      font-weight: bold;
     }
-
     .logoStyle {
       color: #FACC14;
     }
-    .header span{
-      margin-left: 5px;
-    }
-
     .title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color:black;
+      text-align: center;
+      color: black;
     }
-
-    .subtitle{
-    font-weight: bold;
+    .subtitle {
+      font-weight: bold;
     }
-
-    .container{
-    color:black;
-    }
-
     a:visited {
-  color: inherit; /* Or specify another color, like black */
-  text-decoration: none; /* Optional: removes underlining */
-}
+      color: inherit;
+      text-decoration: none;
+    }
   </style>
 </head>
 
@@ -160,7 +158,6 @@ const AcceptRequest = () => {
       <p>Hello [name of student]</p>
       <p>These are the details of your tutoring session: </p>
       <div class="line">
-        
         <p><span class="subtitle">Name Of Tutor: </span>  [name of tutor]</p>
       </div>
       <div class="line">
@@ -168,7 +165,6 @@ const AcceptRequest = () => {
       </div>
       <p>To confirm this tutoring session, please click the button below:</p>
       <button class="confirm">Confirm</button>
-
       <p>Thank you for using TutorMe!</p>
     </div>
   </div>
@@ -178,9 +174,9 @@ const AcceptRequest = () => {
 
   const handleTestEmail = async () => {
     const result = await sendEmail(
-      "ameenalmousa0@gmail.com",
-      "Tutor MEee Test",
-      studentConfirmationEmail
+      "ghumankm@gmail.com",
+      "Tutor Me Confirmation",
+      tutorConfirmationEmail
     );
 
     if (result) {
