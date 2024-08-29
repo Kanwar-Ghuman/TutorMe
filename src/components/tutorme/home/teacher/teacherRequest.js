@@ -8,7 +8,7 @@ import { Dna } from "lucide-react";
 import { IoLanguageOutline } from "react-icons/io5";
 import { PiBooks } from "react-icons/pi";
 
-const TutorCard = ({ name, email, subject }) => {
+const TutorCard = ({ name, email, tutorName, subject }) => {
   const subjectIconMap = {
     IM: <TbMath size={20} />,
     Precalc: <TbMathMax size={20} />,
@@ -46,6 +46,9 @@ const TutorCard = ({ name, email, subject }) => {
         <div className="flex items-center gap-1 text-gray-400">
           <MdOutlineEmail size={16} />
           <p className="text-sm">{email}</p>
+        </div>
+        <div className="flex items-center gap-1 text-black">
+          <p className="text-md pt-3 ">Tutor: {tutorName}</p>
         </div>
       </CardHeader>
       <CardBody className="flex items-center justify-center">

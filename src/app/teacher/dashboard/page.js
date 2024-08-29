@@ -3,15 +3,16 @@ import TutorCard from '@/components/tutorme/home/teacher/teacherRequest';
 
 const Dashboard = () => {
   const tutors = [
-    { name: "John Doe", email: "john@example.com", subject: "IM" },
-    { name: "Jane Smith", email: "jane@example.com", subject: "Precalc" },
-    { name: "Alice Johnson", email: "alice@example.com", subject: "Calc" },
-    { name: "Bob Brown", email: "bob@example.com", subject: "Physics" },
-    { name: "Carol White", email: "carol@example.com", subject: "Biology" },
-    { name: "David Green", email: "david@example.com", subject: "Chemistry" },
-    { name: "Eve Black", email: "eve@example.com", subject: "Language" },
-    { name: "Grace Yellow", email: "grace@example.com", subject: "IM" },
-    { name: "Hank Purple", email: "hank@example.com", subject: "Precalc" },
+    { name: 'John Doe', email: 'john@example.com', tutorName: 'Mr. Smith', subject: 'IM' },
+    { name: 'Jane Smith', email: 'jane@example.com', tutorName: 'Ms. Johnson', subject: 'Precalc' },
+    { name: 'Alice Johnson', email: 'alice@example.com', tutorName: 'Dr. Brown', subject: 'Calc' },
+    { name: 'Bob Brown', email: 'bob@example.com', tutorName: 'Prof. White', subject: 'Physics' },
+    { name: 'Carol White', email: 'carol@example.com', tutorName: 'Mr. Green', subject: 'Biology' },
+    { name: 'David Green', email: 'david@example.com', tutorName: 'Ms. Black', subject: 'Chemistry' },
+    { name: 'Eve Black', email: 'eve@example.com', tutorName: 'Dr. Blue', subject: 'Language' },
+    { name: 'Frank Blue', email: 'frank@example.com', tutorName: 'Prof. Yellow', subject: 'Other' },
+    { name: 'Grace Yellow', email: 'grace@example.com', tutorName: 'Mr. Purple', subject: 'IM' },
+    { name: 'Hank Purple', email: 'hank@example.com', tutorName: 'Ms. Orange', subject: 'Precalc' },
   ];
     // Add more tutor objects as needed
 
@@ -22,6 +23,7 @@ const Dashboard = () => {
             key={index}
             name={tutor.name}
             email={tutor.email}
+            tutorName={tutor.tutorName}
             subject={tutor.subject}
           />
         ))}
