@@ -60,8 +60,22 @@ const Scrollbar = () => {
   const renderCell = React.useCallback((tutor, columnKey) => {
     switch (columnKey) {
       case "name":
+        const initials = tutor.name
+          .split(" ")
+          .map((name) => name[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
         return (
-          <User name={tutor.name} description={tutor.email}>
+          <User
+            name={tutor.name}
+            description={tutor.email}
+            avatarProps={{
+              src: null,
+              name: initials,
+              color: "primary",
+            }}
+          >
             {tutor.email}
           </User>
         );

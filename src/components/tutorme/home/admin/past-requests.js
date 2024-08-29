@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
+import { MdAssignment } from "react-icons/md";
+
 import { cn } from "@/lib/utils";
 import {
   Button,
@@ -26,7 +28,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import Select from "react-select";
-import { DeleteIcon, EditIcon, EyeIcon } from "lucide-react";
+import { DeleteIcon, EditIcon, EyeIcon, CheckIcon } from "lucide-react";
 
 const PastRequests = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -54,8 +56,22 @@ const PastRequests = () => {
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
       case "student":
+        const initials = request.student
+          .split(" ")
+          .map((name) => name[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
         return (
-          <User name={request.student} description={request.studentEmail}>
+          <User
+            name={request.student}
+            description={request.studentEmail}
+            avatarProps={{
+              src: null,
+              name: initials,
+              color: "primary",
+            }}
+          >
             {request.studentEmail}
           </User>
         );
@@ -63,23 +79,25 @@ const PastRequests = () => {
         return <Chip size="sm">{request.subject}</Chip>;
       case "teacher":
         return request.teacher?.user?.name || "Unassigned";
+      case "genderPref":
+        return request.genderPref || "No Preference";
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="View Details">
+            <Tooltip content="Assign Tutor">
               <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg text-primary cursor-pointer active:opacity-50"
                 onClick={() => handleAssign(request)}
               >
-                <EyeIcon />
+                <MdAssignment />
               </span>
             </Tooltip>
-            <Tooltip content="Edit Request">
+            <Tooltip content="Confirm Request">
               <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg  cursor-pointer active:opacity-50 text-green-500"
                 onClick={() => handleAssign(request)}
               >
-                <EditIcon />
+                <CheckIcon />
               </span>
             </Tooltip>
           </div>
@@ -92,7 +110,7 @@ const PastRequests = () => {
   const columns = [
     { name: "STUDENT", uid: "student" },
     { name: "SUBJECT", uid: "subject" },
-    { name: "GENDER PREF", uid: "genderPref" },
+    { name: "GENDER PREFERENCE", uid: "genderPref" },
     { name: "ASSIGNED TUTOR", uid: "teacher" },
     { name: "ACTIONS", uid: "actions" },
   ];
