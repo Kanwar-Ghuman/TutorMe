@@ -16,9 +16,11 @@ const AcceptRequest = () => {
     .line {
       display: flex;
       flex-direction: row;
+      text-align: center;
       justify-content: flex-start;
       align-items: center;
       gap: 5px;
+      color:black;
     }
 
     .confirm {
@@ -29,13 +31,14 @@ const AcceptRequest = () => {
       border: 1px solid #333;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       cursor: pointer;
+      color:black;
     }
 
     .logo {
       display: flex;
       justify-content: start;
-      align-items: start
-      
+      align-items: start;
+      color:black;
     }
 
     .logoStyle {
@@ -49,7 +52,17 @@ const AcceptRequest = () => {
       display: flex;
       justify-content: center;
       align-items: center;
+      color:black;
     }
+
+    .subtitle{
+    font-weight: bold;
+    }
+
+    a:visited {
+  color: black; /* Or specify another color, like black */
+  text-decoration: none; /* Optional: removes underlining */
+}
   </style>
 </head>
 
@@ -63,12 +76,11 @@ const AcceptRequest = () => {
       <p>Hello [name of tutor]</p>
       <p>These are the details of your tutoring session: </p>
       <div class="line">
-        <strong>Name Of Student:</strong>
-        <p>[name of person getting tutored]</p>
+        
+        <p><span class="subtitle">Name Of Student: </span>  [name of person getting tutored]</p>
       </div>
       <div class="line">
-        <strong>Subject:</strong>
-        <p>AP Physics</p>
+        <p><span class="subtitle">Subject:</span>  AP Physics</p>
       </div>
       <p>To confirm this tutoring session, please click the button below:</p>
       <button class="confirm">Confirm</button>
