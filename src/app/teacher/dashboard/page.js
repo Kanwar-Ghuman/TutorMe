@@ -1,5 +1,13 @@
-import React from 'react';
-import TutorCard from '@/components/tutorme/home/teacher/teacherRequest';
+"use client";
+
+import { IoFilter, IoSearchOutline } from "react-icons/io5";
+import TutorCard from "@/components/tutorme/home/teacher/teacherRequest";
+import { Input } from "@/components/ui/input";
+
+import Select from "react-select";
+
+
+
 
 const Dashboard = () => {
   const tutors = [
@@ -17,7 +25,33 @@ const Dashboard = () => {
     // Add more tutor objects as needed
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 mt-16">
+      <>
+      <div className="h-full flex flex-col  ">
+
+      <div className="flex flex-row m-4 justify-center items-center w-full space-x-4">
+                  
+            <Select
+              className="min-w-[15%] h-10 px-4 basic-multi-select"
+              classNamePrefix="select"
+              placeholder={
+                <div className="flex items-center">
+                  <IoFilter className="mr-2" />
+                  <span>Filter</span>
+                </div>
+              }
+            
+            />
+      
+            <div className="relative w-2/3">
+              <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search for tutor"
+                className="w-full h-10 pl-10 pr-4 border"
+              />
+            </div>
+          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 mt-16 ">
         {tutors.map((tutor, index) => (
           <TutorCard
             key={index}
@@ -28,6 +62,8 @@ const Dashboard = () => {
           />
         ))}
       </div>
+      </div>
+      </>
     );
 };
 
