@@ -24,6 +24,26 @@ module.exports = {
         "inter-bold": ['"Inter-Bold"', "Helvetica", "sans-serif"],
       },
       colors: {
+        math: {
+          DEFAULT: "#3B82F6",
+          foreground: "#FFFFFF",
+        },
+        physics: {
+          DEFAULT: "#8B5CF6",
+          foreground: "#FFFFFF",
+        },
+        biology: {
+          DEFAULT: "#10B981",
+          foreground: "#FFFFFF",
+        },
+        chemistry: {
+          DEFAULT: "#10B981",
+          foreground: "#FFFFFF",
+        },
+        language: {
+          DEFAULT: "#EF4444",
+          foreground: "#FFFFFF",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

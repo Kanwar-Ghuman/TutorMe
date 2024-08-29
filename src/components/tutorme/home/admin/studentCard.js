@@ -78,7 +78,7 @@ const StudentCard = ({
       return subjectIconMap.IM;
     } else if (subject === "Precalc") {
       return subjectIconMap.Precalc;
-    } else if (["Calc AB", "Calc BC"].includes(subject)) {
+    } else if (["Calc AB", "Calc BC", "CalcBC", "CalcAB"].includes(subject)) {
       return subjectIconMap.Calc;
     } else if (["Physics", "AP Physics"].includes(subject)) {
       return subjectIconMap.Physics;
