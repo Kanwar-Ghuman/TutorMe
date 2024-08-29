@@ -6,28 +6,79 @@ import { sendEmail } from "@/hooks/email/email";
 const AcceptRequest = () => {
   const handleTestEmail = async () => {
     const result = await sendEmail(
-      "mcdabg1236@gmail.com",
+      "ameenalmousa0@gmail.com",
       "Tutor MEee Testt",
       `<!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                // ... (your existing styles)
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>TutorMe</h1>
-                </div>
-                <div class="content">
-                    <p>Hello,</p>
-                    <p>This is a test email from TutorMe.</p>
-                    <p>Thank you for using TutorMe!</p>
-                </div>
-            </div>
-        </body>
-        </html>`
+<html>
+
+<head>
+  <style>
+    .line {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .confirm {
+      background-color: #FACC14;
+      border-radius: 10px;
+      padding: 10px 20px;
+      border: none;
+      border: 1px solid #333;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: start;
+      align-items: start
+      
+    }
+
+    .logoStyle {
+      color: #FACC14;
+    }
+    .header span{
+      margin-left: 5px;
+    }
+
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <p class="logo">NHS<span class="logoStyle">TutorMe</span></p>
+      <h1 class="title">Tutor Confirmation</h1>
+    </div>
+    <div class="content">
+      <p>Hello [name of tutor]</p>
+      <p>These are the details of your tutoring session: </p>
+      <div class="line">
+        <strong>Name Of Student:</strong>
+        <p>[name of person getting tutored]</p>
+      </div>
+      <div class="line">
+        <strong>Subject:</strong>
+        <p>AP Physics</p>
+      </div>
+      <p>To confirm this tutoring session, please click the button below:</p>
+      <button class="confirm">Confirm</button>
+
+      <p>Thank you for using TutorMe!</p>
+    </div>
+  </div>
+</body>
+
+</html>`
     );
 
     if (result) {
