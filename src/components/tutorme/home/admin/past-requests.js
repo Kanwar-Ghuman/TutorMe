@@ -3,6 +3,13 @@
 import React, { useState, useEffect } from "react";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
+import { MdAssignment } from "react-icons/md";
+import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
+import { HiMiniBeaker } from "react-icons/hi2";
+import { GiMaterialsScience } from "react-icons/gi";
+import { Dna } from "lucide-react";
+import { PiBooks } from "react-icons/pi";
+import { IoLanguageOutline } from "react-icons/io5";
 import { cn } from "@/lib/utils";
 import {
   Button,
@@ -26,7 +33,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import Select from "react-select";
-import { DeleteIcon, EditIcon, EyeIcon } from "lucide-react";
+import { DeleteIcon, EditIcon, EyeIcon, CheckIcon } from "lucide-react";
 
 const PastRequests = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -51,35 +58,116 @@ const PastRequests = () => {
 
   const [viewMode, setViewMode] = useState("card");
 
+  const getSubjectIcon = (subject) => {
+    if (["IM1", "IM2", "IM3"].includes(subject)) {
+      return <TbMath size={20} />;
+    } else if (subject === "Precalc") {
+      return <TbMathMax size={20} />;
+    } else if (["Calc AB", "Calc BC", "CalcBC", "CalcAB"].includes(subject)) {
+      return <TbMathIntegralX size={20} />;
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return <GiMaterialsScience size={20} />;
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return <Dna size={20} />;
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return <HiMiniBeaker size={20} />;
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return <IoLanguageOutline size={20} />;
+    }
+    return <PiBooks size={20} />;
+  };
+
+  const getSubjectColor = (subject) => {
+    if (
+      [
+        "IM1",
+        "IM2",
+        "IM3",
+        "Precalc",
+        "Calc AB",
+        "Calc BC",
+        "CalcBC",
+        "CalcAB",
+      ].includes(subject)
+    ) {
+      return "bg-math text-white";
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return "bg-physics text-white";
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return "bg-biology text-white";
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return "bg-chemistry text-white";
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return "bg-language text-white";
+    }
+    return "bg-other text-white";
+  };
+
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
       case "student":
+        const initials = request.student
+          .split(" ")
+          .map((name) => name[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
         return (
-          <User name={request.student} description={request.studentEmail}>
+          <User
+            name={request.student}
+            description={request.studentEmail}
+            avatarProps={{
+              src: null,
+              name: initials,
+              color: "primary",
+            }}
+          >
             {request.studentEmail}
           </User>
         );
       case "subject":
-        return <Chip size="sm">{request.subject}</Chip>;
+        return (
+          <div className="flex items-center gap-2">
+            <Chip
+              size="sm"
+              className={cn(
+                getSubjectColor(request.subject),
+                "flex items-center gap-1 px-2"
+              )}
+              endContent={getSubjectIcon(request.subject)}
+            >
+              {request.subject}
+            </Chip>
+          </div>
+        );
       case "teacher":
         return request.teacher?.user?.name || "Unassigned";
+      case "genderPref":
+        switch (request.genderPref) {
+          case "F":
+            return "Female";
+          case "M":
+            return "Male";
+          default:
+            return "No Preference";
+        }
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="View Details">
+            <Tooltip content="Assign Tutor">
               <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg text-primary cursor-pointer active:opacity-50"
                 onClick={() => handleAssign(request)}
               >
-                <EyeIcon />
+                <MdAssignment />
               </span>
             </Tooltip>
-            <Tooltip content="Edit Request">
+            <Tooltip content="Confirm Request">
               <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                className="text-lg  cursor-pointer active:opacity-50 text-green-500"
                 onClick={() => handleAssign(request)}
               >
-                <EditIcon />
+                <CheckIcon />
               </span>
             </Tooltip>
           </div>
@@ -92,7 +180,7 @@ const PastRequests = () => {
   const columns = [
     { name: "STUDENT", uid: "student" },
     { name: "SUBJECT", uid: "subject" },
-    { name: "GENDER PREF", uid: "genderPref" },
+    { name: "GENDER PREFERENCE", uid: "genderPref" },
     { name: "ASSIGNED TUTOR", uid: "teacher" },
     { name: "ACTIONS", uid: "actions" },
   ];
