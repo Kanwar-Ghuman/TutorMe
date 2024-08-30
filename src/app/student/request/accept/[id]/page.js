@@ -182,10 +182,13 @@ const AcceptRequest = () => {
 
 </html>`;
 
+  const tutorSubjectLine = "Tutor Me Confirmation";
+  const studentSubjectLine = "Tutor Me Confirmation";
+
   const handleTestEmail = async () => {
     const result = await sendEmail(
       "AmeenAlmousa0@gmail.com",
-      "Tutor Me Confirmation",
+      tutorMeConfirmation,
       tutorConfirmationEmail
     );
 
