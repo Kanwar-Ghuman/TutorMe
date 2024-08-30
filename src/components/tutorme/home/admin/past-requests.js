@@ -229,7 +229,7 @@ const PastRequests = () => {
   return (
     <div className="h-full w-full flex flex-col items-center">
       <>
-        <div className="flex flex-row m-4 justify-center items-center w-full">
+        <div className="flex flex-row m-4 justify-center items-center w-full z-50">
           <div className="flex justify-end items-center">
             <Switch
               checked={viewMode === "table"}
@@ -241,7 +241,7 @@ const PastRequests = () => {
             </Switch>
           </div>
           <Select
-            className="w-[13%] h-10 px-4 basic-multi-select z-50"
+            className="w-[13%] h-10 px-4 basic-multi-select "
             classNamePrefix="select"
             options={subjectsOptions}
             isClearable={true}
