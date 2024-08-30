@@ -30,7 +30,7 @@ const SideBar = () => {
       <SideButton
         theName="Tutor Requests"
         theIcon={IoIosGitPullRequest}
-        theLink="/admin/past-request"
+        theLink="/admin/tutor-requests"
       />
       <SideButton
         theName="Tutors"

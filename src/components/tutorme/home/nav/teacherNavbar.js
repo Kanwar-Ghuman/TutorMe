@@ -3,7 +3,7 @@ import { BaseNavbar } from "./baseNavbar";
 
 export async function TeacherNavbar({ user }) {
   const menuItems = [
-    { label: "Dashboard", link: "/teacher/pastRequest" },
+    { label: "Dashboard", link: "/teacher/tutor-requests" },
     { label: "Create a Request", link: "/teacher/request/create" },
   ];
 
