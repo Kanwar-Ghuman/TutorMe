@@ -1,61 +1,32 @@
-import * as sgMail from '@sendgrid/mail';
+"use server";
 
-export default function SendEmail() {
+// import * as sgMail from "@sendgrid/mail";
+import { createTransport } from "nodemailer";
 
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+export async function sendEmail(to, subject, html) {
 
   const msg = {
-    to: 'heyanantraj@gmail.com', // Change to your recipient
-    from: 'heyanantraj@gmail.com', // Change to your verified sender
-    subject: 'This is a simple message',
-    text: 'which contains some text',
-    html: `<!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #FFFFFF;
-                color: #1E1E1E;
-            }
-            .container {
-                width: 100%;
-                margin: 0 auto;
-                background-color: #FFFFFF;
-            }
-            .header {
-                background-color: #3751FF;
-                color: #FFFFFF;
-                padding: 20px;
-                text-align: center;
-            }
-            .content {
-                padding: 20px;
-                text-align: center;
-            }
-            .verification-code {
-                font-size: 20px;
-                font-weight: bold;
-                color: #3751FF;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>PowerGrader</h1>
-            </div>
-            <div class="content">
-                <p>Hello,</p>
-                <p>Please verify your email address by entering the code below:</p>
-                <p>Thank you for using PowerGrader!</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    `,
+    from: "heyanantraj@gmail.com", // Your verified sender
+    to,
+    subject,
+    html,
+  };
+
+  const transporter = createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    auth: {
+      user: "heyanantraj@gmail.com",
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
+  try {
+    await transporter.sendMail(msg)
+    console.log("Email sent successfully");
+    return true;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return false;
   }
-  sgMail.send(msg)
 }

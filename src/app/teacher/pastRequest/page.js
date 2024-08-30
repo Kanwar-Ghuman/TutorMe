@@ -10,17 +10,18 @@ import { TbMath } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { CalendarCheck } from "lucide-react";
 
 import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
-import { Dna } from "lucide-react";
 import { GiMaterialsScience } from "react-icons/gi";
-
+import { MdOutlinePending } from "react-icons/md";
+import { Dna } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import Select from "react-select";
 import { Form } from "@/components/ui/form";
-
+import ReactSelect from "react-select";
 import {
   Card,
   CardHeader,
@@ -275,70 +276,50 @@ const PastRequests = () => {
   }
 
   return (
-    <div className="flex flex-wrap flex-row items-start w-full p-4">
+    <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
-        <Form {...form}>
-          <form>
-            <Controller
-              name="subjects"
-              control={form.control}
-              render={({ field }) => (
-                <Select
-                  options={subjectsOptions}
-                  className="min-w-[15%] h-10 px-4 basic-multi-select"
-                  classNamePrefix="select"
-                  placeholder={
-                    <div className="flex items-center">
-                      <IoFilter className="mr-2" />
-                      <span>Filter</span>
-                    </div>
-                  }
-                  isDisabled={loading}
-                  isClearable={true}
-                />
-              )}
-            />
-          </form>
-        </Form>
-        <div className="relative w-2/3">
-          <Input
-            type="text"
-            id="inputSearch"
-            placeholder="Search"
-            className="w-[90%]"
-            onKeyUp={(event) => {
-              search(event.target.value);
-            }}
-            startContent={
-              <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
-            }
-          />
-        </div>
-
+        <ReactSelect
+          className=" w-[15%]  h-10 px-4 basic-multi-select"
+          options={subjectsOptions}
+          classNamePrefix="select"
+          placeholder={
+            <div className="flex items-center">
+              <IoFilter className="mr-2" />
+              <span>Filter</span>
+            </div>
+          }
+        />
+        <Input
+          type="text"
+          id="inputSearch"
+          placeholder="Search"
+          className="sm:w-[50%] w-[60%]"
+          onKeyUp={(event) => {
+            search(event.target.value);
+          }}
+          startContent={
+            <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+          }
+        />
       </div>
       {requests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center h-full ">
           <p className="text-2xl text-black-500">No Requests Found</p>
         </div>
       ) : (
-        <div className="flex flex-row flex-wrap sm:mx-18 mx-15">
+        <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
           {requests.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[1500px] mb-8 sm:w-[375px] h-[320px] mx-[3.2rem] bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
-                <CardHeader className="text-black-700 text-m items-center justify-center">
+                <CardHeader className="text-black-700 text-m items-center justify-center flex-col">
                   {request.student}
+                  <p className="text-gray-400">{request.studentEmail}</p>
                 </CardHeader>
               </strong>
               <CardBody className="text-black gap-4 overflow-hidden">
-                <div className="flex items-center gap-1">
-                  <p className="mr-[.9rem]">Email</p>
-                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                  <p>{request.studentEmail}</p>
-                  <MdOutlineEmail size={20} className="mt-1" />
-                </div>
                 <div className="flex items-center gap-1">
                   <p>Subject</p>
                   <IoEllipsisVerticalOutline size={20} className="mt-1" />
@@ -346,7 +327,7 @@ const PastRequests = () => {
                   {getSubjectIcon(request.subject)}
                 </div>
                 <div className="flex items-center gap-1">
-                  <p>Gender</p>
+                  <p>Gender Preference</p>
                   <IoEllipsisVerticalOutline size={20} className="mt-1" />
                   {request.genderPref === "F" ? (
                     <p>Female</p>
@@ -356,34 +337,84 @@ const PastRequests = () => {
                     <p>No Preference</p>
                   )}
                 </div>
-                <div className="">
-                  <p className="text-center pb-2">Status</p>
+                <div className="flex justify-start flex-row">
+                  <p className="text-center">Tutor</p>
+                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                  {request.subject === "Chemistry" ? (
+                    <p>John A</p>
+                  ) : request.subject === "AP Physics" ? (
+                    <p>John A</p>
+                  ) : (
+                    <p>Not Yet Matched</p>
+                  )}
+                </div>
+                <div>
                   {request.subject === "Chemistry" ? (
                     <div>
-                      <p className="text-center pb-2">Completed</p>
+                      <strong className="text-center pb-2 flex item-center justify-start items-center">
+                        Completed
+                      </strong>
                       <Progress
                         color="success"
                         value={100}
-                        className="max-w-md"
+                        className="max-w-xl"
                       />
+                      <div className="flex justify-between pt-1">
+                        <p className="text-gray-400">You are all good to go!</p>
+                        <div className="justify-end">
+                          <FaRegCheckCircle
+                            size={25}
+                            className="text-green-600"
+                          />
+                        </div>
+                      </div>
                     </div>
                   ) : request.subject === "AP Physics" ? (
                     <div>
-                      <p className="text-center pb-2">Confirmed</p>
+                      <strong className="text-center pb-2 flex item-center justify-start items-center">
+                        Confirmed
+                      </strong>
                       <Progress
-                        color="warning"
                         value={75}
-                        className="max-w-md"
+                        className="max-w-xl"
+                        classNames={{
+                          indicator: "bg-yellow-400",
+                        }}
                       />
+                      <div className="flex justify-between pt-1">
+                        <p className="text-gray-400">
+                          Waiting for Mr.Decker to confirm
+                        </p>
+                        <div className="flex justify-end">
+                          <CalendarCheck
+                            size={25}
+                            className="text-orange-600"
+                          />
+                        </div>
+                      </div>
                     </div>
                   ) : (
-                    <div>
-                      <p className="text-center pb-2">Pending</p>
+                    <div className="">
+                      <strong className="text-center pb-2 flex item-center justify-start items-center">
+                        Pending
+                      </strong>
+
                       <Progress
                         color="danger"
                         value={30}
-                        className="max-w-md"
+                        className="max-w-xl"
                       />
+                      <div className="flex justify-between pt-1">
+                        <p className="text-gray-400">
+                          Waiting for tutor to confirm
+                        </p>
+                        <div className="flex justify-end">
+                          <MdOutlinePending
+                            size={30}
+                            className="text-red-600"
+                          />
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -448,7 +479,7 @@ const PastRequests = () => {
                       <label className="block text-sm font-medium text-gray-700">
                         Subjects (comma separated)
                       </label>
-                      <Select
+                      <ReactSelect
                         value={editSubject}
                         onChange={(selectedOptions) =>
                           setEditSubject(selectedOptions)

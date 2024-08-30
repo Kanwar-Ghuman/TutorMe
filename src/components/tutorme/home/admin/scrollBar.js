@@ -4,6 +4,14 @@ import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
+import { EditIcon, DeleteIcon } from "lucide-react";
+import { MdAssignment } from "react-icons/md";
+import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
+import { HiMiniBeaker } from "react-icons/hi2";
+import { GiMaterialsScience } from "react-icons/gi";
+import { Dna } from "lucide-react";
+import { PiBooks } from "react-icons/pi";
+import { IoLanguageOutline } from "react-icons/io5";
 import {
   Modal,
   ModalContent,
@@ -16,6 +24,16 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Switch,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  User,
+  Chip,
+  Tooltip,
 } from "@nextui-org/react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -27,7 +45,6 @@ import AcceptStudentCard from "@/components/request/accept/acceptStudentCard";
 
 const Scrollbar = () => {
   const [studentArr, setStudentArr] = useState([]);
-  const [updateArr, setUpdateArr] = useState([]);
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -41,9 +58,127 @@ const Scrollbar = () => {
   const [editSubjects, setEditSubjects] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
+  const [viewMode, setViewMode] = useState("card");
+
+  const getSubjectIcon = (subject) => {
+    if (["IM1", "IM2", "IM3"].includes(subject)) {
+      return <TbMath size={20} />;
+    } else if (subject === "Precalc") {
+      return <TbMathMax size={20} />;
+    } else if (["Calc AB", "Calc BC", "CalcBC", "CalcAB"].includes(subject)) {
+      return <TbMathIntegralX size={20} />;
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return <GiMaterialsScience size={20} />;
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return <Dna size={20} />;
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return <HiMiniBeaker size={20} />;
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return <IoLanguageOutline size={20} />;
+    }
+    return <PiBooks size={20} />;
+  };
+
+  const getSubjectColor = (subject) => {
+    if (
+      [
+        "IM1",
+        "IM2",
+        "IM3",
+        "Precalc",
+        "Calc AB",
+        "Calc BC",
+        "CalcBC",
+        "CalcAB",
+      ].includes(subject)
+    ) {
+      return "bg-math text-white";
+    } else if (["Physics", "AP Physics"].includes(subject)) {
+      return "bg-physics text-white";
+    } else if (["Biology", "AP Biology"].includes(subject)) {
+      return "bg-biology text-white";
+    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
+      return "bg-chemistry text-white";
+    } else if (subject.includes("Spanish") || subject.includes("German")) {
+      return "bg-language text-white";
+    }
+    return "bg-other text-white";
+  };
+
+  const renderCell = React.useCallback((tutor, columnKey) => {
+    switch (columnKey) {
+      case "name":
+        const initials = tutor.name
+          .split(" ")
+          .map((name) => name[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+        return (
+          <User
+            name={tutor.name}
+            description={tutor.email}
+            avatarProps={{
+              src: null,
+              name: initials,
+              color: "primary",
+            }}
+          >
+            {tutor.email}
+          </User>
+        );
+      case "subjects":
+        return (
+          <div className="flex flex-wrap gap-1">
+            {tutor.subjects.map((subject, index) => (
+              <Chip
+                size="sm"
+                className={cn(
+                  getSubjectColor(subject),
+                  "flex items-center gap-1 px-2"
+                )}
+                endContent={getSubjectIcon(subject)}
+              >
+                {subject}
+              </Chip>
+            ))}
+          </div>
+        );
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Modify tutor">
+              <span
+                className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                onClick={() => handleModifyClick(tutor)}
+              >
+                <EditIcon />
+              </span>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete tutor">
+              <span
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+                onClick={() => handleDelete(tutor.id)}
+              >
+                <DeleteIcon />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return tutor[columnKey];
+    }
+  }, []);
+
+  const columns = [
+    { name: "NAME", uid: "name" },
+    { name: "SUBJECTS", uid: "subjects" },
+    { name: "ACTIONS", uid: "actions" },
+  ];
   const defaultValues = {
     subjects: [],
   };
@@ -135,7 +270,6 @@ const Scrollbar = () => {
     }
     setListStudent(myTempArr);
   };
-
   const handleDelete = async (id) => {
     try {
       const cardElement = document.getElementById(`card-${id}`);
@@ -149,6 +283,10 @@ const Scrollbar = () => {
           throw new Error("Failed to delete request");
         }
         setListStudent((prev) => prev.filter((student) => student.id !== id));
+        setFilteredStudents((prev) =>
+          prev.filter((student) => student.id !== id)
+        );
+        setStudentArr((prev) => prev.filter((student) => student.id !== id));
       }, 500);
     } catch (error) {
       console.error("Failed to delete tutor:", error);
@@ -166,7 +304,7 @@ const Scrollbar = () => {
   };
 
   const handleSaveClick = async () => {
-    setformLoading(true);
+    setIsSubmitting(true);
     setError("");
 
     const updatedTutor = {
@@ -192,9 +330,25 @@ const Scrollbar = () => {
       }
 
       const updatedData = await response.json();
-      setListStudent((prev) =>
+
+      // Ensure the updated data has the correct structure
+      const formattedUpdatedData = {
+        id: selectedRequest.id,
+        name: updatedData.name || editName,
+        email: updatedData.email || editEmail,
+        subjects:
+          updatedData.subjects || editSubjects.map((subject) => subject.value),
+      };
+
+      // Update the state immediately
+      setFilteredStudents((prev) =>
         prev.map((student) =>
-          student.id === selectedRequest.id ? updatedData : student
+          student.id === selectedRequest.id ? formattedUpdatedData : student
+        )
+      );
+      setStudentArr((prev) =>
+        prev.map((student) =>
+          student.id === selectedRequest.id ? formattedUpdatedData : student
         )
       );
 
@@ -208,7 +362,7 @@ const Scrollbar = () => {
       console.error("Failed to update tutor:", error);
       setError("An unexpected error occurred.");
     } finally {
-      setformLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -266,7 +420,7 @@ const Scrollbar = () => {
   }
 
   return (
-    <div className="h-[87vh] flex flex-col items-center ">
+    <div className="h-full flex flex-col  ">
       {studentArr.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-6xl">No Current Tutors</p>
@@ -280,7 +434,17 @@ const Scrollbar = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-row m-4 justify-center items-center w-full space-x-0 ">
+          <div className="flex flex-row m-4 justify-center items-center w-full space-x-4">
+            <div className="flex justify-end items-center">
+              <Switch
+                checked={viewMode === "table"}
+                onChange={() =>
+                  setViewMode(viewMode === "card" ? "table" : "card")
+                }
+              >
+                {viewMode === "card" ? "Card View" : "Table View"}
+              </Switch>
+            </div>
             <Form {...form}>
               <form>
                 <Controller
@@ -311,7 +475,7 @@ const Scrollbar = () => {
               <Input
                 type="text"
                 id="inputSearch"
-                placeholder="Search"
+                placeholder="Search for tutor"
                 className="w-full h-10 pl-10 pr-4 border"
                 onChange={handleSearchChange}
                 value={searchTerm}
@@ -321,24 +485,49 @@ const Scrollbar = () => {
               />
             </div>
           </div>
-
-          <div className="flex flex-col overflow-hidden max-h-[90%] w-full items-center">
+          <div className="flex-1 overflow-y-auto">
             {filteredStudents.length === 0 ? (
-              <p className="text-2xl mt-4">
+              <p className="text-2xl mt-4 text-center">
                 No tutors found with this criteria
               </p>
+            ) : viewMode === "card" ? (
+              <div className="flex justify-center">
+                <div className="space-y-4 px-4 w-full max-w-7xl">
+                  {filteredStudents.map((student) => (
+                    <AcceptStudentCard
+                      id={student.id}
+                      studentName={student.name}
+                      tutorName={student.email}
+                      subjects={student.subjects || []}
+                      onDelete={handleDelete}
+                      onModify={handleModifyClick}
+                      key={student.id}
+                    />
+                  ))}
+                </div>
+              </div>
             ) : (
-              filteredStudents.map((student) => (
-                <AcceptStudentCard
-                  id={student.id}
-                  studentName={student.name}
-                  tutorName={student.email}
-                  subjects={student.subjects}
-                  onDelete={handleDelete}
-                  onModify={handleModifyClick}
-                  key={student.id}
-                />
-              ))
+              <Table aria-label="Tutors table">
+                <TableHeader columns={columns}>
+                  {(column) => (
+                    <TableColumn
+                      key={column.uid}
+                      align={column.uid === "actions" ? "center" : "start"}
+                    >
+                      {column.name}
+                    </TableColumn>
+                  )}
+                </TableHeader>
+                <TableBody items={filteredStudents}>
+                  {(item) => (
+                    <TableRow key={item.id}>
+                      {(columnKey) => (
+                        <TableCell>{renderCell(item, columnKey)}</TableCell>
+                      )}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             )}
           </div>
         </>
@@ -352,63 +541,82 @@ const Scrollbar = () => {
               </ModalHeader>
               <ModalBody>
                 {selectedRequest && (
-                  <>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
+                  <div className="relative">
+                    {isSubmitting && (
+                      <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                        <Spinner size="lg" />
+                      </div>
+                    )}
+                    <div
+                      className={
+                        isSubmitting ? "pointer-events-none opacity-50" : ""
+                      }
+                    >
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Email
+                        </label>
+                        <input
+                          type="text"
+                          value={editEmail}
+                          onChange={(e) => setEditEmail(e.target.value)}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Subjects
+                        </label>
+                        <Select
+                          isMulti
+                          value={editSubjects}
+                          onChange={setEditSubjects}
+                          options={subjectsOptions}
+                          className="basic-multi-select"
+                          classNamePrefix="select"
+                          placeholder="Select subjects"
+                          isDisabled={isSubmitting}
+                        />
+                      </div>
                     </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Email
-                      </label>
-                      <input
-                        type="text"
-                        value={editEmail}
-                        onChange={(e) => setEditEmail(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Subjects (comma separated)
-                      </label>
-                      <Select
-                        isMulti
-                        value={editSubjects}
-                        onChange={setEditSubjects}
-                        options={subjectsOptions}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        placeholder="Select subjects"
-                      />
-                    </div>
-                  </>
+                  </div>
                 )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={onClose}
+                  disabled={isSubmitting}
+                >
                   Close
                 </Button>
                 <Button
                   color="primary"
                   onPress={handleSaveClick}
-                  disabled={loading || success}
+                  disabled={isSubmitting || success}
                   className={cn("", {
                     "bg-green-500": success,
                     "hover:bg-green-600": success,
                   })}
                 >
-                  {loading ? (
+                  {isSubmitting ? (
                     <>
-                      <Loader2 className="animate-spin" />
-                      Please wait
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
                     </>
                   ) : success ? (
                     "Success"
