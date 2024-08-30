@@ -1,23 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MdOutlineEmail, MdOutlineDeleteForever } from "react-icons/md";
-import { BsGenderMale, BsGenderFemale } from "react-icons/bs";
-import { PiBooks } from "react-icons/pi";
-import { RxDividerVertical } from "react-icons/rx";
-import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
-import { TbMath } from "react-icons/tb";
-import { HiMiniBeaker } from "react-icons/hi2";
+import {
+  subjectsOptions,
+  formatOptionLabel,
+  customStyles,
+  getSubjectIcon,
+} from "@/components/utils/common";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { IoEllipsisVerticalOutline } from "react-icons/io5";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { CalendarCheck } from "lucide-react";
-
-import { TbMathIntegralX, TbMathMax } from "react-icons/tb";
-import { GiMaterialsScience } from "react-icons/gi";
 import { MdOutlinePending } from "react-icons/md";
-import { Dna } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
@@ -82,51 +78,6 @@ const PastRequests = () => {
   const form = useForm({
     defaultValues,
   });
-
-  const subjectsOptions = [
-    {
-      label: "Math",
-      options: [
-        { value: "IM1", label: "IM1" },
-        { value: "IM2", label: "IM2" },
-        { value: "IM3", label: "IM3" },
-        { value: "Precalc", label: "Precalculus" },
-        { value: "Calc AB", label: "AP Calculus AB" },
-        { value: "Calc BC", label: "AP Calculus BC" },
-      ],
-    },
-    {
-      label: "Science",
-      options: [
-        { value: "Physics", label: "Physics" },
-        { value: "Chemistry", label: "Chemistry" },
-        { value: "Biology", label: "Biology" },
-        { value: "AP Physics", label: "AP Physics" },
-        { value: "AP Chemistry", label: "AP Chemistry" },
-        { value: "AP Biology", label: "AP Biology" },
-      ],
-    },
-    {
-      label: "Spanish",
-      options: [
-        { value: "Spanish 1", label: "Spanish 1" },
-        { value: "Spanish 2", label: "Spanish 2" },
-        { value: "Spanish 3", label: "Spanish 3" },
-        { value: "Spanish 4", label: "Spanish 4" },
-        { value: "Spanish 5", label: "Spanish 5" },
-      ],
-    },
-    {
-      label: "German",
-      options: [
-        { value: "German 1", label: "German 1" },
-        { value: "German 2", label: "German 2" },
-        { value: "German 3", label: "German 3" },
-        { value: "German 4", label: "German 4" },
-        { value: "German 5", label: "German 5" },
-      ],
-    },
-  ];
 
   const handleDelete = async (id) => {
     try {
@@ -212,47 +163,17 @@ const PastRequests = () => {
     }
   };
 
-  const subjectIconMap = {
-    IM: <TbMath size={20} />,
-    Precalc: <TbMathMax size={20} />,
-    Calc: <TbMathIntegralX size={20} />,
-    Physics: <GiMaterialsScience size={20} />,
-    Biology: <Dna size={20} />,
-    Chemistry: <HiMiniBeaker size={20} />,
-    Language: <IoLanguageOutline size={20} />,
-    Other: <PiBooks size={20} />,
-  };
-
-  const getSubjectIcon = (subject) => {
-    if (["IM1", "IM2", "IM3"].includes(subject)) {
-      return subjectIconMap.IM;
-    } else if (subject === "Precalc") {
-      return subjectIconMap.Precalc;
-    } else if (["Calc AB", "Calc BC"].includes(subject)) {
-      return subjectIconMap.Calc;
-    } else if (["Physics", "AP Physics"].includes(subject)) {
-      return subjectIconMap.Physics;
-    } else if (["Biology", "AP Biology"].includes(subject)) {
-      return subjectIconMap.Biology;
-    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
-      return subjectIconMap.Chemistry;
-    } else if (subject.includes("Spanish") || subject.includes("German")) {
-      return subjectIconMap.Language;
-    }
-    return subjectIconMap.Other;
-  };
-
   if (loading) {
     return (
-      <div className="flex flex-col flex-wrap w-full p-8 items-center">
+      <div className="flex flex-col flex-wrap w-full items-center">
         <Skeleton className="rounded-lg w-2/3 mb-4">
           <div className="h-8 w-2/3 rounded-lg bg-default-300 items-center py-3"></div>
         </Skeleton>
-        <div className="flex flex-row flex-wrap py-4">
+        <div className="flex flex-row flex-wrap py-4 justify-center">
           {Array.from({ length: 9 }).map((_, index) => (
             <Card
               key={index}
-              className="overflow-hidden w-[1500px] sm:w-[375px] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
+              className="overflow-hidden w-[38%] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
             >
               <Skeleton className="rounded-lg">
                 <div className="h-24 rounded-lg bg-default-300"></div>
@@ -288,6 +209,8 @@ const PastRequests = () => {
               <span>Filter</span>
             </div>
           }
+          styles={customStyles}
+          formatOptionLabel={formatOptionLabel}
         />
         <Input
           type="text"

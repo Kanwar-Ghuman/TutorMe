@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import {
+  subjectsOptions,
+  formatOptionLabel,
+  customStyles,
+  getSubjectIcon,
+  getSubjectColor,
+} from "@/components/utils/common";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
 import { EditIcon, DeleteIcon } from "lucide-react";
-import { MdAssignment } from "react-icons/md";
-import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
-import { HiMiniBeaker } from "react-icons/hi2";
-import { GiMaterialsScience } from "react-icons/gi";
-import { Dna } from "lucide-react";
-import { PiBooks } from "react-icons/pi";
-import { IoLanguageOutline } from "react-icons/io5";
 import {
   Modal,
   ModalContent,
@@ -20,10 +20,6 @@ import {
   ModalFooter,
   useDisclosure,
   Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Switch,
   Table,
   TableHeader,
@@ -41,14 +37,13 @@ import { Spinner } from "@nextui-org/react";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
 import { cn } from "@/lib/utils";
-import AcceptStudentCard from "@/components/request/accept/acceptStudentCard";
+import AcceptStudentCard from "@/components/utils/acceptStudentCard";
 
-const Scrollbar = () => {
+const TutorOverview = () => {
   const [studentArr, setStudentArr] = useState([]);
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [formLoading, setformLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,51 +58,6 @@ const Scrollbar = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [viewMode, setViewMode] = useState("card");
-
-  const getSubjectIcon = (subject) => {
-    if (["IM1", "IM2", "IM3"].includes(subject)) {
-      return <TbMath size={20} />;
-    } else if (subject === "Precalc") {
-      return <TbMathMax size={20} />;
-    } else if (["Calc AB", "Calc BC", "CalcBC", "CalcAB"].includes(subject)) {
-      return <TbMathIntegralX size={20} />;
-    } else if (["Physics", "AP Physics"].includes(subject)) {
-      return <GiMaterialsScience size={20} />;
-    } else if (["Biology", "AP Biology"].includes(subject)) {
-      return <Dna size={20} />;
-    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
-      return <HiMiniBeaker size={20} />;
-    } else if (subject.includes("Spanish") || subject.includes("German")) {
-      return <IoLanguageOutline size={20} />;
-    }
-    return <PiBooks size={20} />;
-  };
-
-  const getSubjectColor = (subject) => {
-    if (
-      [
-        "IM1",
-        "IM2",
-        "IM3",
-        "Precalc",
-        "Calc AB",
-        "Calc BC",
-        "CalcBC",
-        "CalcAB",
-      ].includes(subject)
-    ) {
-      return "bg-math text-white";
-    } else if (["Physics", "AP Physics"].includes(subject)) {
-      return "bg-physics text-white";
-    } else if (["Biology", "AP Biology"].includes(subject)) {
-      return "bg-biology text-white";
-    } else if (["Chemistry", "AP Chemistry"].includes(subject)) {
-      return "bg-chemistry text-white";
-    } else if (subject.includes("Spanish") || subject.includes("German")) {
-      return "bg-language text-white";
-    }
-    return "bg-other text-white";
-  };
 
   const renderCell = React.useCallback((tutor, columnKey) => {
     switch (columnKey) {
@@ -366,51 +316,6 @@ const Scrollbar = () => {
     }
   };
 
-  const subjectsOptions = [
-    {
-      label: "Math",
-      options: [
-        { value: "IM1", label: "IM1" },
-        { value: "IM2", label: "IM2" },
-        { value: "IM3", label: "IM3" },
-        { value: "Precalc", label: "Precalculus" },
-        { value: "Calc AB", label: "AP Calculus AB" },
-        { value: "Calc BC", label: "AP Calculus BC" },
-      ],
-    },
-    {
-      label: "Science",
-      options: [
-        { value: "Physics", label: "Physics" },
-        { value: "Chemistry", label: "Chemistry" },
-        { value: "Biology", label: "Biology" },
-        { value: "AP Physics", label: "AP Physics" },
-        { value: "AP Chemistry", label: "AP Chemistry" },
-        { value: "AP Biology", label: "AP Biology" },
-      ],
-    },
-    {
-      label: "Spanish",
-      options: [
-        { value: "Spanish 1", label: "Spanish 1" },
-        { value: "Spanish 2", label: "Spanish 2" },
-        { value: "Spanish 3", label: "Spanish 3" },
-        { value: "Spanish 4", label: "Spanish 4" },
-        { value: "Spanish 5", label: "Spanish 5" },
-      ],
-    },
-    {
-      label: "German",
-      options: [
-        { value: "German 1", label: "German 1" },
-        { value: "German 2", label: "German 2" },
-        { value: "German 3", label: "German 3" },
-        { value: "German 4", label: "German 4" },
-        { value: "German 5", label: "German 5" },
-      ],
-    },
-  ];
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -434,7 +339,7 @@ const Scrollbar = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-row m-4 justify-center items-center w-full space-x-4">
+          <div className="flex flex-row m-4 justify-center items-center w-full space-x-4 z-50">
             <div className="flex justify-end items-center">
               <Switch
                 checked={viewMode === "table"}
@@ -453,7 +358,7 @@ const Scrollbar = () => {
                   render={({ field }) => (
                     <Select
                       options={subjectsOptions}
-                      className="min-w-[15%] h-10 px-4 basic-multi-select"
+                      className="w-71 h-10 pl-20 basic-multi-select"
                       classNamePrefix="select"
                       placeholder={
                         <div className="flex items-center">
@@ -465,6 +370,8 @@ const Scrollbar = () => {
                       isClearable={true}
                       onChange={handleSubjectChange}
                       value={selectedSubjects}
+                      styles={customStyles}
+                      formatOptionLabel={formatOptionLabel}
                     />
                   )}
                 />
@@ -476,7 +383,7 @@ const Scrollbar = () => {
                 type="text"
                 id="inputSearch"
                 placeholder="Search for tutor"
-                className="w-full h-10 pl-10 pr-4 border"
+                className="w-[80%] h-10 pl-10 pr-4 border"
                 onChange={handleSearchChange}
                 value={searchTerm}
                 onKeyUp={(event) => {
@@ -633,4 +540,4 @@ const Scrollbar = () => {
   );
 };
 
-export default Scrollbar;
+export default TutorOverview;

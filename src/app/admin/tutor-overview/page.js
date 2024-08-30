@@ -1,6 +1,6 @@
 import React from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
-import ScrollBar from "@/components/tutorme/home/admin/scrollBar";
+import TutorOverview from "@/components/tutorme/home/admin/tutor-overview";
 
 const AcceptRequest = () => {
   return (
@@ -9,7 +9,7 @@ const AcceptRequest = () => {
         <SideBar />
       </div>
       <div className="w-4/5 overflow-hidden">
-        <ScrollBar />
+        <TutorOverview />
       </div>
     </div>
   );
