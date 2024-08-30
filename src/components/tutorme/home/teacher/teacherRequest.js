@@ -48,7 +48,9 @@ const TutorCard = ({ name, email, tutorName, subject }) => {
           <p className="text-sm">{email}</p>
         </div>
         <div className="flex items-center gap-1 text-black">
-          <p className="text-md pt-3 ">Tutor: {tutorName}</p>
+          <p className="text-md pt-3 ">
+            <strong>Tutor:</strong> {tutorName}
+          </p>
         </div>
       </CardHeader>
       <CardBody className="flex items-center justify-center">

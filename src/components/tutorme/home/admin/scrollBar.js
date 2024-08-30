@@ -366,50 +366,125 @@ const Scrollbar = () => {
     }
   };
 
+  const subjectIconMap = {
+    IM: <TbMath size={20} />,
+    Precalc: <TbMathMax size={20} />,
+    Calc: <TbMathIntegralX size={20} />,
+    Physics: <GiMaterialsScience size={20} />,
+    Biology: <Dna size={20} />,
+    Chemistry: <HiMiniBeaker size={20} />,
+    Language: <IoLanguageOutline size={20} />,
+    Other: <PiBooks size={20} />,
+  };
+
   const subjectsOptions = [
     {
       label: "Math",
       options: [
-        { value: "IM1", label: "IM1" },
-        { value: "IM2", label: "IM2" },
-        { value: "IM3", label: "IM3" },
-        { value: "Precalc", label: "Precalculus" },
-        { value: "Calc AB", label: "AP Calculus AB" },
-        { value: "Calc BC", label: "AP Calculus BC" },
+        { value: "IM1", label: "IM1", icon: subjectIconMap.IM },
+        { value: "IM2", label: "IM2", icon: subjectIconMap.IM },
+        { value: "IM3", label: "IM3", icon: subjectIconMap.IM },
+        {
+          value: "Precalc",
+          label: "Precalculus",
+          icon: subjectIconMap.Precalc,
+        },
+        {
+          value: "Calc AB",
+          label: "AP Calculus AB",
+          icon: subjectIconMap.Calc,
+        },
+        {
+          value: "Calc BC",
+          label: "AP Calculus BC",
+          icon: subjectIconMap.Calc,
+        },
       ],
     },
     {
       label: "Science",
       options: [
-        { value: "Physics", label: "Physics" },
-        { value: "Chemistry", label: "Chemistry" },
-        { value: "Biology", label: "Biology" },
-        { value: "AP Physics", label: "AP Physics" },
-        { value: "AP Chemistry", label: "AP Chemistry" },
-        { value: "AP Biology", label: "AP Biology" },
+        { value: "Physics", label: "Physics", icon: subjectIconMap.Physics },
+        {
+          value: "Chemistry",
+          label: "Chemistry",
+          icon: subjectIconMap.Chemistry,
+        },
+        { value: "Biology", label: "Biology", icon: subjectIconMap.Biology },
+        {
+          value: "AP Physics",
+          label: "AP Physics",
+          icon: subjectIconMap.Physics,
+        },
+        {
+          value: "AP Chemistry",
+          label: "AP Chemistry",
+          icon: subjectIconMap.Chemistry,
+        },
+        {
+          value: "AP Biology",
+          label: "AP Biology",
+          icon: subjectIconMap.Biology,
+        },
       ],
     },
     {
       label: "Spanish",
       options: [
-        { value: "Spanish 1", label: "Spanish 1" },
-        { value: "Spanish 2", label: "Spanish 2" },
-        { value: "Spanish 3", label: "Spanish 3" },
-        { value: "Spanish 4", label: "Spanish 4" },
-        { value: "Spanish 5", label: "Spanish 5" },
+        {
+          value: "Spanish 1",
+          label: "Spanish 1",
+          icon: subjectIconMap.Language,
+        },
+        {
+          value: "Spanish 2",
+          label: "Spanish 2",
+          icon: subjectIconMap.Language,
+        },
+        {
+          value: "Spanish 3",
+          label: "Spanish 3",
+          icon: subjectIconMap.Language,
+        },
+        {
+          value: "Spanish 4",
+          label: "Spanish 4",
+          icon: subjectIconMap.Language,
+        },
+        {
+          value: "Spanish 5",
+          label: "Spanish 5",
+          icon: subjectIconMap.Language,
+        },
       ],
     },
     {
       label: "German",
       options: [
-        { value: "German 1", label: "German 1" },
-        { value: "German 2", label: "German 2" },
-        { value: "German 3", label: "German 3" },
-        { value: "German 4", label: "German 4" },
-        { value: "German 5", label: "German 5" },
+        { value: "German 1", label: "German 1", icon: subjectIconMap.Language },
+        { value: "German 2", label: "German 2", icon: subjectIconMap.Language },
+        { value: "German 3", label: "German 3", icon: subjectIconMap.Language },
+        { value: "German 4", label: "German 4", icon: subjectIconMap.Language },
+        { value: "German 5", label: "German 5", icon: subjectIconMap.Language },
       ],
     },
   ];
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      display: "flex",
+      alignItems: "center",
+      padding: "8px 12px",
+    }),
+  };
+
+  const formatOptionLabel = ({ value, label, icon }) => (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      {icon}
+      <span style={{ marginLeft: "10px" }}>{label}</span>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -453,7 +528,7 @@ const Scrollbar = () => {
                   render={({ field }) => (
                     <Select
                       options={subjectsOptions}
-                      className="min-w-[15%] h-10 px-4 basic-multi-select"
+                      className="w-71 h-10 pl-20 basic-multi-select"
                       classNamePrefix="select"
                       placeholder={
                         <div className="flex items-center">
@@ -465,6 +540,8 @@ const Scrollbar = () => {
                       isClearable={true}
                       onChange={handleSubjectChange}
                       value={selectedSubjects}
+                      styles={customStyles}
+                      formatOptionLabel={formatOptionLabel}
                     />
                   )}
                 />
