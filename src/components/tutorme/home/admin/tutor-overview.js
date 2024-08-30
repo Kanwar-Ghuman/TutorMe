@@ -37,7 +37,7 @@ import { Spinner } from "@nextui-org/react";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
 import { cn } from "@/lib/utils";
-import AcceptStudentCard from "@/components/request/accept/acceptStudentCard";
+import AcceptStudentCard from "@/components/utils/acceptStudentCard";
 
 const TutorOverview = () => {
   const [studentArr, setStudentArr] = useState([]);
