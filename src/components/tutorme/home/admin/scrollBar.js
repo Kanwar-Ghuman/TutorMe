@@ -434,7 +434,7 @@ const Scrollbar = () => {
         </div>
       ) : (
         <>
-          <div className="flex flex-row m-4 justify-center items-center w-full space-x-4">
+          <div className="flex flex-row m-4 justify-center items-center w-full space-x-4 z-50">
             <div className="flex justify-end items-center">
               <Switch
                 checked={viewMode === "table"}
