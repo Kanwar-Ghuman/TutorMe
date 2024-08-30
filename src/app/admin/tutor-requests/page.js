@@ -4,7 +4,7 @@ import SideBar from "@/components/tutorme/home/admin/sideBar";
 import PastRequests from "@/components/tutorme/home/admin/past-requests";
 import "../../../styles/globals.css";
 
-const AcceptRequest = () => {
+const AdminTutorRequests = () => {
   return (
     <div className="h-screen global-overflow-hidden">
       <div className="flex w-full h-full space-x-4 ">
@@ -19,4 +19,4 @@ const AcceptRequest = () => {
   );
 };
 
-export default AcceptRequest;
+export default AdminTutorRequests;
