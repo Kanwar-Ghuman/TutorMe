@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BsArchive, BsInbox } from "react-icons/bs";
 import { PiStudent } from "react-icons/pi";
 import { IoIosGitPullRequest } from "react-icons/io";
 import React from "react";
@@ -10,7 +9,6 @@ import React from "react";
 const SideButton = ({ theLink, theName, theIcon }) => {
   const pathname = usePathname();
   const isActive = pathname === theLink;
-
   return (
     <div className="flex flex-row ml-[4%] h-[100] mr-[5%]">
       <Link
@@ -20,7 +18,6 @@ const SideButton = ({ theLink, theName, theIcon }) => {
         }`}
       >
         {React.createElement(theIcon, { className: "ml-[2vh]" })}
-
         {theName}
       </Link>
     </div>
@@ -38,19 +35,8 @@ const SideBar = () => {
       <SideButton
         theName="Tutors"
         theIcon={PiStudent}
-        theLink="/admin/dashboard"
+        theLink="/admin/tutor-overview"
       />
-
-      {/* <SideButton
-        theName="Archive"
-        theIcon={BsArchive}
-        theLink="/admin/archive"
-      />
-      <SideButton
-        theName="Pending"
-        theIcon={BsInbox}
-        theLink="/admin/pending"
-      /> */}
     </div>
   );
 };

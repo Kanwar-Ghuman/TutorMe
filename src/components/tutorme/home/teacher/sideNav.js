@@ -39,14 +39,14 @@ const SideNav = () => {
       <SideButton
         theName="Tutor Requests"
         theIcon={MdDashboard}
-        theLink="/teacher/pastRequest"
-        isActive={currentPath === "/teacher/pastRequest"}
+        theLink="/teacher/tutor-requests"
+        isActive={currentPath === "/teacher/tutor-requests"}
       />
       <SideButton
         theName="Past Requests"
         theIcon={FaCodePullRequest}
-        theLink="/teacher/dashboard"
-        isActive={currentPath === "/teacher/dashboard"}
+        theLink="/teacher/past-requests"
+        isActive={currentPath === "/teacher/past-requests"}
       />
     </div>
   );
