@@ -37,7 +37,7 @@ import {
 
 import { CiEdit } from "react-icons/ci";
 
-const PastRequests = () => {
+const TeacherTutorRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -469,4 +469,4 @@ const PastRequests = () => {
     </div>
   );
 };
-export default PastRequests;
+export default TeacherTutorRequests;

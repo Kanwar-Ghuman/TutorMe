@@ -2,7 +2,7 @@ import React from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
 import TutorOverview from "@/components/tutorme/home/admin/tutor-overview";
 
-const AcceptRequest = () => {
+const AdminTutorOverview = () => {
   return (
     <div className="h-screen flex">
       <div className="w-1/5 shadow-md">
@@ -15,4 +15,4 @@ const AcceptRequest = () => {
   );
 };
 
-export default AcceptRequest;
+export default AdminTutorOverview;

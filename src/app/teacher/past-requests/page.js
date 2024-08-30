@@ -11,7 +11,7 @@ import {
 
 import Select from "react-select";
 
-const Dashboard = () => {
+const TeacherPastRequests = () => {
   const tutors = [
     {
       name: "John Doe",
@@ -126,4 +126,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default TeacherPastRequests;
