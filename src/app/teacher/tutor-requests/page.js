@@ -211,6 +211,7 @@ const TeacherTutorRequests = () => {
           }
           styles={customStyles}
           formatOptionLabel={formatOptionLabel}
+          isClearable={true}
         />
         <Input
           type="text"

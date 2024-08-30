@@ -93,6 +93,7 @@ const TeacherPastRequests = () => {
             }
             styles={customStyles}
             formatOptionLabel={formatOptionLabel}
+            isClearable={true}
           />
 
           <div className="w-2/3">
