@@ -6,87 +6,6 @@ import { sendEmail } from "@/hooks/email/email";
 const AcceptRequest = () => {
   const tutorConfirmationEmail = `<!DOCTYPE html>
 <html>
-<head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .logoStyle {
-      color: #FACC14;
-    }
-    .title {
-      font-size: 28px;
-      margin-top: 10px;
-    }
-    .content {
-      text-align: center;
-    }
-    .line {
-      margin: 10px 0;
-    }
-    .subtitle {
-      font-weight: bold;
-    }
-    .confirm {
-      background-color: #FACC14;
-      border-radius: 10px;
-      padding: 10px 20px;
-      border: 1px solid #333;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-      color: black;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    a, a:visited {
-      color: inherit;
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <p class="logo">NHS<span class="logoStyle">TutorMe</span></p>
-      <h1 class="title">Tutor Confirmation</h1>
-    </div>
-    <div class="content">
-      <p>Hello [name of tutor]</p>
-      <p>These are the details of your tutoring session:</p>
-      <div class="line">
-        <p><span class="subtitle">Name Of Student:</span> [name of person getting tutored]</p>
-      </div>
-      <div class="line">
-        <p><span class="subtitle">Subject:</span> AP Physics</p>
-      </div>
-      <p>To confirm this tutoring session, please click the button below:</p>
-      <button class="confirm">Confirm</button>
-      <p>Thank you for using TutorMe!</p>
-    </div>
-  </div>
-</body>
-</html>`;
-
-  const studentConfirmationEmail = `<!DOCTYPE html>
-<html>
 
 <head>
   <style>
@@ -95,11 +14,11 @@ const AcceptRequest = () => {
       justify-content: center;
       align-items: center;
       height: 100vh;
+      width: 100%;
       margin: 0;
       font-family: Arial, sans-serif;
     }
     .container {
-      max-width: 600px;
       padding: 20px;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -107,10 +26,8 @@ const AcceptRequest = () => {
       color: black;
     }
     .line {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
       align-items: center;
+      text-align: center;
       gap: 5px;
       color: black;
     }
@@ -133,6 +50,7 @@ const AcceptRequest = () => {
     }
     .logoStyle {
       color: #FACC14;
+      padding-left: 5px;
     }
     .title {
       text-align: center;
@@ -144,6 +62,99 @@ const AcceptRequest = () => {
     a:visited {
       color: inherit;
       text-decoration: none;
+    }
+
+    .content{
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <p class="logo">NHS<span class="logoStyle">TutorMe</span></p>
+      <h1 class="title">Tutor Confirmation</h1>
+    </div>
+    <div class="content">
+      <p>Hello [name of tutor]</p>
+      <p>These are the details of your tutoring session: </p>
+      <div class="line">
+        <p><span class="subtitle">Name Of Student: </span>  [name of student]</p>
+      </div>
+      <div class="line">
+        <p><span class="subtitle">Subject:</span>  AP Physics</p>
+      </div>
+      <p>To confirm this tutoring session, please click <span><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">here</a></span></p>
+      <p>Thank you for using TutorMe!</p>
+    </div>
+  </div>
+</body>
+
+</html>`;
+
+  const studentConfirmationEmail = `<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      color: black;
+    }
+    .line {
+      align-items: center;
+      text-align: center;
+      gap: 5px;
+      color: black;
+    }
+    .confirm {
+      background-color: #FACC14;
+      border-radius: 10px;
+      padding: 10px 20px;
+      border: 1px solid #333;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      color: black;
+      display: block;
+      margin: 20px auto;
+    }
+    .logo {
+      text-align: center;
+      color: black;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .logoStyle {
+      color: #FACC14;
+      padding-left: 5px;
+    }
+    .title {
+      text-align: center;
+      color: black;
+    }
+    .subtitle {
+      font-weight: bold;
+    }
+    a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .content{
+      text-align: center;
     }
   </style>
 </head>
@@ -163,8 +174,7 @@ const AcceptRequest = () => {
       <div class="line">
         <p><span class="subtitle">Subject:</span>  AP Physics</p>
       </div>
-      <p>To confirm this tutoring session, please click the button below:</p>
-      <button class="confirm">Confirm</button>
+      <p>To confirm this tutoring session, please click <span><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">here</a></span></p>
       <p>Thank you for using TutorMe!</p>
     </div>
   </div>
@@ -174,7 +184,7 @@ const AcceptRequest = () => {
 
   const handleTestEmail = async () => {
     const result = await sendEmail(
-      "ghumankm@gmail.com",
+      "AmeenAlmousa0@gmail.com",
       "Tutor Me Confirmation",
       tutorConfirmationEmail
     );
