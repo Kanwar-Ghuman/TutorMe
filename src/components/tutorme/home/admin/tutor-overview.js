@@ -39,7 +39,7 @@ import Select from "react-select";
 import { cn } from "@/lib/utils";
 import AcceptStudentCard from "@/components/request/accept/acceptStudentCard";
 
-const Scrollbar = () => {
+const TutorOverview = () => {
   const [studentArr, setStudentArr] = useState([]);
   const [listStudent, setListStudent] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
@@ -383,7 +383,7 @@ const Scrollbar = () => {
                 type="text"
                 id="inputSearch"
                 placeholder="Search for tutor"
-                className="w-full h-10 pl-10 pr-4 border"
+                className="w-[80%] h-10 pl-10 pr-4 border"
                 onChange={handleSearchChange}
                 value={searchTerm}
                 onKeyUp={(event) => {
@@ -540,4 +540,4 @@ const Scrollbar = () => {
   );
 };
 
-export default Scrollbar;
+export default TutorOverview;
