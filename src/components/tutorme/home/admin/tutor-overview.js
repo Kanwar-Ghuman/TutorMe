@@ -30,9 +30,9 @@ import {
   User,
   Chip,
   Tooltip,
+  Input,
 } from "@nextui-org/react";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@nextui-org/react";
 import { Loader2 } from "lucide-react";
 import Select from "react-select";
@@ -377,18 +377,20 @@ const TutorOverview = () => {
                 />
               </form>
             </Form>
-            <div className="relative w-2/3">
-              <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <div className=" w-2/3">
               <Input
                 type="text"
                 id="inputSearch"
                 placeholder="Search for tutor"
-                className="w-[80%] h-10 pl-10 pr-4 border"
+                className="w-[80%] h-10 pl-5 pr-4 "
                 onChange={handleSearchChange}
                 value={searchTerm}
                 onKeyUp={(event) => {
                   search(event.target.value);
                 }}
+                startContent={
+                  <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+                }
               />
             </div>
           </div>
