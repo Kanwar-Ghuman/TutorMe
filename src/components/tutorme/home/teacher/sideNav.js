@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { Clock7 } from "lucide-react";
 
 // Icons
 import { FaCodePullRequest } from "react-icons/fa6";
-
-import { MdDashboard } from "react-icons/md";
 
 const SideButton = ({ theLink, theIcon: Icon, theName, isActive }) => {
   return (
@@ -18,7 +16,7 @@ const SideButton = ({ theLink, theIcon: Icon, theName, isActive }) => {
           isActive ? "bg-primary text-white" : "hover:bg-slate-200"
         }`}
       >
-        <Icon className="ml-2" />
+        <Icon className="ml-2 size-5" />
         <span>{theName}</span>
       </Link>
     </div>
@@ -38,13 +36,13 @@ const SideNav = () => {
     <div className="flex-col mt-4 w-64 h-full p-4 bg-white">
       <SideButton
         theName="Tutor Requests"
-        theIcon={MdDashboard}
+        theIcon={FaCodePullRequest}
         theLink="/teacher/tutor-requests"
         isActive={currentPath === "/teacher/tutor-requests"}
       />
       <SideButton
         theName="Past Requests"
-        theIcon={FaCodePullRequest}
+        theIcon={Clock7}
         theLink="/teacher/past-requests"
         isActive={currentPath === "/teacher/past-requests"}
       />

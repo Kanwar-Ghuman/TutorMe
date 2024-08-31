@@ -11,7 +11,7 @@ import {
 
 import Select from "react-select";
 
-const Dashboard = () => {
+const TeacherPastRequests = () => {
   const tutors = [
     {
       name: "John Doe",
@@ -93,6 +93,7 @@ const Dashboard = () => {
             }
             styles={customStyles}
             formatOptionLabel={formatOptionLabel}
+            isClearable={true}
           />
 
           <div className="w-2/3">
@@ -126,4 +127,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default TeacherPastRequests;
