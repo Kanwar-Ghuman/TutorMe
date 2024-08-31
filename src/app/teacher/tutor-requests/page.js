@@ -6,6 +6,7 @@ import {
   formatOptionLabel,
   customStyles,
   getSubjectIcon,
+  getSubjectColor,
 } from "@/components/utils/common";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { IoEllipsisVerticalOutline } from "react-icons/io5";
@@ -18,11 +19,13 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import ReactSelect from "react-select";
+
 import {
   Card,
   CardHeader,
   CardBody,
   CardFooter,
+  Chip,
   Button,
   Input,
   Skeleton,
@@ -247,8 +250,16 @@ const TeacherTutorRequests = () => {
                 <div className="flex items-center gap-1">
                   <p>Subject</p>
                   <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                  <p>{request.subject}</p>
-                  {getSubjectIcon(request.subject)}
+                  <Chip
+                    size="md"
+                    className={cn(
+                      getSubjectColor(request.subject),
+                      "flex items-center gap-1 px-2 mt-1"
+                    )}
+                    endContent={getSubjectIcon(request.subject)}
+                  >
+                    {request.subject}
+                  </Chip>
                 </div>
                 <div className="flex items-center gap-1">
                   <p>Gender Preference</p>

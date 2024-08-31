@@ -5,7 +5,9 @@ import { MdOutlineEmail } from "react-icons/md";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@nextui-org/button";
 import { CiEdit } from "react-icons/ci";
-import { getSubjectIcon } from "@/components/utils/common";
+import { Chip } from "@nextui-org/react";
+import { cn } from "@/lib/utils";
+import { getSubjectColor, getSubjectIcon } from "@/components/utils/common";
 export default function AcceptStudentCard({
   id,
   studentName,
@@ -34,11 +36,16 @@ export default function AcceptStudentCard({
                 <span className="font-bold mr-2">Subjects:</span>
                 {subjects.map((subject, index) => (
                   <span key={index} className="flex items-center mr-2">
-                    {subject}
-                    <span className="ml-1">{getSubjectIcon(subject)}</span>
-                    {index < subjects.length - 1 && (
-                      <span className="mr-1">,</span>
-                    )}
+                    <Chip
+                      size="md"
+                      className={cn(
+                        getSubjectColor(subject),
+                        "flex items-center gap-1 px-2 mt-1"
+                      )}
+                      endContent={getSubjectIcon(subject)}
+                    >
+                      {subject}
+                    </Chip>
                   </span>
                 ))}
               </div>
