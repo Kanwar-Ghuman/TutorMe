@@ -358,7 +358,7 @@ const TutorOverview = () => {
                   render={({ field }) => (
                     <Select
                       options={subjectsOptions}
-                      className="w-71 h-10 pl-20 basic-multi-select"
+                      className="w-full h-10  basic-multi-select"
                       classNamePrefix="select"
                       placeholder={
                         <div className="flex items-center">

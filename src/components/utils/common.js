@@ -135,6 +135,16 @@ export const customStyles = {
     display: "flex",
     alignItems: "center",
     padding: "8px 12px",
+    width: "auto",
+  }),
+  menu: (provided) => ({
+    ...provided,
+    width: "auto", // This will make the menu as wide as the control
+    minWidth: "100%", // Ensures the menu is at least as wide as the control
+  }),
+  menuList: (provided) => ({
+    ...provided,
+    width: "auto", // This will make the menu list as wide as the menu
   }),
 };
 
