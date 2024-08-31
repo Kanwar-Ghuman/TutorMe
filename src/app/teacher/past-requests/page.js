@@ -1,7 +1,7 @@
 "use client";
 
 import TutorCard from "@/components/tutorme/home/teacher/teacherRequest";
-import { Input } from "@nextui-org/react";
+import { Input, Spinner } from "@nextui-org/react";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import {
   subjectsOptions,
@@ -9,77 +9,45 @@ import {
   formatOptionLabel,
 } from "@/components/utils/common";
 
+import { useEffect, useState } from "react";
+
 import Select from "react-select";
 
 const TeacherPastRequests = () => {
-  const tutors = [
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      tutorName: "Mr. Smith",
-      subject: "IM",
-    },
-    {
-      name: "Jane Smith",
-      email: "jane@example.com",
-      tutorName: "Ms. Johnson",
-      subject: "Precalc",
-    },
-    {
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      tutorName: "Dr. Brown",
-      subject: "Calc",
-    },
-    {
-      name: "Bob Brown",
-      email: "bob@example.com",
-      tutorName: "Prof. White",
-      subject: "Physics",
-    },
-    {
-      name: "Carol White",
-      email: "carol@example.com",
-      tutorName: "Mr. Green",
-      subject: "Biology",
-    },
-    {
-      name: "David Green",
-      email: "david@example.com",
-      tutorName: "Ms. Black",
-      subject: "Chemistry",
-    },
-    {
-      name: "Eve Black",
-      email: "eve@example.com",
-      tutorName: "Dr. Blue",
-      subject: "Language",
-    },
-    {
-      name: "Frank Blue",
-      email: "frank@example.com",
-      tutorName: "Prof. Yellow",
-      subject: "Other",
-    },
-    {
-      name: "Grace Yellow",
-      email: "grace@example.com",
-      tutorName: "Mr. Purple",
-      subject: "IM",
-    },
-    {
-      name: "Hank Purple",
-      email: "hank@example.com",
-      tutorName: "Ms. Orange",
-      subject: "Precalc",
-    },
-  ];
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Add more tutor objects as needed
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await fetch("/api/teacher/past-tutor-requests");
+        if (!response.ok) {
+          throw new Error("Failed to fetch requests");
+        }
+        const data = await response.json();
+        console.log("Fetched Data:", data);
+        setRequests(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
 
+    fetchRequests();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
   return (
     <>
-      <div className="h-full flex flex-col ">
+      <div className="flex flex-wrap flex-col items-start w-full p-4">
         <div className="flex flex-row m-4 justify-center items-center w-full space-x-4 z-50">
           <Select
             className="min-w-[15%] h-10 px-4 basic-multi-select"
@@ -111,17 +79,22 @@ const TeacherPastRequests = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 mt-8 ">
-          {tutors.map((tutor, index) => (
-            <TutorCard
-              key={index}
-              name={tutor.name}
-              email={tutor.email}
-              tutorName={tutor.tutorName}
-              subject={tutor.subject}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 mt-8 ">
+            {requests.map((request) => (
+              <TutorCard
+                key={request.id}
+                name={request.student}
+                email={request.studentEmail}
+                subject={request.subject}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
