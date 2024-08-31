@@ -1,12 +1,13 @@
 "use client";
 
-import { getSubjectIcon } from "@/components/utils/common";
+import { getSubjectIcon, getSubjectColor } from "@/components/utils/common";
 import { IoEllipsisVerticalOutline, IoLanguageOutline } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import { MdAssignment } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { CalendarCheck } from "lucide-react";
 import { MdOutlinePending } from "react-icons/md";
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardHeader,
@@ -14,6 +15,7 @@ import {
   CardFooter,
   Button,
   Progress,
+  Chip,
 } from "@nextui-org/react";
 
 const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
@@ -31,8 +33,16 @@ const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
           <div className="flex items-center gap-1">
             <p>Subject</p>
             <IoEllipsisVerticalOutline size={20} className="mt-1" />
-            <p>{subject}</p>
-            {getSubjectIcon(subject)}
+            <Chip
+              size="md"
+              className={cn(
+                getSubjectColor(subject),
+                "flex items-center gap-1 px-2 mt-1"
+              )}
+              endContent={getSubjectIcon(subject)}
+            >
+              {subject}
+            </Chip>
           </div>
           <div className="flex items-center gap-1">
             <p>Gender Preference</p>

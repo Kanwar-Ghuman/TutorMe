@@ -1,14 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Clock7 } from "lucide-react";
 
 // Icons
 import { FaCodePullRequest } from "react-icons/fa6";
-
-import { MdDashboard } from "react-icons/md";
 
 const SideButton = ({ theLink, theIcon: Icon, theName, isActive }) => {
   return (
