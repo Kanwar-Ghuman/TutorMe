@@ -46,6 +46,8 @@ const TeacherTutorRequests = () => {
   const [error, setError] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [listStudent, setListStudent] = useState([]);
+  const [noResults, setNoResults] = useState(false);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editSubject, setEditSubject] = useState("");
@@ -53,6 +55,9 @@ const TeacherTutorRequests = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [studentArr, setStudentArr] = useState([]);
+  const [updateArr, setUpdateArr] = useState([]);
+  const [isReversed, setIsReversed] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -63,6 +68,9 @@ const TeacherTutorRequests = () => {
           throw new Error("Failed to fetch requests");
         }
         const data = await response.json();
+        setStudentArr(data);
+        setUpdateArr(data);
+        display(data, isReversed);
         console.log("Fetched Data:", data);
         setRequests(data);
         setLoading(false);
@@ -180,6 +188,37 @@ const TeacherTutorRequests = () => {
     }
   };
 
+  const search = (value) => {
+    const searchTerm = value.toLowerCase().trim();
+    const returnArr = studentArr.filter((student) =>
+      innerSearch(student, searchTerm)
+    );
+    setUpdateArr(returnArr);
+    setNoResults(returnArr.length === 0);
+    display(returnArr, isReversed);
+  };
+
+  const innerSearch = (student, searchTerm) => {
+    const searchFields = [
+      student.student,
+      student.studentEmail,
+      student.subject,
+      student.teacher?.user?.name,
+    ];
+
+    return searchFields.some(
+      (field) => field && field.toLowerCase().includes(searchTerm)
+    );
+  };
+
+  const display = (returnArr, reverse) => {
+    let myTempArr = JSON.parse(JSON.stringify(returnArr));
+    if (reverse) {
+      myTempArr.reverse();
+    }
+    setListStudent(myTempArr);
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col flex-wrap w-full items-center">
@@ -249,7 +288,7 @@ const TeacherTutorRequests = () => {
         </div>
       ) : (
         <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
-          {requests.map((request) => (
+          {listStudent.map((request) => (
             <Card
               key={request.id}
               className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
