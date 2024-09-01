@@ -72,7 +72,7 @@ const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
                 <strong className="text-center pb-2 flex item-center justify-start items-center">
                   Completed
                 </strong>
-                <Progress color="success" value={100} className="max-w-md" />
+                <Progress color="success" value={100} className="max-w-xl" />
                 <div className="flex justify-between pt-1">
                   <p className="text-gray-400">You are all good to go!</p>
                   <div className="justify-end">
@@ -88,7 +88,7 @@ const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
                 <Progress
                   color="warning"
                   value={75}
-                  className="max-w-md"
+                  className="max-w-xl"
                   classNames={{
                     indicator: "bg-yellow-400",
                   }}
@@ -105,7 +105,7 @@ const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
                 <strong className="text-center pb-2 flex item-center justify-start items-center">
                   Pending
                 </strong>
-                <Progress color="danger" value={30} className="max-w-md" />
+                <Progress color="danger" value={30} className="max-w-xl" />
                 <div className="flex justify-between pt-1">
                   <p className="text-gray-400">Waiting for tutor to confirm</p>
                   <div className="flex justify-end">
