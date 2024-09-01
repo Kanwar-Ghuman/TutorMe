@@ -144,12 +144,12 @@ const TutorOverview = () => {
                 </span>
               </Tooltip>
               <Tooltip color="danger" content="Delete tutor">
-                <Button
+                <span
                   className="text-lg text-danger cursor-pointer active:opacity-50"
-                  onPress={() => handleDelete(tutor.id)}
+                  onClick={() => handleDelete(tutor.id)}
                 >
                   <DeleteIcon />
-                </Button>
+                </span>
               </Tooltip>
             </div>
           );
