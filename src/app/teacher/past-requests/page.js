@@ -17,6 +17,43 @@ const TeacherPastRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [listStudent, setListStudent] = useState([]);
+  const [noResults, setNoResults] = useState(false);
+  const [studentArr, setStudentArr] = useState([]);
+  const [updateArr, setUpdateArr] = useState([]);
+  const [isReversed, setIsReversed] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const search = (value) => {
+    const searchTerm = value.toLowerCase().trim();
+    const returnArr = studentArr.filter((student) =>
+      innerSearch(student, searchTerm)
+    );
+    setUpdateArr(returnArr);
+    setNoResults(returnArr.length === 0);
+    display(returnArr, isReversed);
+  };
+
+  const innerSearch = (student, searchTerm) => {
+    const searchFields = [
+      student.student,
+      student.studentEmail,
+      student.subject,
+      student.teacher?.user?.name,
+    ];
+
+    return searchFields.some(
+      (field) => field && field.toLowerCase().includes(searchTerm)
+    );
+  };
+
+  const display = (returnArr, reverse) => {
+    let myTempArr = JSON.parse(JSON.stringify(returnArr));
+    if (reverse) {
+      myTempArr.reverse();
+    }
+    setListStudent(myTempArr);
+  };
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -26,6 +63,9 @@ const TeacherPastRequests = () => {
           throw new Error("Failed to fetch requests");
         }
         const data = await response.json();
+        setStudentArr(data);
+        setUpdateArr(data);
+        display(data, isReversed);
         console.log("Fetched Data:", data);
         setRequests(data);
         setLoading(false);
@@ -80,13 +120,13 @@ const TeacherPastRequests = () => {
               />
             </div>
           </div>
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p>Error: {error}</p>
+          {noResults ? (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-gray-500 text-lg">No results found</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 mt-8 ">
-              {requests.map((request) => (
+              {listStudent.map((request) => (
                 <TutorCard
                   key={request.id}
                   name={request.student}

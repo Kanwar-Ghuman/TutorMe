@@ -282,9 +282,9 @@ const TeacherTutorRequests = () => {
           }
         />
       </div>
-      {requests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full ">
-          <p className="text-2xl text-black-500">No Requests Found</p>
+      {noResults ? (
+        <div className="flex justify-center items-center h-full">
+          <p className="text-gray-500 text-lg">No results found</p>
         </div>
       ) : (
         <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
