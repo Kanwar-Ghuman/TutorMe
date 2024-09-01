@@ -69,10 +69,13 @@ const TutorRequest = () => {
       const responseData = await response.json();
       setSuccess(true);
       form.reset(defaultValues);
+
       toast({
         title: "Success",
         description: "Tutor added successfully",
-        variant: "success",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
       });
 
       setTimeout(() => {

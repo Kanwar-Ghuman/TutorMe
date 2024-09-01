@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 
+import ClientToaster from "@/hooks/client-toaster";
 import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Providers>{children}</Providers>
+        <ClientToaster />
       </body>
     </html>
   );
