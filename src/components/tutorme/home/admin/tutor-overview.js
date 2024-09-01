@@ -507,6 +507,8 @@ const TutorOverview = () => {
                           classNamePrefix="select"
                           placeholder="Select subjects"
                           isDisabled={isSubmitting}
+                          styles={customStyles}
+                          formatOptionLabel={formatOptionLabel}
                         />
                       </div>
                     </div>

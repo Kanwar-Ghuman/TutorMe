@@ -476,6 +476,8 @@ const TeacherTutorRequests = () => {
                         className="basic-multi-select"
                         classNamePrefix="select"
                         placeholder="Select subjects"
+                        styles={customStyles}
+                        formatOptionLabel={formatOptionLabel}
                         isDisabled={isProcessing}
                       />
                     </div>
