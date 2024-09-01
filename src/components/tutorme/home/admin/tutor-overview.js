@@ -91,6 +91,15 @@ const TutorOverview = () => {
       });
     }
   };
+  const handleModifyClick = (tutor) => {
+    setSelectedRequest(tutor);
+    setEditName(tutor.studentName);
+    setEditEmail(tutor.tutorName);
+    setEditSubjects(
+      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
+    );
+    onOpen();
+  };
 
   const renderCell = React.useCallback(
     (tutor, columnKey) => {
@@ -157,7 +166,7 @@ const TutorOverview = () => {
           return tutor[columnKey];
       }
     },
-    [handleDelete]
+    [handleModifyClick, handleDelete]
   );
 
   const columns = [
@@ -255,16 +264,6 @@ const TutorOverview = () => {
       myTempArr.reverse();
     }
     setListStudent(myTempArr);
-  };
-
-  const handleModifyClick = (tutor) => {
-    setSelectedRequest(tutor);
-    setEditName(tutor.studentName);
-    setEditEmail(tutor.tutorName);
-    setEditSubjects(
-      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
-    );
-    onOpen();
   };
 
   const handleSaveClick = async () => {
