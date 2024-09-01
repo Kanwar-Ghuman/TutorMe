@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
 import { EditIcon, DeleteIcon } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   Modal,
   ModalContent,
@@ -54,6 +55,7 @@ const TutorOverview = () => {
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
@@ -237,6 +239,13 @@ const TutorOverview = () => {
           prev.filter((student) => student.id !== id)
         );
         setStudentArr((prev) => prev.filter((student) => student.id !== id));
+        toast({
+          title: "Success",
+          description: "Tutor deleted successfully",
+          variant: "default",
+          className: "bg-green-500 text-white",
+          duration: 3000,
+        });
       }, 500);
     } catch (error) {
       console.error("Failed to delete tutor:", error);
