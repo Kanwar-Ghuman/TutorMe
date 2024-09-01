@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import ReactSelect from "react-select";
-
+import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardHeader,
@@ -53,6 +53,7 @@ const TeacherTutorRequests = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -91,6 +92,13 @@ const TeacherTutorRequests = () => {
         throw new Error("Failed to delete request");
       }
       setRequests((prev) => prev.filter((request) => request.id !== id));
+      toast({
+        title: "Success",
+        description: "Tutor request deleted successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
     } catch (error) {
       console.error("Failed to delete request:", error);
     }
@@ -152,7 +160,13 @@ const TeacherTutorRequests = () => {
       );
 
       setSuccess(true);
-
+      toast({
+        title: "Success",
+        description: "Tutor request modified successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
       setTimeout(() => {
         setSuccess(false);
         onClose();
