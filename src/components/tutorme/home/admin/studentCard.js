@@ -21,7 +21,7 @@ import {
 const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
   return (
     <div>
-      <Card className="w-10/12 h-[360px] bg-white shadow-md hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
+      <Card className="w-10/12 h-[360px] bg-white  hover:shadow-[#FACC14] border border-small  shadow-lg transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
         <CardHeader className="text-black-700  items-center justify-center flex-col">
           <strong>{student}</strong>
           <div className="flex items-center gap-1 flex-row text-gray-400">
