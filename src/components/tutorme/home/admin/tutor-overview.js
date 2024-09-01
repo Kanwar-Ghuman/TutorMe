@@ -61,70 +61,104 @@ const TutorOverview = () => {
 
   const [viewMode, setViewMode] = useState("card");
 
-  const renderCell = React.useCallback((tutor, columnKey) => {
-    switch (columnKey) {
-      case "name":
-        const initials = tutor.name
-          .split(" ")
-          .map((name) => name[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
-        return (
-          <User
-            name={tutor.name}
-            description={tutor.email}
-            avatarProps={{
-              src: null,
-              name: initials,
-              color: "primary",
-            }}
-          >
-            {tutor.email}
-          </User>
-        );
-      case "subjects":
-        return (
-          <div className="flex flex-wrap gap-1">
-            {tutor.subjects.map((subject, index) => (
-              <Chip
-                size="sm"
-                className={cn(
-                  getSubjectColor(subject),
-                  "flex items-center gap-1 px-2"
-                )}
-                endContent={getSubjectIcon(subject)}
-              >
-                {subject}
-              </Chip>
-            ))}
-          </div>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Modify tutor">
-              <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                onClick={() => handleModifyClick(tutor)}
-              >
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete tutor">
-              <span
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-                onClick={() => handleDelete(tutor.id)}
-              >
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return tutor[columnKey];
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/tutors/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete request");
+      }
+      setListStudent((prev) => prev.filter((student) => student.id !== id));
+      setFilteredStudents((prev) =>
+        prev.filter((student) => student.id !== id)
+      );
+      setStudentArr((prev) => prev.filter((student) => student.id !== id));
+      toast({
+        title: "Success",
+        description: "Tutor deleted successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Failed to delete tutor:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete tutor",
+        variant: "destructive",
+        duration: 3000,
+      });
     }
-  }, []);
+  };
+
+  const renderCell = React.useCallback(
+    (tutor, columnKey) => {
+      switch (columnKey) {
+        case "name":
+          const initials = tutor.name
+            .split(" ")
+            .map((name) => name[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+          return (
+            <User
+              name={tutor.name}
+              description={tutor.email}
+              avatarProps={{
+                src: null,
+                name: initials,
+                color: "primary",
+              }}
+            >
+              {tutor.email}
+            </User>
+          );
+        case "subjects":
+          return (
+            <div className="flex flex-wrap gap-1">
+              {tutor.subjects.map((subject, index) => (
+                <Chip
+                  size="sm"
+                  className={cn(
+                    getSubjectColor(subject),
+                    "flex items-center gap-1 px-2"
+                  )}
+                  endContent={getSubjectIcon(subject)}
+                >
+                  {subject}
+                </Chip>
+              ))}
+            </div>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              <Tooltip content="Modify tutor">
+                <span
+                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                  onClick={() => handleModifyClick(tutor)}
+                >
+                  <EditIcon />
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="Delete tutor">
+                <Button
+                  className="text-lg text-danger cursor-pointer active:opacity-50"
+                  onPress={() => handleDelete(tutor.id)}
+                >
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return tutor[columnKey];
+      }
+    },
+    [handleDelete]
+  );
 
   const columns = [
     { name: "NAME", uid: "name" },
@@ -221,35 +255,6 @@ const TutorOverview = () => {
       myTempArr.reverse();
     }
     setListStudent(myTempArr);
-  };
-  const handleDelete = async (id) => {
-    try {
-      const cardElement = document.getElementById(`card-${id}`);
-      cardElement.classList.add("animate-slideOut");
-
-      setTimeout(async () => {
-        const response = await fetch(`/api/admin/tutors/${id}`, {
-          method: "DELETE",
-        });
-        if (!response.ok) {
-          throw new Error("Failed to delete request");
-        }
-        setListStudent((prev) => prev.filter((student) => student.id !== id));
-        setFilteredStudents((prev) =>
-          prev.filter((student) => student.id !== id)
-        );
-        setStudentArr((prev) => prev.filter((student) => student.id !== id));
-        toast({
-          title: "Success",
-          description: "Tutor deleted successfully",
-          variant: "default",
-          className: "bg-green-500 text-white",
-          duration: 3000,
-        });
-      }, 500);
-    } catch (error) {
-      console.error("Failed to delete tutor:", error);
-    }
   };
 
   const handleModifyClick = (tutor) => {
