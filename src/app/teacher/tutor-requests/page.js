@@ -99,7 +99,12 @@ const TeacherTutorRequests = () => {
       if (!response.ok) {
         throw new Error("Failed to delete request");
       }
+
+      // Remove the deleted request from the local state
       setRequests((prev) => prev.filter((request) => request.id !== id));
+      setListStudent((prev) => prev.filter((request) => request.id !== id));
+      setStudentArr((prev) => prev.filter((request) => request.id !== id));
+
       toast({
         title: "Success",
         description: "Tutor request deleted successfully",
@@ -159,7 +164,23 @@ const TeacherTutorRequests = () => {
       }
 
       const updatedData = await response.json();
+
+      // Update the local state with the modified request
       setRequests((prev) =>
+        prev.map((request) =>
+          request.id === selectedRequest.id
+            ? { ...request, ...updatedRequest }
+            : request
+        )
+      );
+      setListStudent((prev) =>
+        prev.map((request) =>
+          request.id === selectedRequest.id
+            ? { ...request, ...updatedRequest }
+            : request
+        )
+      );
+      setStudentArr((prev) =>
         prev.map((request) =>
           request.id === selectedRequest.id
             ? { ...request, ...updatedRequest }
