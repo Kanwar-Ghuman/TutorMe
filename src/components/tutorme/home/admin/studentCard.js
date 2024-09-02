@@ -18,7 +18,14 @@ import {
   Chip,
 } from "@nextui-org/react";
 
-const StudentCard = ({ id, student, studentEmail, subject, genderPref }) => {
+const StudentCard = ({
+  id,
+  student,
+  studentEmail,
+  subject,
+  genderPref,
+  onAssign,
+}) => {
   return (
     <div>
       <Card className="w-10/12 h-[360px] bg-white  hover:shadow-[#FACC14] border border-small  shadow-lg transition-transform duration-200 ease-in-out hover:scale-105 mx-10">
