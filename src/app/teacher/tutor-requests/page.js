@@ -282,153 +282,157 @@ const TeacherTutorRequests = () => {
           }
         />
       </div>
-      {noResults ? (
-        <div className="flex justify-center items-center h-full">
-          <p className="text-gray-500 text-lg">No results found</p>
-        </div>
-      ) : (
-        <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
-          {listStudent.map((request) => (
-            <Card
-              key={request.id}
-              className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border  hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
-            >
-              <strong>
-                <CardHeader className="text-black-700 text-m items-center justify-center flex-col">
-                  {request.student}
-                  <p className="text-gray-400">{request.studentEmail}</p>
-                </CardHeader>
-              </strong>
-              <CardBody className="text-black gap-4 overflow-hidden">
-                <div className="flex items-center gap-1">
-                  <p>Subject</p>
-                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                  <Chip
-                    size="md"
-                    className={cn(
-                      getSubjectColor(request.subject),
-                      "flex items-center gap-1 px-2 mt-1"
+      <div className="w-full overflow-y-auto max-h-[calc(100vh-120px)]">
+        {noResults ? (
+          <div className="flex justify-center items-center h-full">
+            <p className="text-gray-500 text-lg">No results found</p>
+          </div>
+        ) : (
+          <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
+            {listStudent.map((request) => (
+              <Card
+                key={request.id}
+                className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border  hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
+              >
+                <strong>
+                  <CardHeader className="text-black-700 text-m items-center justify-center flex-col">
+                    {request.student}
+                    <p className="text-gray-400">{request.studentEmail}</p>
+                  </CardHeader>
+                </strong>
+                <CardBody className="text-black gap-4 overflow-hidden">
+                  <div className="flex items-center gap-1">
+                    <p>Subject</p>
+                    <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                    <Chip
+                      size="md"
+                      className={cn(
+                        getSubjectColor(request.subject),
+                        "flex items-center gap-1 px-2 mt-1"
+                      )}
+                      endContent={getSubjectIcon(request.subject)}
+                    >
+                      {request.subject}
+                    </Chip>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <p>Gender Preference</p>
+                    <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                    {request.genderPref === "F" ? (
+                      <p>Female</p>
+                    ) : request.genderPref === "M" ? (
+                      <p>Male</p>
+                    ) : (
+                      <p>No Preference</p>
                     )}
-                    endContent={getSubjectIcon(request.subject)}
-                  >
-                    {request.subject}
-                  </Chip>
-                </div>
-                <div className="flex items-center gap-1">
-                  <p>Gender Preference</p>
-                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                  {request.genderPref === "F" ? (
-                    <p>Female</p>
-                  ) : request.genderPref === "M" ? (
-                    <p>Male</p>
-                  ) : (
-                    <p>No Preference</p>
-                  )}
-                </div>
-                <div className="flex justify-start flex-row">
-                  <p className="text-center">Tutor</p>
-                  <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                  {request.subject === "Chemistry" ? (
-                    <p>John A</p>
-                  ) : request.subject === "AP Physics" ? (
-                    <p>John A</p>
-                  ) : (
-                    <p>Not Yet Matched</p>
-                  )}
-                </div>
-                <div>
-                  {request.subject === "Chemistry" ? (
-                    <div>
-                      <strong className="text-center pb-2 flex item-center justify-start items-center">
-                        Completed
-                      </strong>
-                      <Progress
-                        color="success"
-                        value={100}
-                        className="max-w-xl"
-                      />
-                      <div className="flex justify-between pt-1">
-                        <p className="text-gray-400">You are all good to go!</p>
-                        <div className="justify-end">
-                          <FaRegCheckCircle
-                            size={25}
-                            className="text-green-600"
-                          />
+                  </div>
+                  <div className="flex justify-start flex-row">
+                    <p className="text-center">Tutor</p>
+                    <IoEllipsisVerticalOutline size={20} className="mt-1" />
+                    {request.subject === "Chemistry" ? (
+                      <p>John A</p>
+                    ) : request.subject === "AP Physics" ? (
+                      <p>John A</p>
+                    ) : (
+                      <p>Not Yet Matched</p>
+                    )}
+                  </div>
+                  <div>
+                    {request.subject === "Chemistry" ? (
+                      <div>
+                        <strong className="text-center pb-2 flex item-center justify-start items-center">
+                          Completed
+                        </strong>
+                        <Progress
+                          color="success"
+                          value={100}
+                          className="max-w-xl"
+                        />
+                        <div className="flex justify-between pt-1">
+                          <p className="text-gray-400">
+                            You are all good to go!
+                          </p>
+                          <div className="justify-end">
+                            <FaRegCheckCircle
+                              size={25}
+                              className="text-green-600"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : request.subject === "AP Physics" ? (
-                    <div>
-                      <strong className="text-center pb-2 flex item-center justify-start items-center">
-                        Confirmed
-                      </strong>
-                      <Progress
-                        value={75}
-                        className="max-w-xl"
-                        classNames={{
-                          indicator: "bg-yellow-400",
-                        }}
-                      />
-                      <div className="flex justify-between pt-1">
-                        <p className="text-gray-400">
-                          Waiting for Mr.Decker to confirm
-                        </p>
-                        <div className="flex justify-end">
-                          <CalendarCheck
-                            size={25}
-                            className="text-orange-600"
-                          />
+                    ) : request.subject === "AP Physics" ? (
+                      <div>
+                        <strong className="text-center pb-2 flex item-center justify-start items-center">
+                          Confirmed
+                        </strong>
+                        <Progress
+                          value={75}
+                          className="max-w-xl"
+                          classNames={{
+                            indicator: "bg-yellow-400",
+                          }}
+                        />
+                        <div className="flex justify-between pt-1">
+                          <p className="text-gray-400">
+                            Waiting for Mr.Decker to confirm
+                          </p>
+                          <div className="flex justify-end">
+                            <CalendarCheck
+                              size={25}
+                              className="text-orange-600"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="">
-                      <strong className="text-center pb-2 flex item-center justify-start items-center">
-                        Pending
-                      </strong>
+                    ) : (
+                      <div className="">
+                        <strong className="text-center pb-2 flex item-center justify-start items-center">
+                          Pending
+                        </strong>
 
-                      <Progress
-                        color="danger"
-                        value={30}
-                        className="max-w-xl"
-                      />
-                      <div className="flex justify-between pt-1">
-                        <p className="text-gray-400">
-                          Waiting for tutor to confirm
-                        </p>
-                        <div className="flex justify-end">
-                          <MdOutlinePending
-                            size={30}
-                            className="text-red-600"
-                          />
+                        <Progress
+                          color="danger"
+                          value={30}
+                          className="max-w-xl"
+                        />
+                        <div className="flex justify-between pt-1">
+                          <p className="text-gray-400">
+                            Waiting for tutor to confirm
+                          </p>
+                          <div className="flex justify-end">
+                            <MdOutlinePending
+                              size={30}
+                              className="text-red-600"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              </CardBody>
-              <CardFooter className="justify-end gap-4">
-                <Button
-                  color="danger"
-                  variant="bordered"
-                  size="sm"
-                  icon={MdOutlineDeleteForever}
-                  endContent={<MdOutlineDeleteForever size="20" />}
-                  onClick={() => handleDelete(request.id)}
-                ></Button>
-                <Button
-                  auto
-                  color="primary"
-                  icon={CiEdit}
-                  size="sm"
-                  endContent={<CiEdit size="20" />}
-                  onClick={() => handleModifyClick(request)}
-                ></Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
+                    )}
+                  </div>
+                </CardBody>
+                <CardFooter className="justify-end gap-4">
+                  <Button
+                    color="danger"
+                    variant="bordered"
+                    size="sm"
+                    icon={MdOutlineDeleteForever}
+                    endContent={<MdOutlineDeleteForever size="20" />}
+                    onClick={() => handleDelete(request.id)}
+                  ></Button>
+                  <Button
+                    auto
+                    color="primary"
+                    icon={CiEdit}
+                    size="sm"
+                    endContent={<CiEdit size="20" />}
+                    onClick={() => handleModifyClick(request)}
+                  ></Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
       <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
         <ModalContent>
           {(onClose) => (
