@@ -101,6 +101,16 @@ const TutorOverview = () => {
     onOpen();
   };
 
+  const handleModifyClickTable = (tutor) => {
+    setSelectedRequest(tutor);
+    setEditName(tutor.name);
+    setEditEmail(tutor.email);
+    setEditSubjects(
+      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
+    );
+    onOpen();
+  };
+
   const renderCell = React.useCallback(
     (tutor, columnKey) => {
       switch (columnKey) {
@@ -147,7 +157,7 @@ const TutorOverview = () => {
               <Tooltip content="Modify tutor">
                 <span
                   className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                  onClick={() => handleModifyClick(tutor)}
+                  onClick={() => handleModifyClickTable(tutor)}
                 >
                   <EditIcon />
                 </span>
@@ -166,7 +176,7 @@ const TutorOverview = () => {
           return tutor[columnKey];
       }
     },
-    [handleModifyClick, handleDelete]
+    [handleModifyClickTable, handleDelete]
   );
 
   const columns = [
