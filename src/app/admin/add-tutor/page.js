@@ -22,7 +22,7 @@ const TutorRequest = () => {
   const defaultValues = {
     studentsName: "",
     studentsEmail: "",
-    studenstSubjects: [],
+    studentsSubjects: [],
   };
 
   const form = useForm({
