@@ -291,7 +291,7 @@ const TeacherTutorRequests = () => {
           {listStudent.map((request) => (
             <Card
               key={request.id}
-              className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white shadow-md  hover:shadow-[#FACC14] border border-black transition-transform duration-200 ease-in-out hover:scale-105"
+              className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border  hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
             >
               <strong>
                 <CardHeader className="text-black-700 text-m items-center justify-center flex-col">
