@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const NotFound = () => {
+export default function NotFound() {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -26,6 +26,4 @@ const NotFound = () => {
       </Button>
     </div>
   );
-};
-
-export default NotFound;
+}
