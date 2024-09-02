@@ -136,12 +136,13 @@ const TeacherTutorRequests = () => {
     setIsProcessing(true);
 
     const updatedRequest = {
-      studentName: editName,
+      ...selectedRequest,
+      student: editName,
       studentEmail: editEmail,
       subject: Array.isArray(editSubject)
         ? editSubject.map((subject) => subject.value).join(", ")
         : editSubject.value,
-      genderPreference: editGenderPref,
+      genderPref: editGenderPref,
     };
 
     try {
