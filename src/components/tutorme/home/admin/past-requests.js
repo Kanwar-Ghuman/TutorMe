@@ -56,7 +56,7 @@ const PastRequests = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [tutors, setTutors] = useState([]);
-
+  const [selectedTutor, setSelectedTutor] = useState(null);
   const [viewMode, setViewMode] = useState("card");
 
   const renderCell = React.useCallback((request, columnKey) => {
@@ -181,8 +181,12 @@ const PastRequests = () => {
 
   const handleAssign = (student) => {
     setSelectedStudent(student);
-
+    setSelectedTutor(null); // Reset selected tutor when opening modal
     onOpen();
+  };
+
+  const handleTutorChange = (selectedOption) => {
+    setSelectedTutor(selectedOption);
   };
 
   const search = (value) => {
@@ -326,7 +330,8 @@ const PastRequests = () => {
                       Manually assign a tutor for this request
                     </p>
                     <Select
-                      value={editSubject}
+                      value={selectedTutor}
+                      onChange={handleTutorChange}
                       className="basic-multi-select"
                       classNamePrefix="select"
                       placeholder="Select Tutor"
