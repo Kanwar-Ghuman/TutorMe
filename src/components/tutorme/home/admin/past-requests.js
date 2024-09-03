@@ -74,26 +74,28 @@ const PastRequests = () => {
     switch (columnKey) {
       case "stage":
         return (
-          <Tooltip
-            content={
-              request.subject === "Chemistry"
-                ? "Complete"
-                : request.subject === "AP Physics"
-                ? "Confirmed"
-                : "Pending"
-            }
-            className={cn(
-              "text-white font-medium justify-center",
-              getStageColor(request.subject)
-            )}
-          >
-            <div
+          <div className="flex justify-start items-start mx-2">
+            <Tooltip
+              content={
+                request.subject === "Chemistry"
+                  ? "Complete"
+                  : request.subject === "AP Physics"
+                  ? "Confirmed"
+                  : "Pending"
+              }
               className={cn(
-                "w-3 h-3 rounded-full justify-center",
+                "text-white font-medium",
                 getStageColor(request.subject)
               )}
-            />
-          </Tooltip>
+            >
+              <div
+                className={cn(
+                  "w-3 h-3 rounded-full",
+                  getStageColor(request.subject)
+                )}
+              />
+            </Tooltip>
+          </div>
         );
       case "student":
         const initials = request.student
