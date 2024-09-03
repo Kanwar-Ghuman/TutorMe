@@ -59,8 +59,42 @@ const PastRequests = () => {
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [viewMode, setViewMode] = useState("card");
 
+  const getStageColor = (subject) => {
+    switch (subject) {
+      case (subject = "Chemistry"):
+        return "bg-green-400";
+      case (subject = "AP Physics"):
+        return "bg-yellow-500";
+      default:
+        return "bg-red-500";
+    }
+  };
+
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
+      case "stage":
+        return (
+          <Tooltip
+            content={
+              request.subject === "Chemistry"
+                ? "Complete"
+                : request.subject === "AP Physics"
+                ? "Confirmed"
+                : "Pending"
+            }
+            className={cn(
+              "text-white font-medium justify-center",
+              getStageColor(request.subject)
+            )}
+          >
+            <div
+              className={cn(
+                "w-3 h-3 rounded-full justify-center",
+                getStageColor(request.subject)
+              )}
+            />
+          </Tooltip>
+        );
       case "student":
         const initials = request.student
           .split(" ")
@@ -138,6 +172,7 @@ const PastRequests = () => {
     { name: "SUBJECT", uid: "subject" },
     { name: "GENDER PREFERENCE", uid: "genderPref" },
     { name: "ASSIGNED TUTOR", uid: "teacher" },
+    { name: "STAGE", uid: "stage" },
     { name: "ACTIONS", uid: "actions" },
   ];
 
