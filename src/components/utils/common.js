@@ -18,6 +18,17 @@ export const subjectIconMap = {
   Other: <PiBooks size={20} />,
 };
 
+export const getStageColor = (subject) => {
+  switch (subject) {
+    case (subject = "Chemistry"):
+      return "bg-green-400";
+    case (subject = "AP Physics"):
+      return "bg-yellow-500";
+    default:
+      return "bg-red-500";
+  }
+};
+
 export const subjectsOptions = [
   {
     label: "Math",

@@ -7,6 +7,7 @@ import {
   customStyles,
   getSubjectIcon,
   getSubjectColor,
+  getStageColor,
 } from "@/components/utils/common";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
@@ -58,17 +59,6 @@ const PastRequests = () => {
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [viewMode, setViewMode] = useState("card");
-
-  const getStageColor = (subject) => {
-    switch (subject) {
-      case (subject = "Chemistry"):
-        return "bg-green-400";
-      case (subject = "AP Physics"):
-        return "bg-yellow-500";
-      default:
-        return "bg-red-500";
-    }
-  };
 
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
