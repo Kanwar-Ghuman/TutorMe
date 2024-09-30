@@ -17,7 +17,6 @@ import {
 import { usePathname } from "next/navigation";
 import React from "react";
 import { signOut } from "../../auth/signout";
-
 export function BaseNavbar({ logoLink, menuItems, profileItems }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
@@ -78,7 +77,6 @@ export function BaseNavbar({ logoLink, menuItems, profileItems }) {
           ))}
         </NavbarContent>
       </NavbarContent>
-
       <NavbarContent justify="end">
         {Array.isArray(profileItems) && profileItems.length > 0 ? (
           <Dropdown placement="bottom-end">

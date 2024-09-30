@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import {
   subjectsOptions,
   formatOptionLabel,
@@ -35,7 +36,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import Select from "react-select";
-import { DeleteIcon, EditIcon, EyeIcon, CheckIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 const PastRequests = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -47,13 +48,7 @@ const PastRequests = () => {
   const [noResults, setNoResults] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
-  const [requests, setRequests] = useState([]);
-  const [error, setError] = useState(null);
-  const [editName, setEditName] = useState("");
-  const [editEmail, setEditEmail] = useState("");
-  const [editSubject, setEditSubject] = useState("");
-  const [editGenderPref, setEditGenderPref] = useState("");
+
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [tutors, setTutors] = useState([]);
