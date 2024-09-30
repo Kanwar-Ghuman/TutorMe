@@ -22,6 +22,8 @@ model TutorRequest {
 
   isActive Boolean @default(true)
 
+  status String @default("pending")
+
   tutor   Tutor?  @relation(fields: [tutorId], references: [id])
   tutorId String?
 }

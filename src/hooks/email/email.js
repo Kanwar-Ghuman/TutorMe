@@ -1,10 +1,8 @@
 "use server";
 
-// import * as sgMail from "@sendgrid/mail";
 import { createTransport } from "nodemailer";
 
 export async function sendEmail(to, subject, html) {
-
   const msg = {
     from: "heyanantraj@gmail.com", // Your verified sender
     to,
@@ -22,7 +20,7 @@ export async function sendEmail(to, subject, html) {
   });
 
   try {
-    await transporter.sendMail(msg)
+    await transporter.sendMail(msg);
     console.log("Email sent successfully");
     return true;
   } catch (error) {
