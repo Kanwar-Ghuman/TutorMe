@@ -7,8 +7,9 @@ import {
   customStyles,
   getSubjectIcon,
   getSubjectColor,
+  getStageColor,
 } from "@/components/utils/common";
-import { MdOutlineDeleteForever } from "react-icons/md";
+import { MdOutlineDeleteForever, MdAssignment } from "react-icons/md";
 import { IoEllipsisVerticalOutline } from "react-icons/io5";
 import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
@@ -16,7 +17,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { CalendarCheck } from "lucide-react";
 import { MdOutlinePending } from "react-icons/md";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckIcon } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import ReactSelect from "react-select";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +37,15 @@ import {
   ModalFooter,
   useDisclosure,
   Progress,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+  TableColumn,
+  User,
+  Tooltip,
 } from "@nextui-org/react";
 
 import { CiEdit } from "react-icons/ci";
@@ -58,6 +68,7 @@ const TeacherTutorRequests = () => {
   const [studentArr, setStudentArr] = useState([]);
   const [updateArr, setUpdateArr] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
+  const [viewMode, setViewMode] = useState("card");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -90,6 +101,114 @@ const TeacherTutorRequests = () => {
   const form = useForm({
     defaultValues,
   });
+
+  const renderCell = React.useCallback((request, columnKey) => {
+    switch (columnKey) {
+      case "stage":
+        return (
+          <div className="flex justify-start items-start mx-2">
+            <Tooltip
+              content={
+                request.subject === "Chemistry"
+                  ? "Complete"
+                  : request.subject === "AP Physics"
+                  ? "Confirmed"
+                  : "Pending"
+              }
+              className={cn(
+                "text-white font-medium",
+                getStageColor(request.subject)
+              )}
+            >
+              <div
+                className={cn(
+                  "w-3 h-3 rounded-full",
+                  getStageColor(request.subject)
+                )}
+              />
+            </Tooltip>
+          </div>
+        );
+      case "student":
+        const initials = request.student
+          .split(" ")
+          .map((name) => name[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+        return (
+          <User
+            name={request.student}
+            description={request.studentEmail}
+            avatarProps={{
+              src: null,
+              name: initials,
+              color: "primary",
+            }}
+          >
+            {request.studentEmail}
+          </User>
+        );
+      case "subject":
+        return (
+          <div className="flex items-center gap-2">
+            <Chip
+              size="sm"
+              className={cn(
+                getSubjectColor(request.subject),
+                "flex items-center gap-1 px-2"
+              )}
+              endContent={getSubjectIcon(request.subject)}
+            >
+              {request.subject}
+            </Chip>
+          </div>
+        );
+      case "teacher":
+        return request.teacher?.user?.name || "Unassigned";
+      case "genderPref":
+        switch (request.genderPref) {
+          case "F":
+            return "Female";
+          case "M":
+            return "Male";
+          default:
+            return "No Preference";
+        }
+      case "actions":
+        return (
+          <div className="relative flex items-center gap-2">
+            <Tooltip content="Assign Tutor">
+              <span
+                className="text-lg text-primary cursor-pointer active:opacity-50"
+                onClick={() => handleAssign(request)}
+              >
+                <MdAssignment />
+              </span>
+            </Tooltip>
+            <Tooltip content="Confirm Request">
+              <span
+                className="text-lg  cursor-pointer active:opacity-50 text-green-500"
+                onClick={() => handleAssign(request)}
+              >
+                <CheckIcon />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return request[columnKey];
+    }
+  }, []);
+
+  const columns = [
+    { name: "STUDENT", uid: "student" },
+    { name: "SUBJECT", uid: "subject" },
+    { name: "GENDER PREFERENCE", uid: "genderPref" },
+    { name: "ASSIGNED TUTOR", uid: "teacher" },
+    { name: "STAGE", uid: "stage" },
+    { name: "ACTIONS", uid: "actions" },
+  ];
 
   const handleDelete = async (id) => {
     try {
@@ -277,6 +396,12 @@ const TeacherTutorRequests = () => {
   return (
     <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
+        <Switch
+          checked={viewMode === "table"}
+          onChange={() => setViewMode(viewMode === "card" ? "table" : "card")}
+        >
+          {viewMode === "card" ? "Card View" : "Table View"}
+        </Switch>
         <ReactSelect
           className=" w-[15%]  h-10 px-4 basic-multi-select"
           options={subjectsOptions}
@@ -309,7 +434,7 @@ const TeacherTutorRequests = () => {
           <div className="flex justify-center items-center h-full">
             <p className="text-gray-500 text-lg">No results found</p>
           </div>
-        ) : (
+        ) : viewMode === "card" ? (
           <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
             {listStudent.map((request) => (
               <Card
@@ -453,6 +578,28 @@ const TeacherTutorRequests = () => {
               </Card>
             ))}
           </div>
+        ) : (
+          <Table aria-label="Past Requests table">
+            <TableHeader columns={columns}>
+              {(column) => (
+                <TableColumn
+                  key={column.uid}
+                  align={column.uid === "actions" ? "center" : "start"}
+                >
+                  {column.name}
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody items={listStudent}>
+              {(item) => (
+                <TableRow key={item.id}>
+                  {(columnKey) => (
+                    <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         )}
       </div>
       <Modal isOpen={isOpen} onOpenChange={onClose} isDisabled={isProcessing}>
