@@ -1,8 +1,12 @@
 "use client";
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
-import PastRequests from "@/components/tutorme/home/admin/past-requests";
 import "../../../styles/globals.css";
+import { Spinner } from "@nextui-org/react";
+
+const PastRequests = lazy(() =>
+  import("@/components/tutorme/home/admin/past-requests")
+);
 
 const AdminTutorRequests = () => {
   return (
@@ -12,7 +16,9 @@ const AdminTutorRequests = () => {
           <SideBar />
         </div>
         <div className="w-[80%] h-full overflow-hidden">
-          <PastRequests />
+          <Suspense>
+            <PastRequests />
+          </Suspense>
         </div>
       </div>
     </div>
