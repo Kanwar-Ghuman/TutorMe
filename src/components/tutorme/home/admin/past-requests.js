@@ -55,6 +55,8 @@ const PastRequests = () => {
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [viewMode, setViewMode] = useState("card");
 
+  const [pendingMatches, setPendingMatches] = useState([]);
+
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
       case "stage":
@@ -131,22 +133,36 @@ const PastRequests = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Assign Tutor">
-              <span
-                className="text-lg text-primary cursor-pointer active:opacity-50"
-                onClick={() => handleAssign(request)}
-              >
-                <MdAssignment />
-              </span>
-            </Tooltip>
-            <Tooltip content="Confirm Request">
-              <span
-                className="text-lg  cursor-pointer active:opacity-50 text-green-500"
-                onClick={() => handleAssign(request)}
-              >
-                <CheckIcon />
-              </span>
-            </Tooltip>
+            {request.status === "PENDING" && (
+              <Tooltip content="Match Tutor">
+                <span
+                  className="text-lg text-primary cursor-pointer active:opacity-50"
+                  onClick={() => handleMatch(request.id)}
+                >
+                  <MdAssignment />
+                </span>
+              </Tooltip>
+            )}
+            {request.status === "PENDING_CONFIRMATION" && (
+              <>
+                <Tooltip content="Approve Match">
+                  <span
+                    className="text-lg cursor-pointer active:opacity-50 text-green-500"
+                    onClick={() => handleApprove(request.id)}
+                  >
+                    <CheckIcon />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Deny Match">
+                  <span
+                    className="text-lg cursor-pointer active:opacity-50 text-red-500"
+                    onClick={() => handleDeny(request.id)}
+                  >
+                    <MdOutlineDeleteForever />
+                  </span>
+                </Tooltip>
+              </>
+            )}
           </div>
         );
       default:
@@ -164,24 +180,52 @@ const PastRequests = () => {
   ];
 
   useEffect(() => {
-    const fetchRequests = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/past-tutor-requests");
-        if (!response.ok) {
+        const [requestsResponse, matchesResponse] = await Promise.all([
+          fetch("/api/admin/past-tutor-requests"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=pending,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!requestsResponse.ok || !matchesResponse.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        setStudentArr(data);
-        setUpdateArr(data);
-        display(data, isReversed);
+
+        const [requestsData, matchesData] = await Promise.all([
+          requestsResponse.json(),
+          matchesResponse.json(),
+        ]);
+
+        setStudentArr(requestsData);
+        setUpdateArr(requestsData);
+        display(requestsData, isReversed);
+
+        const matchesWithTutors = await Promise.all(
+          matchesData.map(async (match) => {
+            if (match.matchedTutorId) {
+              const tutorResponse = await fetch(
+                `/api/admin/tutors/${match.matchedTutorId}`
+              );
+              if (tutorResponse.ok) {
+                const tutorData = await tutorResponse.json();
+                return { ...match, matchedTutor: tutorData };
+              }
+            }
+            return match;
+          })
+        );
+
+        setPendingMatches(matchesWithTutors);
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch tutor requests:", error);
+        console.error("Failed to fetch data:", error);
         setLoading(false);
       }
     };
 
-    fetchRequests();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -242,6 +286,101 @@ const PastRequests = () => {
     setListStudent(myTempArr);
   };
 
+  const handleMatch = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ requestId: id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to match tutor");
+      }
+
+      const { match } = await response.json();
+      if (match.matchedTutorId) {
+        const tutorResponse = await fetch(
+          `/api/admin/tutors/${match.matchedTutorId}`
+        );
+        if (tutorResponse.ok) {
+          const tutorData = await tutorResponse.json();
+          match.matchedTutor = tutorData;
+        }
+      }
+      updateMatchesAndRequests(id, match);
+    } catch (error) {
+      console.error("Error matching tutor:", error);
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ matchId: id, action: "approve" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to approve match");
+      }
+
+      const { match } = await response.json();
+      updateMatchesAndRequests(id, match);
+    } catch (error) {
+      console.error("Error approving match:", error);
+    }
+  };
+
+  const handleDeny = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ matchId: id, action: "deny" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to deny match");
+      }
+
+      const { match } = await response.json();
+      updateMatchesAndRequests(id, match);
+    } catch (error) {
+      console.error("Error denying match:", error);
+    }
+  };
+
+  const updateMatchesAndRequests = (id, match) => {
+    setPendingMatches((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+    setStudentArr((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+    setUpdateArr((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+    setListStudent((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -249,8 +388,6 @@ const PastRequests = () => {
       </div>
     );
   }
-
-  // ... existing code ...
 
   return (
     <div className="h-full w-full flex flex-col items-center">
@@ -302,13 +439,18 @@ const PastRequests = () => {
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-x-10 gap-x-20 gap-y-10 p-4 mx-auto max-w-7xl">
               {listStudent.map((student) => (
                 <StudentCard
+                  key={student.id}
                   id={student.id}
                   student={student.student}
                   studentEmail={student.studentEmail}
                   subject={student.subject}
                   genderPref={student.genderPref}
                   teacherName={student.teacher?.user?.name}
-                  key={student.id}
+                  matchedTutor={student.matchedTutor}
+                  status={student.status}
+                  onMatch={handleMatch}
+                  onApprove={handleApprove}
+                  onDeny={handleDeny}
                   onAssign={handleAssign}
                 />
               ))}
