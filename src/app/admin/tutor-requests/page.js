@@ -2,7 +2,6 @@
 import React, { lazy, Suspense } from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
 import "../../../styles/globals.css";
-import { Spinner } from "@nextui-org/react";
 
 const PastRequests = lazy(() =>
   import("@/components/tutorme/home/admin/past-requests")

@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 
 const adminEmailList = [
   "popguy1029@gmail.com",
-  "keith.decker@franklin.k12.wi.us",
+  // "keith.decker@franklin.k12.wi.us",
   "ghumankm@gmail.com",
   "heyanantraj@gmail.com",
   "ameen.almousa@franklinsabers.org",

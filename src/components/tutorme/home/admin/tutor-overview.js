@@ -222,12 +222,10 @@ const TutorOverview = () => {
     if (!studentArr) return;
     let filtered = studentArr;
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter((student) => innerSearch(student, searchTerm));
     }
 
-    // Filter by selected subjects
     if (selectedSubjects.length > 0) {
       filtered = filtered.filter((student) =>
         selectedSubjects.every((subject) =>
@@ -304,7 +302,6 @@ const TutorOverview = () => {
 
       const updatedData = await response.json();
 
-      // Ensure the updated data has the correct structure
       const formattedUpdatedData = {
         id: selectedRequest.id,
         name: updatedData.name || editName,
@@ -313,7 +310,6 @@ const TutorOverview = () => {
           updatedData.subjects || editSubjects.map((subject) => subject.value),
       };
 
-      // Update the state immediately
       setFilteredStudents((prev) =>
         prev.map((student) =>
           student.id === selectedRequest.id ? formattedUpdatedData : student

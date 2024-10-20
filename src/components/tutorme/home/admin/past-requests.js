@@ -203,7 +203,7 @@ const PastRequests = () => {
 
   const handleAssign = (student) => {
     setSelectedStudent(student);
-    setSelectedTutor(null); // Reset selected tutor when opening modal
+    setSelectedTutor(null);
     onOpen();
   };
 

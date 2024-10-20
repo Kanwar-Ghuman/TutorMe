@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { matchTutor, approveMatch, denyMatch } from "@/lib/logic/matchTutor";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function POST(req) {
   try {
     const { requestId } = await req.json();
     const tutorRequest = await prisma.tutorRequest.findUnique({
       where: { id: requestId },
-      include: { student: true },
     });
 
     if (!tutorRequest) {

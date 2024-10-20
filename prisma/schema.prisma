@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
@@ -24,8 +23,11 @@ model TutorRequest {
 
   status String @default("pending")
 
-  tutor   Tutor?  @relation(fields: [tutorId], references: [id])
+  tutor   Tutor?  @relation("AssignedTutor", fields: [tutorId], references: [id])
   tutorId String?
+
+  matchedTutor   Tutor?  @relation("MatchedTutor", fields: [matchedTutorId], references: [id])
+  matchedTutorId String?
 }
 
 model Tutor {
@@ -36,7 +38,8 @@ model Tutor {
 
   isActive Boolean @default(true)
 
-  matchedRequests TutorRequest[]
+  assignedRequests TutorRequest[] @relation("AssignedTutor")
+  matchedRequests  TutorRequest[] @relation("MatchedTutor")
 }
 
 model Teacher {

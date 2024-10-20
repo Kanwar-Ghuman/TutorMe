@@ -1,5 +1,14 @@
-import LoginPage from "@/components/tutorme/auth/login";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return <LoginPage />;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/auth/login");
+  }, [router]);
+
+  return null;
 }

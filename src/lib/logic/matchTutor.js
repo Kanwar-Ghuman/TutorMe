@@ -1,4 +1,3 @@
-import GetBestMatch from "./tutorPairSystem";
 import { PrismaClient } from "@prisma/client";
 import { useEmailSender } from "@/hooks/useEmailSender";
 import {
@@ -8,39 +7,42 @@ import {
   studentSubjectLine,
 } from "@/components/utils/emailTemplate";
 
+import GetBestMatch from "./tutorPairSystem";
+
 const prisma = new PrismaClient();
 const { sendMatchEmail } = useEmailSender();
-
-import GetBestMatch from "./tutorPairSystem";
 
 export async function matchTutor(tutorRequest) {
   try {
     const matchedTutor = await GetBestMatch(tutorRequest);
 
     if (typeof matchedTutor === "string") {
-      await sendEmail(
-        "admin@example.com",
-        "No Tutor Match Found",
-        matchedTutor
-      );
+      await sendMatchEmail({
+        recipient: "ghumankm@gmail.com",
+        subject: "No Tutor Match Found",
+        tutorData: { name: "Admin", email: "ghumankm@gmail.com" },
+        studentData: {
+          name: tutorRequest.student,
+          email: tutorRequest.studentEmail,
+          subject: tutorRequest.subject,
+        },
+        message: matchedTutor,
+      });
       return null;
     }
 
-    const match = await prisma.tutorMatch.create({
+    const updatedRequest = await prisma.tutorRequest.update({
+      where: { id: tutorRequest.id },
       data: {
-        tutorId: matchedTutor.id,
-        requestId: tutorRequest.id,
+        matchedTutorId: matchedTutor.id,
         status: "PENDING_CONFIRMATION",
+      },
+      include: {
+        matchedTutor: true,
       },
     });
 
-    // Update the tutor's matchedRequest count
-    await prisma.tutor.update({
-      where: { id: matchedTutor.id },
-      data: { matchedRequest: { increment: 1 } },
-    });
-
-    return match;
+    return updatedRequest;
   } catch (error) {
     console.error("Error in matchTutor:", error);
     throw error;
@@ -48,42 +50,58 @@ export async function matchTutor(tutorRequest) {
 }
 export async function approveMatch(matchId) {
   try {
-    const match = await prisma.tutorMatch.update({
+    const match = await prisma.tutorRequest.findUnique({
       where: { id: matchId },
-      data: { status: "APPROVED" },
-      include: { tutor: true, request: { include: { student: true } } },
+      select: { matchedTutorId: true },
     });
 
-    // Send email to tutor
-    await sendMatchEmail(
-      match.tutor.email,
-      tutorSubjectLine,
-      {
-        name: match.tutor.name,
-        email: match.tutor.email,
-      },
-      {
-        name: match.request.student.name,
-        email: match.request.student.email,
-        subject: match.request.subject,
-      }
-    );
+    if (!match || !match.matchedTutorId) {
+      throw new Error("No matched tutor found for this request");
+    }
 
-    await sendMatchEmail(
-      match.request.student.email,
-      studentSubjectLine,
-      {
-        name: match.tutor.name,
-        email: match.tutor.email,
+    const updatedMatch = await prisma.tutorRequest.update({
+      where: { id: matchId },
+      data: {
+        tutorId: match.matchedTutorId,
+        matchedTutorId: null,
+        status: "APPROVED",
       },
-      {
-        name: match.request.student.name,
-        email: match.request.student.email,
-        subject: match.request.subject,
-      }
-    );
+      include: {
+        tutor: true,
+      },
+    });
 
-    return match;
+    await sendMatchEmail({
+      recipient: updatedMatch.tutor.email,
+      subject: tutorSubjectLine,
+      emailTemplate: tutorConfirmationEmail,
+      tutorData: {
+        name: updatedMatch.tutor.name,
+        email: updatedMatch.tutor.email,
+      },
+      studentData: {
+        name: updatedMatch.student,
+        email: updatedMatch.studentEmail,
+        subject: updatedMatch.subject,
+      },
+    });
+
+    await sendMatchEmail({
+      recipient: updatedMatch.studentEmail,
+      subject: studentSubjectLine,
+      emailTemplate: studentConfirmationEmail,
+      tutorData: {
+        name: updatedMatch.tutor.name,
+        email: updatedMatch.tutor.email,
+      },
+      studentData: {
+        name: updatedMatch.student,
+        email: updatedMatch.studentEmail,
+        subject: updatedMatch.subject,
+      },
+    });
+
+    return updatedMatch;
   } catch (error) {
     console.error("Error in approveMatch:", error);
     throw error;
@@ -92,8 +110,12 @@ export async function approveMatch(matchId) {
 
 export async function denyMatch(matchId) {
   try {
-    const match = await prisma.tutorMatch.delete({
+    const match = await prisma.tutorRequest.update({
       where: { id: matchId },
+      data: {
+        matchedTutorId: null,
+        status: "PENDING",
+      },
     });
 
     return match;
