@@ -45,21 +45,35 @@ const StudentCard = ({
   };
 
   const getTutorName = () => {
-    if (tutor && typeof tutor === "object" && tutor.name) return tutor.name;
-    if (matchedTutor && typeof matchedTutor === "object" && matchedTutor.name) {
-      return `${matchedTutor.name} ${
-        status === "PENDING_CONFIRMATION" ? "(Pending)" : ""
-      }`;
+    if (status === "APPROVED" && matchedTutor) {
+      if (typeof matchedTutor === "object" && matchedTutor.name) {
+        return matchedTutor.name;
+      } else if (
+        Array.isArray(matchedTutor) &&
+        matchedTutor.length > 0 &&
+        matchedTutor[0].name
+      ) {
+        return matchedTutor[0].name;
+      }
+      return matchedTutor;
     }
-    if (
-      Array.isArray(matchedTutor) &&
-      matchedTutor.length > 0 &&
-      matchedTutor[0].name
-    ) {
-      return `${matchedTutor[0].name} ${
-        status === "PENDING_CONFIRMATION" ? "(Pending)" : ""
-      }`;
+
+    if (status === "PENDING_CONFIRMATION" && matchedTutor) {
+      if (typeof matchedTutor === "object" && matchedTutor.name) {
+        return `${matchedTutor.name} (Pending)`;
+      } else if (
+        Array.isArray(matchedTutor) &&
+        matchedTutor.length > 0 &&
+        matchedTutor[0].name
+      ) {
+        return `${matchedTutor[0].name} (Pending)`;
+      }
     }
+
+    if (tutor && typeof tutor === "object" && tutor.name) {
+      return tutor.name;
+    }
+
     return "Not Yet Matched";
   };
 
@@ -154,7 +168,7 @@ const StudentCard = ({
         </div>
       </CardBody>
       <CardFooter className="justify-end gap-2 mb-2">
-        {status === "pending" && (
+        {(status === "PENDING" || status === "pending") && (
           <Button
             className="bg-gradient-to-tr from-primary to-yellow-200"
             size="md"

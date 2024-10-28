@@ -10,6 +10,7 @@ import {
   getSubjectColor,
   getStageColor,
 } from "@/components/utils/common";
+import { useToast } from "@/hooks/use-toast";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { MdAssignment } from "react-icons/md";
@@ -57,6 +58,8 @@ const PastRequests = () => {
 
   const [pendingMatches, setPendingMatches] = useState([]);
 
+  const { toast } = useToast();
+
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
       case "stage":
@@ -64,21 +67,23 @@ const PastRequests = () => {
           <div className="flex justify-start items-start mx-2">
             <Tooltip
               content={
-                request.subject === "Chemistry"
+                request.status === "COMPLETED"
                   ? "Complete"
-                  : request.subject === "AP Physics"
+                  : request.status === "CONFIRMED"
                   ? "Confirmed"
+                  : request.status === "PENDING_CONFIRMATION" || "pending"
+                  ? "Pending Confirmation"
                   : "Pending"
               }
               className={cn(
                 "text-white font-medium",
-                getStageColor(request.subject)
+                getStageColor(request.status)
               )}
             >
               <div
                 className={cn(
                   "w-3 h-3 rounded-full",
-                  getStageColor(request.subject)
+                  getStageColor(request.status)
                 )}
               />
             </Tooltip>
@@ -120,7 +125,7 @@ const PastRequests = () => {
           </div>
         );
       case "teacher":
-        return request.teacher?.user?.name || "Unassigned";
+        return request.matchedTutor?.name || "Unassigned";
       case "genderPref":
         switch (request.genderPref) {
           case "F":
@@ -163,6 +168,17 @@ const PastRequests = () => {
                 </Tooltip>
               </>
             )}
+            {/* {(request.status === "CONFIRMED" ||
+              request.status === "COMPLETED") && (
+              <Tooltip content="View Details">
+                <span
+                  className="text-lg cursor-pointer active:opacity-50 text-blue-500"
+                  onClick={() => handleViewDetails(request.id)}
+                >
+                  <IoInformationCircleOutline />
+                </span>
+              </Tooltip>
+            )} */}
           </div>
         );
       default:
@@ -286,78 +302,6 @@ const PastRequests = () => {
     setListStudent(myTempArr);
   };
 
-  const handleMatch = async (id) => {
-    try {
-      const response = await fetch("/api/tutor-match", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ requestId: id }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to match tutor");
-      }
-
-      const { match } = await response.json();
-      if (match.matchedTutorId) {
-        const tutorResponse = await fetch(
-          `/api/admin/tutors/${match.matchedTutorId}`
-        );
-        if (tutorResponse.ok) {
-          const tutorData = await tutorResponse.json();
-          match.matchedTutor = tutorData;
-        }
-      }
-      updateMatchesAndRequests(id, match);
-    } catch (error) {
-      console.error("Error matching tutor:", error);
-    }
-  };
-
-  const handleApprove = async (id) => {
-    try {
-      const response = await fetch("/api/tutor-match", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ matchId: id, action: "approve" }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to approve match");
-      }
-
-      const { match } = await response.json();
-      updateMatchesAndRequests(id, match);
-    } catch (error) {
-      console.error("Error approving match:", error);
-    }
-  };
-
-  const handleDeny = async (id) => {
-    try {
-      const response = await fetch("/api/tutor-match", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ matchId: id, action: "deny" }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to deny match");
-      }
-
-      const { match } = await response.json();
-      updateMatchesAndRequests(id, match);
-    } catch (error) {
-      console.error("Error denying match:", error);
-    }
-  };
-
   const updateMatchesAndRequests = (id, match) => {
     setPendingMatches((prev) =>
       prev.map((request) =>
@@ -381,6 +325,117 @@ const PastRequests = () => {
     );
   };
 
+  const handleMatch = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ requestId: id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to match tutor");
+      }
+
+      const { match } = await response.json();
+      if (!match.matchedTutorId) {
+        toast({
+          title: "Error",
+          description: "No Tutor Found for this request",
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+
+      if (match.matchedTutorId) {
+        const tutorResponse = await fetch(
+          `/api/admin/tutors/${match.matchedTutorId}`
+        );
+        if (tutorResponse.ok) {
+          const tutorData = await tutorResponse.json();
+          match.matchedTutor = tutorData;
+        }
+      }
+      updateMatchesAndRequests(id, match);
+    } catch (error) {
+      console.error("Error matching tutor:", error);
+      toast({
+        title: "Error",
+        description: "No Tutor Found for this request",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ matchId: id, action: "approve" }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to approve match");
+      }
+
+      const { match } = await response.json();
+      updateMatchesAndRequests(id, {
+        ...match,
+        status: "APPROVED",
+        matchedTutor: match.matchedTutor || match.tutor,
+      });
+
+      toast({
+        title: "Success",
+        description: "Match approved successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Error approving match:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to approve match",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleDeny = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ matchId: id, action: "deny" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to deny match");
+      }
+
+      const { match } = await response.json();
+      updateMatchesAndRequests(id, {
+        ...match,
+        status: "PENDING",
+        matchedTutor: null,
+        matchedTutorId: null,
+      });
+    } catch (error) {
+      console.error("Error denying match:", error);
+    }
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">

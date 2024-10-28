@@ -14,8 +14,16 @@ export default async function GetBestMatch(tutorRequest) {
       },
     });
 
+    tutors.sort((a, b) => a.matchedRequests.length - b.matchedRequests.length);
+
     tutorLoop: for (const tutor of tutors) {
-      if (tutor.matchedRequests.length > 3) {
+      if (
+        tutor.matchedRequests.some(
+          (request) =>
+            request.status === "PENDING_CONFIRMATION" ||
+            request.status === "APPROVED"
+        )
+      ) {
         continue;
       }
 
@@ -23,9 +31,7 @@ export default async function GetBestMatch(tutorRequest) {
       let subjectScore = 0;
 
       for (const subject of tutor.subjects) {
-        if (tutorRequest.subject !== subject) {
-          continue;
-        } else {
+        if (tutorRequest.subject === subject) {
           subjectScore++;
           break;
         }
@@ -35,11 +41,14 @@ export default async function GetBestMatch(tutorRequest) {
         continue tutorLoop;
       } else {
         cachedTutor = tutor;
+        matchScore += 5; // Prioritize subject match
       }
 
       if (tutorRequest.genderPref === tutor.gender) {
         matchScore += 2;
       }
+
+      matchScore += 3 / (tutor.matchedRequests.length + 1);
 
       if (matchScore > bestMatchScore) {
         bestMatch = tutor;
@@ -47,16 +56,15 @@ export default async function GetBestMatch(tutorRequest) {
       }
     }
 
-    if (bestMatchScore <= 0) {
-      if (cachedTutor != null) {
-        console.log("Could not match gender, forced to choose cachedTutor");
-        return cachedTutor;
-      } else {
-        console.log("Returning...");
-        return "Could not find a good match... sending email to mister decker";
-      }
+    if (bestMatch) {
+      return bestMatch;
+    } else if (cachedTutor) {
+      console.log("Could not match gender, forced to choose cachedTutor");
+      return cachedTutor;
+    } else {
+      console.log("Returning...");
+      return "Could not find a good match... sending email to mister decker";
     }
-    return bestMatch;
   } catch (error) {
     console.error("Error in GetBestMatch:", error);
     throw error;

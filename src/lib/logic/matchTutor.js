@@ -30,6 +30,19 @@ export async function matchTutor(tutorRequest) {
       });
       return null;
     }
+    const existingAssignment = await prisma.tutorRequest.findFirst({
+      where: {
+        matchedTutorId: matchedTutor.id,
+        status: {
+          in: ["PENDING_CONFIRMATION", "APPROVED"],
+        },
+      },
+    });
+
+    if (existingAssignment) {
+      console.log("Tutor already assigned to another request");
+      return null;
+    }
 
     const updatedRequest = await prisma.tutorRequest.update({
       where: { id: tutorRequest.id },
@@ -48,21 +61,26 @@ export async function matchTutor(tutorRequest) {
     throw error;
   }
 }
+
 export async function approveMatch(matchId) {
   try {
     const match = await prisma.tutorRequest.findUnique({
       where: { id: matchId },
-      select: { matchedTutorId: true },
+      include: { matchedTutor: true },
     });
 
-    if (!match || !match.matchedTutorId) {
+    if (!match) {
+      throw new Error("Tutor request not found");
+    }
+
+    if (!match.matchedTutor) {
       throw new Error("No matched tutor found for this request");
     }
 
     const updatedMatch = await prisma.tutorRequest.update({
       where: { id: matchId },
       data: {
-        tutorId: match.matchedTutorId,
+        tutorId: match.matchedTutor.id,
         matchedTutorId: null,
         status: "APPROVED",
       },

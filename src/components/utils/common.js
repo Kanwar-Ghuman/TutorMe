@@ -18,12 +18,15 @@ export const subjectIconMap = {
   Other: <PiBooks size={20} />,
 };
 
-export const getStageColor = (subject) => {
-  switch (subject) {
-    case (subject = "Chemistry"):
-      return "bg-green-400";
-    case (subject = "AP Physics"):
+export const getStageColor = (status) => {
+  switch (status) {
+    case "COMPLETED":
+      return "bg-green-500";
+    case "CONFIRMED":
+      return "bg-blue-500";
+    case "PENDING_CONFIRMATION":
       return "bg-yellow-500";
+    case "PENDING":
     default:
       return "bg-red-500";
   }
