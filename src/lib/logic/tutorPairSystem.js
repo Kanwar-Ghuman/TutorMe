@@ -17,13 +17,22 @@ export default async function GetBestMatch(tutorRequest) {
     tutors.sort((a, b) => a.matchedRequests.length - b.matchedRequests.length);
 
     tutorLoop: for (const tutor of tutors) {
-      if (
-        tutor.matchedRequests.some(
-          (request) =>
-            request.status === "PENDING_CONFIRMATION" ||
-            request.status === "APPROVED"
-        )
-      ) {
+      const hasActiveMatch = await prisma.tutorRequest.findFirst({
+        where: {
+          OR: [
+            {
+              matchedTutorId: tutor.id,
+              status: "PENDING_CONFIRMATION",
+            },
+            {
+              tutorId: tutor.id,
+              status: "APPROVED",
+            },
+          ],
+        },
+      });
+
+      if (hasActiveMatch) {
         continue;
       }
 
@@ -41,7 +50,7 @@ export default async function GetBestMatch(tutorRequest) {
         continue tutorLoop;
       } else {
         cachedTutor = tutor;
-        matchScore += 5; // Prioritize subject match
+        matchScore += 5;
       }
 
       if (tutorRequest.genderPref === tutor.gender) {

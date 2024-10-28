@@ -387,12 +387,20 @@ const PastRequests = () => {
       }
 
       const { match } = await response.json();
-      updateMatchesAndRequests(id, {
+      const updatedMatch = {
         ...match,
         status: "APPROVED",
-        matchedTutor: match.matchedTutor || match.tutor,
-      });
+        teacher: {
+          user: {
+            name: match.matchedTutor?.name || match.tutor?.name,
+          },
+        },
+        tutor: match.matchedTutor || match.tutor,
+        matchedTutor: null,
+        matchedTutorId: null,
+      };
 
+      updateMatchesAndRequests(id, updatedMatch);
       toast({
         title: "Success",
         description: "Match approved successfully",
@@ -502,6 +510,7 @@ const PastRequests = () => {
                   genderPref={student.genderPref}
                   teacherName={student.teacher?.user?.name}
                   matchedTutor={student.matchedTutor}
+                  tutor={student.tutor}
                   status={student.status}
                   onMatch={handleMatch}
                   onApprove={handleApprove}

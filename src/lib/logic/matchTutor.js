@@ -77,18 +77,48 @@ export async function approveMatch(matchId) {
       throw new Error("No matched tutor found for this request");
     }
 
-    const updatedMatch = await prisma.tutorRequest.update({
-      where: { id: matchId },
-      data: {
+    const existingApprovedMatch = await prisma.tutorRequest.findFirst({
+      where: {
         tutorId: match.matchedTutor.id,
-        matchedTutorId: null,
         status: "APPROVED",
-      },
-      include: {
-        tutor: true,
       },
     });
 
+    if (existingApprovedMatch) {
+      throw new Error("Tutor already has an approved match");
+    }
+
+    const updatedMatch = await prisma.$transaction(async (prisma) => {
+      await prisma.tutorRequest.update({
+        where: { id: matchId },
+        data: {
+          matchedTutor: {
+            disconnect: true,
+          },
+        },
+      });
+
+      // Then update the request with the new tutor connection
+      const updatedRequest = await prisma.tutorRequest.update({
+        where: { id: matchId },
+        data: {
+          status: "APPROVED",
+          tutor: {
+            connect: { id: match.matchedTutor.id },
+          },
+          matchedTutor: {
+            disconnect: true,
+          },
+        },
+        include: {
+          tutor: true,
+        },
+      });
+
+      return updatedRequest;
+    });
+
+    // Send confirmation emails
     await sendMatchEmail({
       recipient: updatedMatch.tutor.email,
       subject: tutorSubjectLine,

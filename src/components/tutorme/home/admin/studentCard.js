@@ -45,36 +45,24 @@ const StudentCard = ({
   };
 
   const getTutorName = () => {
-    if (status === "APPROVED" && matchedTutor) {
-      if (typeof matchedTutor === "object" && matchedTutor.name) {
+    console.log("Status:", status);
+    console.log("Tutor:", tutor);
+    console.log("MatchedTutor:", matchedTutor);
+
+    if (status === "APPROVED") {
+      if (tutor?.name) {
+        return tutor.name;
+      }
+      if (matchedTutor?.name) {
         return matchedTutor.name;
-      } else if (
-        Array.isArray(matchedTutor) &&
-        matchedTutor.length > 0 &&
-        matchedTutor[0].name
-      ) {
-        return matchedTutor[0].name;
-      }
-      return matchedTutor;
-    }
-
-    if (status === "PENDING_CONFIRMATION" && matchedTutor) {
-      if (typeof matchedTutor === "object" && matchedTutor.name) {
-        return `${matchedTutor.name} (Pending)`;
-      } else if (
-        Array.isArray(matchedTutor) &&
-        matchedTutor.length > 0 &&
-        matchedTutor[0].name
-      ) {
-        return `${matchedTutor[0].name} (Pending)`;
       }
     }
 
-    if (tutor && typeof tutor === "object" && tutor.name) {
-      return tutor.name;
+    if (status === "PENDING_CONFIRMATION" && matchedTutor?.name) {
+      return `${matchedTutor.name} (Pending)`;
     }
 
-    return "Not Yet Matched";
+    return "No Tutor Yet";
   };
 
   return (
