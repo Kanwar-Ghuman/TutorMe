@@ -567,22 +567,26 @@ const TeacherTutorRequests = () => {
                   </div>
                 </CardBody>
                 <CardFooter className="justify-end gap-4">
-                  <Button
-                    color="danger"
-                    variant="bordered"
-                    size="sm"
-                    icon={MdOutlineDeleteForever}
-                    endContent={<MdOutlineDeleteForever size="20" />}
-                    onClick={() => handleDelete(request.id)}
-                  ></Button>
-                  <Button
-                    auto
-                    color="primary"
-                    icon={CiEdit}
-                    size="sm"
-                    endContent={<CiEdit size="20" />}
-                    onClick={() => handleModifyClick(request)}
-                  ></Button>
+                  {request.status !== "APPROVED" && (
+                    <>
+                      <Button
+                        color="danger"
+                        variant="bordered"
+                        size="sm"
+                        icon={MdOutlineDeleteForever}
+                        endContent={<MdOutlineDeleteForever size="20" />}
+                        onClick={() => handleDelete(request.id)}
+                      />
+                      <Button
+                        auto
+                        color="primary"
+                        icon={CiEdit}
+                        size="sm"
+                        endContent={<CiEdit size="20" />}
+                        onClick={() => handleModifyClick(request)}
+                      />
+                    </>
+                  )}
                 </CardFooter>
               </Card>
             ))}

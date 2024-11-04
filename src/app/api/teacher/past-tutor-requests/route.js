@@ -14,7 +14,6 @@ export async function GET(req) {
     where: { userId: user.id },
   });
 
-  // Get all the tutor requests that the teacher has made and return them
   const tutorRequests = await prisma.tutorRequest.findMany({
     where: {
       teacherId: teacher.id,
