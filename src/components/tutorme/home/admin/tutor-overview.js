@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { Form } from "@/components/ui/form";
 import { EditIcon, DeleteIcon } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   Modal,
   ModalContent,
@@ -54,75 +55,130 @@ const TutorOverview = () => {
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [viewMode, setViewMode] = useState("card");
+  const [activeRequests, setActiveRequests] = useState([]);
 
-  const renderCell = React.useCallback((tutor, columnKey) => {
-    switch (columnKey) {
-      case "name":
-        const initials = tutor.name
-          .split(" ")
-          .map((name) => name[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
-        return (
-          <User
-            name={tutor.name}
-            description={tutor.email}
-            avatarProps={{
-              src: null,
-              name: initials,
-              color: "primary",
-            }}
-          >
-            {tutor.email}
-          </User>
-        );
-      case "subjects":
-        return (
-          <div className="flex flex-wrap gap-1">
-            {tutor.subjects.map((subject, index) => (
-              <Chip
-                size="sm"
-                className={cn(
-                  getSubjectColor(subject),
-                  "flex items-center gap-1 px-2"
-                )}
-                endContent={getSubjectIcon(subject)}
-              >
-                {subject}
-              </Chip>
-            ))}
-          </div>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Modify tutor">
-              <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                onClick={() => handleModifyClick(tutor)}
-              >
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete tutor">
-              <span
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-                onClick={() => handleDelete(tutor.id)}
-              >
-                <DeleteIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return tutor[columnKey];
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/tutors/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete request");
+      }
+      setListStudent((prev) => prev.filter((student) => student.id !== id));
+      setFilteredStudents((prev) =>
+        prev.filter((student) => student.id !== id)
+      );
+      setStudentArr((prev) => prev.filter((student) => student.id !== id));
+      toast({
+        title: "Success",
+        description: "Tutor deleted successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Failed to delete tutor:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete tutor",
+        variant: "destructive",
+        duration: 3000,
+      });
     }
-  }, []);
+  };
+  const handleModifyClick = (tutor) => {
+    setSelectedRequest(tutor);
+    setEditName(tutor.studentName);
+    setEditEmail(tutor.tutorName);
+    setEditSubjects(
+      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
+    );
+    onOpen();
+  };
+
+  const handleModifyClickTable = (tutor) => {
+    setSelectedRequest(tutor);
+    setEditName(tutor.name);
+    setEditEmail(tutor.email);
+    setEditSubjects(
+      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
+    );
+    onOpen();
+  };
+
+  const renderCell = React.useCallback(
+    (tutor, columnKey) => {
+      switch (columnKey) {
+        case "name":
+          const initials = tutor.name
+            .split(" ")
+            .map((name) => name[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+          return (
+            <User
+              name={tutor.name}
+              description={tutor.email}
+              avatarProps={{
+                src: null,
+                name: initials,
+                color: "primary",
+              }}
+            >
+              {tutor.email}
+            </User>
+          );
+        case "subjects":
+          return (
+            <div className="flex flex-wrap gap-1">
+              {tutor.subjects.map((subject, index) => (
+                <Chip
+                  size="sm"
+                  className={cn(
+                    getSubjectColor(subject),
+                    "flex items-center gap-1 px-2"
+                  )}
+                  endContent={getSubjectIcon(subject)}
+                >
+                  {subject}
+                </Chip>
+              ))}
+            </div>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              <Tooltip content="Modify tutor">
+                <span
+                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                  onClick={() => handleModifyClickTable(tutor)}
+                >
+                  <EditIcon />
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="Delete tutor">
+                <span
+                  className="text-lg text-danger cursor-pointer active:opacity-50"
+                  onClick={() => handleDelete(tutor.id)}
+                >
+                  <DeleteIcon />
+                </span>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return tutor[columnKey];
+      }
+    },
+    [handleModifyClickTable, handleDelete]
+  );
 
   const columns = [
     { name: "NAME", uid: "name" },
@@ -167,12 +223,10 @@ const TutorOverview = () => {
     if (!studentArr) return;
     let filtered = studentArr;
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter((student) => innerSearch(student, searchTerm));
     }
 
-    // Filter by selected subjects
     if (selectedSubjects.length > 0) {
       filtered = filtered.filter((student) =>
         selectedSubjects.every((subject) =>
@@ -220,38 +274,6 @@ const TutorOverview = () => {
     }
     setListStudent(myTempArr);
   };
-  const handleDelete = async (id) => {
-    try {
-      const cardElement = document.getElementById(`card-${id}`);
-      cardElement.classList.add("animate-slideOut");
-
-      setTimeout(async () => {
-        const response = await fetch(`/api/admin/tutors/${id}`, {
-          method: "DELETE",
-        });
-        if (!response.ok) {
-          throw new Error("Failed to delete request");
-        }
-        setListStudent((prev) => prev.filter((student) => student.id !== id));
-        setFilteredStudents((prev) =>
-          prev.filter((student) => student.id !== id)
-        );
-        setStudentArr((prev) => prev.filter((student) => student.id !== id));
-      }, 500);
-    } catch (error) {
-      console.error("Failed to delete tutor:", error);
-    }
-  };
-
-  const handleModifyClick = (tutor) => {
-    setSelectedRequest(tutor);
-    setEditName(tutor.studentName);
-    setEditEmail(tutor.tutorName);
-    setEditSubjects(
-      tutor.subjects.map((subject) => ({ value: subject, label: subject }))
-    );
-    onOpen();
-  };
 
   const handleSaveClick = async () => {
     setIsSubmitting(true);
@@ -281,7 +303,6 @@ const TutorOverview = () => {
 
       const updatedData = await response.json();
 
-      // Ensure the updated data has the correct structure
       const formattedUpdatedData = {
         id: selectedRequest.id,
         name: updatedData.name || editName,
@@ -290,7 +311,6 @@ const TutorOverview = () => {
           updatedData.subjects || editSubjects.map((subject) => subject.value),
       };
 
-      // Update the state immediately
       setFilteredStudents((prev) =>
         prev.map((student) =>
           student.id === selectedRequest.id ? formattedUpdatedData : student
@@ -315,6 +335,54 @@ const TutorOverview = () => {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [tutorsResponse, requestsResponse] = await Promise.all([
+          fetch("/api/admin/tutors"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=APPROVED,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!tutorsResponse.ok || !requestsResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const [tutorsData, requestsData] = await Promise.all([
+          tutorsResponse.json(),
+          requestsResponse.json(),
+        ]);
+
+        const activeRequestsMap = new Map();
+        requestsData.forEach((request) => {
+          if (request.tutor || request.matchedTutor) {
+            const tutorId = request.tutor?.id || request.matchedTutor?.id;
+            if (!activeRequestsMap.has(tutorId)) {
+              activeRequestsMap.set(tutorId, []);
+            }
+            activeRequestsMap.get(tutorId).push(request);
+          }
+        });
+
+        const tutorsWithRequests = tutorsData.map((tutor) => ({
+          ...tutor,
+          activeRequests: activeRequestsMap.get(tutor.id) || [],
+        }));
+
+        setStudentArr(tutorsWithRequests);
+        setFilteredStudents(tutorsWithRequests);
+        display(tutorsWithRequests, isReversed);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
@@ -408,6 +476,7 @@ const TutorOverview = () => {
                       studentName={student.name}
                       tutorName={student.email}
                       subjects={student.subjects || []}
+                      activeRequests={student.activeRequests} // Add this prop
                       onDelete={handleDelete}
                       onModify={handleModifyClick}
                       key={student.id}
@@ -498,6 +567,8 @@ const TutorOverview = () => {
                           classNamePrefix="select"
                           placeholder="Select subjects"
                           isDisabled={isSubmitting}
+                          styles={customStyles}
+                          formatOptionLabel={formatOptionLabel}
                         />
                       </div>
                     </div>

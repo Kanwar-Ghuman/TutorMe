@@ -16,12 +16,13 @@ import {
   customStyles,
   formatOptionLabel,
 } from "@/components/utils/common";
+import { useToast } from "@/hooks/use-toast";
 
 const TutorRequest = () => {
   const defaultValues = {
     studentsName: "",
     studentsEmail: "",
-    studenstSubjects: [],
+    studentsSubjects: [],
   };
 
   const form = useForm({
@@ -32,6 +33,8 @@ const TutorRequest = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  const { toast } = useToast();
 
   async function onSubmit(data) {
     setLoading(true);
@@ -66,6 +69,14 @@ const TutorRequest = () => {
       const responseData = await response.json();
       setSuccess(true);
       form.reset(defaultValues);
+
+      toast({
+        title: "Success",
+        description: "Tutor added successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
 
       setTimeout(() => {
         setSuccess(false);

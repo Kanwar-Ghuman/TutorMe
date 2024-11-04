@@ -83,7 +83,7 @@ export function getApp(user) {
   if (user.role === "admin") {
     return "/admin/tutor-requests";
   } else if (user.role === "teacher") {
-    return "/teacher/dashboard";
+    return "/teacher/tutor-requests";
   } else if (user.role === "student") {
     return "/student/tutor-requests";
   } else {

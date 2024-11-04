@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
 import {
   subjectsOptions,
   formatOptionLabel,
   customStyles,
   getSubjectIcon,
   getSubjectColor,
+  getStageColor,
 } from "@/components/utils/common";
+import { useToast } from "@/hooks/use-toast";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { MdAssignment } from "react-icons/md";
@@ -34,7 +37,7 @@ import {
   Switch,
 } from "@nextui-org/react";
 import Select from "react-select";
-import { DeleteIcon, EditIcon, EyeIcon, CheckIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 
 const PastRequests = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -46,21 +49,133 @@ const PastRequests = () => {
   const [noResults, setNoResults] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
-  const [requests, setRequests] = useState([]);
-  const [error, setError] = useState(null);
-  const [editName, setEditName] = useState("");
-  const [editEmail, setEditEmail] = useState("");
-  const [editSubject, setEditSubject] = useState("");
-  const [editGenderPref, setEditGenderPref] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
+
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [tutors, setTutors] = useState([]);
-
+  const [selectedTutor, setSelectedTutor] = useState(null);
   const [viewMode, setViewMode] = useState("card");
+
+  const [pendingMatches, setPendingMatches] = useState([]);
+  const [isAutoMatching, setIsAutoMatching] = useState(false);
+
+  const { toast } = useToast();
+
+  const triggerAutoMatch = async () => {
+    if (isAutoMatching) return;
+    setIsAutoMatching(true);
+
+    try {
+      const response = await fetch("/api/admin/auto-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to auto-match");
+      }
+
+      const { matches } = await response.json();
+
+      if (matches?.length > 0) {
+        const matchesWithTutors = await Promise.all(
+          matches.map(async (match) => {
+            if (match.matchedTutorId) {
+              const tutorResponse = await fetch(
+                `/api/admin/tutors/${match.matchedTutorId}`
+              );
+              if (tutorResponse.ok) {
+                const tutorData = await tutorResponse.json();
+                return { ...match, matchedTutor: tutorData };
+              }
+            }
+            return match;
+          })
+        );
+
+        matchesWithTutors.forEach((match) => {
+          updateMatchesAndRequests(match.id, match);
+        });
+      }
+    } catch (error) {
+      console.error("Error in auto-matching:", error);
+    } finally {
+      setIsAutoMatching(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchAndMatch = async () => {
+      try {
+        const [requestsResponse, matchesResponse] = await Promise.all([
+          fetch("/api/admin/past-tutor-requests"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=pending,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!requestsResponse.ok || !matchesResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const [requestsData, matchesData] = await Promise.all([
+          requestsResponse.json(),
+          matchesResponse.json(),
+        ]);
+
+        setStudentArr(requestsData);
+        setUpdateArr(requestsData);
+        display(requestsData, isReversed);
+
+        if (!isAutoMatching) {
+          await triggerAutoMatch();
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchAndMatch();
+
+    const autoMatchInterval = setInterval(async () => {
+      await triggerAutoMatch();
+    }, 90000);
+
+    return () => clearInterval(autoMatchInterval);
+  }, []);
 
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
+      case "stage":
+        return (
+          <div className="flex justify-start items-start mx-2">
+            <Tooltip
+              content={
+                request.status === "COMPLETED"
+                  ? "Complete"
+                  : request.status === "CONFIRMED"
+                  ? "Confirmed"
+                  : request.status === "PENDING_CONFIRMATION" || "pending"
+                  ? "Pending Confirmation"
+                  : "Pending"
+              }
+              className={cn(
+                "text-white font-medium",
+                getStageColor(request.status)
+              )}
+            >
+              <div
+                className={cn(
+                  "w-3 h-3 rounded-full",
+                  getStageColor(request.status)
+                )}
+              />
+            </Tooltip>
+          </div>
+        );
       case "student":
         const initials = request.student
           .split(" ")
@@ -97,7 +212,7 @@ const PastRequests = () => {
           </div>
         );
       case "teacher":
-        return request.teacher?.user?.name || "Unassigned";
+        return request.matchedTutor?.name || "Unassigned";
       case "genderPref":
         switch (request.genderPref) {
           case "F":
@@ -110,22 +225,36 @@ const PastRequests = () => {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Assign Tutor">
-              <span
-                className="text-lg text-primary cursor-pointer active:opacity-50"
-                onClick={() => handleAssign(request)}
-              >
-                <MdAssignment />
-              </span>
-            </Tooltip>
-            <Tooltip content="Confirm Request">
-              <span
-                className="text-lg  cursor-pointer active:opacity-50 text-green-500"
-                onClick={() => handleAssign(request)}
-              >
-                <CheckIcon />
-              </span>
-            </Tooltip>
+            {request.status === "PENDING" && (
+              <Tooltip content="Match Tutor">
+                <span
+                  className="text-lg text-primary cursor-pointer active:opacity-50"
+                  onClick={() => handleMatch(request.id)}
+                >
+                  <MdAssignment />
+                </span>
+              </Tooltip>
+            )}
+            {request.status === "PENDING_CONFIRMATION" && (
+              <>
+                <Tooltip content="Approve Match">
+                  <span
+                    className="text-lg cursor-pointer active:opacity-50 text-green-500"
+                    onClick={() => handleApprove(request.id)}
+                  >
+                    <CheckIcon />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Deny Match">
+                  <span
+                    className="text-lg cursor-pointer active:opacity-50 text-red-500"
+                    onClick={() => handleDeny(request.id)}
+                  >
+                    <MdOutlineDeleteForever />
+                  </span>
+                </Tooltip>
+              </>
+            )}
           </div>
         );
       default:
@@ -138,28 +267,57 @@ const PastRequests = () => {
     { name: "SUBJECT", uid: "subject" },
     { name: "GENDER PREFERENCE", uid: "genderPref" },
     { name: "ASSIGNED TUTOR", uid: "teacher" },
+    { name: "STAGE", uid: "stage" },
     { name: "ACTIONS", uid: "actions" },
   ];
 
   useEffect(() => {
-    const fetchRequests = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/past-tutor-requests");
-        if (!response.ok) {
+        const [requestsResponse, matchesResponse] = await Promise.all([
+          fetch("/api/admin/past-tutor-requests"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=pending,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!requestsResponse.ok || !matchesResponse.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        setStudentArr(data);
-        setUpdateArr(data);
-        display(data, isReversed);
+
+        const [requestsData, matchesData] = await Promise.all([
+          requestsResponse.json(),
+          matchesResponse.json(),
+        ]);
+
+        setStudentArr(requestsData);
+        setUpdateArr(requestsData);
+        display(requestsData, isReversed);
+
+        const matchesWithTutors = await Promise.all(
+          matchesData.map(async (match) => {
+            if (match.matchedTutorId) {
+              const tutorResponse = await fetch(
+                `/api/admin/tutors/${match.matchedTutorId}`
+              );
+              if (tutorResponse.ok) {
+                const tutorData = await tutorResponse.json();
+                return { ...match, matchedTutor: tutorData };
+              }
+            }
+            return match;
+          })
+        );
+
+        setPendingMatches(matchesWithTutors);
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch tutor requests:", error);
+        console.error("Failed to fetch data:", error);
         setLoading(false);
       }
     };
 
-    fetchRequests();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -181,8 +339,12 @@ const PastRequests = () => {
 
   const handleAssign = (student) => {
     setSelectedStudent(student);
-
+    setSelectedTutor(null);
     onOpen();
+  };
+
+  const handleTutorChange = (selectedOption) => {
+    setSelectedTutor(selectedOption);
   };
 
   const search = (value) => {
@@ -210,12 +372,193 @@ const PastRequests = () => {
 
   const display = (returnArr, reverse) => {
     let myTempArr = JSON.parse(JSON.stringify(returnArr));
+
+    myTempArr.sort((a, b) => {
+      if (
+        a.status === "PENDING_CONFIRMATION" &&
+        b.status !== "PENDING_CONFIRMATION"
+      ) {
+        return -1;
+      }
+      if (
+        b.status === "PENDING_CONFIRMATION" &&
+        a.status !== "PENDING_CONFIRMATION"
+      ) {
+        return 1;
+      }
+      return 0;
+    });
+
     if (reverse) {
       myTempArr.reverse();
     }
+
     setListStudent(myTempArr);
   };
 
+  const updateMatchesAndRequests = (id, match) => {
+    setPendingMatches((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+    setStudentArr((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+    setUpdateArr((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+    setListStudent((prev) =>
+      prev.map((request) =>
+        request.id === id ? { ...request, ...match } : request
+      )
+    );
+  };
+
+  const handleMatch = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ requestId: id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to match tutor");
+      }
+
+      const { match } = await response.json();
+      if (!match.matchedTutorId) {
+        toast({
+          title: "Error",
+          description: "No Tutor Found for this request",
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+
+      if (match.matchedTutorId) {
+        const tutorResponse = await fetch(
+          `/api/admin/tutors/${match.matchedTutorId}`
+        );
+        if (tutorResponse.ok) {
+          const tutorData = await tutorResponse.json();
+          match.matchedTutor = tutorData;
+        }
+      }
+      updateMatchesAndRequests(id, match);
+    } catch (error) {
+      console.error("Error matching tutor:", error);
+      toast({
+        title: "Error",
+        description: "No Tutor Found for this request",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ matchId: id, action: "approve" }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to approve match");
+      }
+
+      const { match } = await response.json();
+      const updatedMatch = {
+        ...match,
+        status: "APPROVED",
+        teacher: {
+          user: {
+            name: match.matchedTutor?.name || match.tutor?.name,
+          },
+        },
+        tutor: match.matchedTutor || match.tutor,
+        matchedTutor: null,
+        matchedTutorId: null,
+      };
+
+      updateMatchesAndRequests(id, updatedMatch);
+      toast({
+        title: "Success",
+        description: "Match approved successfully",
+        variant: "default",
+        className: "bg-green-500 text-white",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Error approving match:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to approve match",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
+  const handleSubjectChange = (selectedOptions) => {
+    setSelectedSubjects(selectedOptions || []);
+    filterRequests(selectedOptions);
+  };
+  const filterRequests = (subjects) => {
+    if (!subjects || subjects.length === 0) {
+      setListStudent(studentArr);
+      setNoResults(false);
+      return;
+    }
+
+    const filtered = studentArr.filter((request) => {
+      return subjects.some((subject) =>
+        request.subject.toLowerCase().includes(subject.value.toLowerCase())
+      );
+    });
+
+    setListStudent(filtered);
+    setNoResults(filtered.length === 0);
+  };
+
+  const handleDeny = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ matchId: id, action: "deny" }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to deny match");
+      }
+
+      const { match } = await response.json();
+      updateMatchesAndRequests(id, {
+        ...match,
+        status: "PENDING",
+        matchedTutor: null,
+        matchedTutorId: null,
+      });
+    } catch (error) {
+      console.error("Error denying match:", error);
+    }
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -223,8 +566,6 @@ const PastRequests = () => {
       </div>
     );
   }
-
-  // ... existing code ...
 
   return (
     <div className="h-full w-full flex flex-col items-center">
@@ -241,10 +582,9 @@ const PastRequests = () => {
             </Switch>
           </div>
           <Select
-            className="w-[13%] h-10 px-4 basic-multi-select "
+            className="min-w-[15%] h-10 px-4 basic-multi-select"
             classNamePrefix="select"
             options={subjectsOptions}
-            isClearable={true}
             placeholder={
               <div className="flex items-center">
                 <IoFilter className="mr-2" />
@@ -253,6 +593,10 @@ const PastRequests = () => {
             }
             styles={customStyles}
             formatOptionLabel={formatOptionLabel}
+            isClearable={true}
+            onChange={handleSubjectChange}
+            value={selectedSubjects}
+            isMulti
           />
           <Input
             type="text"
@@ -276,13 +620,19 @@ const PastRequests = () => {
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-x-10 gap-x-20 gap-y-10 p-4 mx-auto max-w-7xl">
               {listStudent.map((student) => (
                 <StudentCard
+                  key={student.id}
                   id={student.id}
                   student={student.student}
                   studentEmail={student.studentEmail}
                   subject={student.subject}
                   genderPref={student.genderPref}
                   teacherName={student.teacher?.user?.name}
-                  key={student.id}
+                  matchedTutor={student.matchedTutor}
+                  tutor={student.tutor}
+                  status={student.status}
+                  onMatch={handleMatch}
+                  onApprove={handleApprove}
+                  onDeny={handleDeny}
                   onAssign={handleAssign}
                 />
               ))}
@@ -326,7 +676,8 @@ const PastRequests = () => {
                       Manually assign a tutor for this request
                     </p>
                     <Select
-                      value={editSubject}
+                      value={selectedTutor}
+                      onChange={handleTutorChange}
                       className="basic-multi-select"
                       classNamePrefix="select"
                       placeholder="Select Tutor"

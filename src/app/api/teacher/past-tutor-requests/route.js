@@ -1,8 +1,6 @@
-
-import { PrismaClient } from '@prisma/client';
-import { NextResponse } from 'next/server';
-import { getBackendPermission } from '@/lib/auth/roles';
-
+import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
+import { getBackendPermission } from "@/lib/auth/roles";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +14,6 @@ export async function GET(req) {
     where: { userId: user.id },
   });
 
-  // Get all the tutor requests that the teacher has made and return them
   const tutorRequests = await prisma.tutorRequest.findMany({
     where: {
       teacherId: teacher.id,
@@ -27,6 +24,21 @@ export async function GET(req) {
       studentEmail: true,
       subject: true,
       genderPref: true,
+      status: true,
+      tutor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      matchedTutor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 

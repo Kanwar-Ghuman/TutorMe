@@ -1,6 +1,9 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import SideBar from "@/components/tutorme/home/admin/sideBar";
-import TutorOverview from "@/components/tutorme/home/admin/tutor-overview";
+
+const TutorOverview = lazy(() =>
+  import("@/components/tutorme/home/admin/tutor-overview")
+);
 
 const AdminTutorOverview = () => {
   return (
@@ -9,7 +12,9 @@ const AdminTutorOverview = () => {
         <SideBar />
       </div>
       <div className="w-4/5 overflow-hidden">
-        <TutorOverview />
+        <Suspense>
+          <TutorOverview />
+        </Suspense>
       </div>
     </div>
   );
