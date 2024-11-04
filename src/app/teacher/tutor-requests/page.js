@@ -71,6 +71,26 @@ const TeacherTutorRequests = () => {
   const [viewMode, setViewMode] = useState("card");
   const { toast } = useToast();
 
+  // const getTutorName = (request) => {
+  //   if (request.status === "APPROVED") {
+  //     if (request.tutor?.name) {
+  //       return request.tutor.name;
+  //     }
+  //     if (request.matchedTutor?.name) {
+  //       return request.matchedTutor.name;
+  //     }
+  //   }
+
+  //   if (
+  //     request.status === "PENDING_CONFIRMATION" &&
+  //     request.matchedTutor?.name
+  //   ) {
+  //     return `${request.matchedTutor.name} (Pending)`;
+  //   }
+
+  //   return "No Tutor Yet";
+  // };
+
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -219,7 +239,6 @@ const TeacherTutorRequests = () => {
         throw new Error("Failed to delete request");
       }
 
-      // Remove the deleted request from the local state
       setRequests((prev) => prev.filter((request) => request.id !== id));
       setListStudent((prev) => prev.filter((request) => request.id !== id));
       setStudentArr((prev) => prev.filter((request) => request.id !== id));
@@ -285,7 +304,6 @@ const TeacherTutorRequests = () => {
 
       const updatedData = await response.json();
 
-      // Update the local state with the modified request
       setRequests((prev) =>
         prev.map((request) =>
           request.id === selectedRequest.id
@@ -435,11 +453,11 @@ const TeacherTutorRequests = () => {
             <p className="text-gray-500 text-lg">No results found</p>
           </div>
         ) : viewMode === "card" ? (
-          <div className="flex flex-row flex-wrap justify-center sm:mx-18 mx-15 after:content-[''] after:flex-[0_0_40%] after:mx-3 w-full">
-            {listStudent.map((request) => (
+          <div className="flex flex-wrap justify-center gap-4 p-4">
+            {requests.map((request) => (
               <Card
                 key={request.id}
-                className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border  hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
+                className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
               >
                 <strong>
                   <CardHeader className="text-black-700 text-m items-center justify-center flex-col">
@@ -476,30 +494,24 @@ const TeacherTutorRequests = () => {
                   <div className="flex justify-start flex-row">
                     <p className="text-center">Tutor</p>
                     <IoEllipsisVerticalOutline size={20} className="mt-1" />
-                    {request.subject === "Chemistry" ? (
-                      <p>John A</p>
-                    ) : request.subject === "AP Physics" ? (
-                      <p>John A</p>
-                    ) : (
-                      <p>Not Yet Matched</p>
-                    )}
+                    <p> {request.tutor?.name || request.matchedTutor?.name}</p>
                   </div>
                   <div>
-                    {request.subject === "Chemistry" ? (
+                    {request.status === "APPROVED" ? (
                       <div>
                         <strong className="text-center pb-2 flex item-center justify-start items-center">
-                          Completed
+                          Approved
                         </strong>
                         <Progress
-                          color="success"
                           value={100}
                           className="max-w-xl"
+                          classNames={{ indicator: "bg-green-500" }}
                         />
                         <div className="flex justify-between pt-1">
                           <p className="text-gray-400">
-                            You are all good to go!
+                            Tutor has been assigned!
                           </p>
-                          <div className="justify-end">
+                          <div className="flex justify-end">
                             <FaRegCheckCircle
                               size={25}
                               className="text-green-600"
@@ -507,36 +519,33 @@ const TeacherTutorRequests = () => {
                           </div>
                         </div>
                       </div>
-                    ) : request.subject === "AP Physics" ? (
+                    ) : request.status === "PENDING_CONFIRMATION" ? (
                       <div>
                         <strong className="text-center pb-2 flex item-center justify-start items-center">
-                          Confirmed
+                          Pending Confirmation
                         </strong>
                         <Progress
                           value={75}
                           className="max-w-xl"
-                          classNames={{
-                            indicator: "bg-yellow-400",
-                          }}
+                          classNames={{ indicator: "bg-yellow-400" }}
                         />
                         <div className="flex justify-between pt-1">
                           <p className="text-gray-400">
-                            Waiting for Mr.Decker to confirm
+                            Waiting for confirmation by Mr.Decker
                           </p>
                           <div className="flex justify-end">
-                            <CalendarCheck
-                              size={25}
+                            <MdOutlinePending
+                              size={30}
                               className="text-orange-600"
                             />
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="">
+                      <div>
                         <strong className="text-center pb-2 flex item-center justify-start items-center">
-                          Pending
+                          Pending Match
                         </strong>
-
                         <Progress
                           color="danger"
                           value={30}
@@ -544,7 +553,7 @@ const TeacherTutorRequests = () => {
                         />
                         <div className="flex justify-between pt-1">
                           <p className="text-gray-400">
-                            Waiting for tutor to confirm
+                            Waiting for tutor match
                           </p>
                           <div className="flex justify-end">
                             <MdOutlinePending

@@ -25,6 +25,21 @@ export async function GET(req) {
       studentEmail: true,
       subject: true,
       genderPref: true,
+      status: true,
+      tutor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      matchedTutor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 

@@ -6,6 +6,7 @@ import StudentCard from "@/components/tutorme/home/admin/studentCard";
 const TutorMatchApproval = () => {
   const [pendingMatches, setPendingMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAutoMatching, setIsAutoMatching] = useState(false);
 
   const fetchPendingMatches = async () => {
     try {
@@ -42,9 +43,75 @@ const TutorMatchApproval = () => {
       setLoading(false);
     }
   };
+  const triggerAutoMatch = async () => {
+    if (isAutoMatching) return;
+    setIsAutoMatching(true);
+
+    try {
+      const response = await fetch("/api/admin/auto-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to auto-match");
+      }
+
+      const { matches } = await response.json();
+
+      // Update UI with new matches
+      if (matches?.length > 0) {
+        // Get full tutor details for each match
+        const matchesWithTutors = await Promise.all(
+          matches.map(async (match) => {
+            if (match.matchedTutorId) {
+              const tutorResponse = await fetch(
+                `/api/admin/tutors/${match.matchedTutorId}`
+              );
+              if (tutorResponse.ok) {
+                const tutorData = await tutorResponse.json();
+                return { ...match, matchedTutor: tutorData };
+              }
+            }
+            return match;
+          })
+        );
+
+        setPendingMatches((prev) => {
+          const updated = [...prev];
+          matchesWithTutors.forEach((match) => {
+            const index = updated.findIndex((p) => p.id === match.id);
+            if (index >= 0) {
+              updated[index] = match;
+            } else {
+              updated.push(match);
+            }
+          });
+          return updated;
+        });
+      }
+    } catch (error) {
+      console.error("Error in auto-matching:", error);
+    } finally {
+      setIsAutoMatching(false);
+    }
+  };
 
   useEffect(() => {
-    fetchPendingMatches();
+    const fetchAndMatch = async () => {
+      await fetchPendingMatches();
+      if (!isAutoMatching) {
+        await triggerAutoMatch();
+      }
+    };
+
+    fetchAndMatch();
+
+    const autoMatchInterval = setInterval(fetchAndMatch, 30000);
+
+    return () => clearInterval(autoMatchInterval);
   }, []);
 
   const handleMatch = async (id) => {

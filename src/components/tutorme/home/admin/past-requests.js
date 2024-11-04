@@ -57,8 +57,94 @@ const PastRequests = () => {
   const [viewMode, setViewMode] = useState("card");
 
   const [pendingMatches, setPendingMatches] = useState([]);
+  const [isAutoMatching, setIsAutoMatching] = useState(false);
 
   const { toast } = useToast();
+
+  const triggerAutoMatch = async () => {
+    if (isAutoMatching) return;
+    setIsAutoMatching(true);
+
+    try {
+      const response = await fetch("/api/admin/auto-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to auto-match");
+      }
+
+      const { matches } = await response.json();
+
+      if (matches?.length > 0) {
+        const matchesWithTutors = await Promise.all(
+          matches.map(async (match) => {
+            if (match.matchedTutorId) {
+              const tutorResponse = await fetch(
+                `/api/admin/tutors/${match.matchedTutorId}`
+              );
+              if (tutorResponse.ok) {
+                const tutorData = await tutorResponse.json();
+                return { ...match, matchedTutor: tutorData };
+              }
+            }
+            return match;
+          })
+        );
+
+        matchesWithTutors.forEach((match) => {
+          updateMatchesAndRequests(match.id, match);
+        });
+      }
+    } catch (error) {
+      console.error("Error in auto-matching:", error);
+    } finally {
+      setIsAutoMatching(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchAndMatch = async () => {
+      try {
+        const [requestsResponse, matchesResponse] = await Promise.all([
+          fetch("/api/admin/past-tutor-requests"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=pending,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!requestsResponse.ok || !matchesResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const [requestsData, matchesData] = await Promise.all([
+          requestsResponse.json(),
+          matchesResponse.json(),
+        ]);
+
+        setStudentArr(requestsData);
+        setUpdateArr(requestsData);
+        display(requestsData, isReversed);
+
+        if (!isAutoMatching) {
+          await triggerAutoMatch();
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchAndMatch();
+
+    const autoMatchInterval = setInterval(async () => {
+      await triggerAutoMatch();
+    }, 30000);
+
+    return () => clearInterval(autoMatchInterval);
+  }, []);
 
   const renderCell = React.useCallback((request, columnKey) => {
     switch (columnKey) {
@@ -168,17 +254,6 @@ const PastRequests = () => {
                 </Tooltip>
               </>
             )}
-            {/* {(request.status === "CONFIRMED" ||
-              request.status === "COMPLETED") && (
-              <Tooltip content="View Details">
-                <span
-                  className="text-lg cursor-pointer active:opacity-50 text-blue-500"
-                  onClick={() => handleViewDetails(request.id)}
-                >
-                  <IoInformationCircleOutline />
-                </span>
-              </Tooltip>
-            )} */}
           </div>
         );
       default:

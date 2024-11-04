@@ -32,23 +32,7 @@ const StudentCard = ({
   onApprove,
   onDeny,
 }) => {
-  const [isMatching, setIsMatching] = useState(false);
-
-  const handleMatch = async () => {
-    setIsMatching(true);
-    try {
-      await onMatch(id);
-    } catch (error) {
-      console.error("Error matching tutor:", error);
-    }
-    setIsMatching(false);
-  };
-
   const getTutorName = () => {
-    console.log("Status:", status);
-    console.log("Tutor:", tutor);
-    console.log("MatchedTutor:", matchedTutor);
-
     if (status === "APPROVED") {
       if (tutor?.name) {
         return tutor.name;
@@ -156,18 +140,6 @@ const StudentCard = ({
         </div>
       </CardBody>
       <CardFooter className="justify-end gap-2 mb-2">
-        {(status === "PENDING" || status === "pending") && (
-          <Button
-            className="bg-gradient-to-tr from-primary to-yellow-200"
-            size="md"
-            icon={MdAssignment}
-            endContent={<MdAssignment size="20" />}
-            onClick={handleMatch}
-            disabled={isMatching}
-          >
-            {isMatching ? "Matching..." : "Match Tutor"}
-          </Button>
-        )}
         {status === "PENDING_CONFIRMATION" && (
           <>
             <Button

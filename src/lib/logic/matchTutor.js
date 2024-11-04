@@ -17,17 +17,6 @@ export async function matchTutor(tutorRequest) {
     const matchedTutor = await GetBestMatch(tutorRequest);
 
     if (typeof matchedTutor === "string") {
-      await sendMatchEmail({
-        recipient: "ghumankm@gmail.com",
-        subject: "No Tutor Match Found",
-        tutorData: { name: "Admin", email: "ghumankm@gmail.com" },
-        studentData: {
-          name: tutorRequest.student,
-          email: tutorRequest.studentEmail,
-          subject: tutorRequest.subject,
-        },
-        message: matchedTutor,
-      });
       return null;
     }
     const existingAssignment = await prisma.tutorRequest.findFirst({
@@ -98,7 +87,6 @@ export async function approveMatch(matchId) {
         },
       });
 
-      // Then update the request with the new tutor connection
       const updatedRequest = await prisma.tutorRequest.update({
         where: { id: matchId },
         data: {
