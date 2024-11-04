@@ -60,6 +60,7 @@ const TutorOverview = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [viewMode, setViewMode] = useState("card");
+  const [activeRequests, setActiveRequests] = useState([]);
 
   const handleDelete = async (id) => {
     try {
@@ -335,6 +336,54 @@ const TutorOverview = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [tutorsResponse, requestsResponse] = await Promise.all([
+          fetch("/api/admin/tutors"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=APPROVED,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!tutorsResponse.ok || !requestsResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const [tutorsData, requestsData] = await Promise.all([
+          tutorsResponse.json(),
+          requestsResponse.json(),
+        ]);
+
+        const activeRequestsMap = new Map();
+        requestsData.forEach((request) => {
+          if (request.tutor || request.matchedTutor) {
+            const tutorId = request.tutor?.id || request.matchedTutor?.id;
+            if (!activeRequestsMap.has(tutorId)) {
+              activeRequestsMap.set(tutorId, []);
+            }
+            activeRequestsMap.get(tutorId).push(request);
+          }
+        });
+
+        const tutorsWithRequests = tutorsData.map((tutor) => ({
+          ...tutor,
+          activeRequests: activeRequestsMap.get(tutor.id) || [],
+        }));
+
+        setStudentArr(tutorsWithRequests);
+        setFilteredStudents(tutorsWithRequests);
+        display(tutorsWithRequests, isReversed);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -427,6 +476,7 @@ const TutorOverview = () => {
                       studentName={student.name}
                       tutorName={student.email}
                       subjects={student.subjects || []}
+                      activeRequests={student.activeRequests} // Add this prop
                       onDelete={handleDelete}
                       onModify={handleModifyClick}
                       key={student.id}

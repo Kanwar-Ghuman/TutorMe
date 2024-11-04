@@ -49,6 +49,7 @@ const PastRequests = () => {
   const [noResults, setNoResults] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
 
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -141,7 +142,7 @@ const PastRequests = () => {
 
     const autoMatchInterval = setInterval(async () => {
       await triggerAutoMatch();
-    }, 30000);
+    }, 90000);
 
     return () => clearInterval(autoMatchInterval);
   }, []);
@@ -371,9 +372,27 @@ const PastRequests = () => {
 
   const display = (returnArr, reverse) => {
     let myTempArr = JSON.parse(JSON.stringify(returnArr));
+
+    myTempArr.sort((a, b) => {
+      if (
+        a.status === "PENDING_CONFIRMATION" &&
+        b.status !== "PENDING_CONFIRMATION"
+      ) {
+        return -1;
+      }
+      if (
+        b.status === "PENDING_CONFIRMATION" &&
+        a.status !== "PENDING_CONFIRMATION"
+      ) {
+        return 1;
+      }
+      return 0;
+    });
+
     if (reverse) {
       myTempArr.reverse();
     }
+
     setListStudent(myTempArr);
   };
 
@@ -494,6 +513,27 @@ const PastRequests = () => {
     }
   };
 
+  const handleSubjectChange = (selectedOptions) => {
+    setSelectedSubjects(selectedOptions || []);
+    filterRequests(selectedOptions);
+  };
+  const filterRequests = (subjects) => {
+    if (!subjects || subjects.length === 0) {
+      setListStudent(studentArr);
+      setNoResults(false);
+      return;
+    }
+
+    const filtered = studentArr.filter((request) => {
+      return subjects.some((subject) =>
+        request.subject.toLowerCase().includes(subject.value.toLowerCase())
+      );
+    });
+
+    setListStudent(filtered);
+    setNoResults(filtered.length === 0);
+  };
+
   const handleDeny = async (id) => {
     try {
       const response = await fetch("/api/tutor-match", {
@@ -542,10 +582,9 @@ const PastRequests = () => {
             </Switch>
           </div>
           <Select
-            className="w-[13%] h-10 px-4 basic-multi-select "
+            className="min-w-[15%] h-10 px-4 basic-multi-select"
             classNamePrefix="select"
             options={subjectsOptions}
-            isClearable={true}
             placeholder={
               <div className="flex items-center">
                 <IoFilter className="mr-2" />
@@ -554,6 +593,10 @@ const PastRequests = () => {
             }
             styles={customStyles}
             formatOptionLabel={formatOptionLabel}
+            isClearable={true}
+            onChange={handleSubjectChange}
+            value={selectedSubjects}
+            isMulti
           />
           <Input
             type="text"
