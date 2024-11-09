@@ -593,7 +593,6 @@ const PastRequests = () => {
             }
             styles={customStyles}
             formatOptionLabel={formatOptionLabel}
-            isClearable={true}
             onChange={handleSubjectChange}
             value={selectedSubjects}
             isMulti
