@@ -130,9 +130,9 @@ const PastRequests = () => {
         setUpdateArr(requestsData);
         display(requestsData, isReversed);
 
-        if (!isAutoMatching) {
-          await triggerAutoMatch();
-        }
+        // if (!isAutoMatching) {
+        //   await triggerAutoMatch();
+        // }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -140,11 +140,11 @@ const PastRequests = () => {
 
     fetchAndMatch();
 
-    const autoMatchInterval = setInterval(async () => {
-      await triggerAutoMatch();
-    }, 90000);
+    // const autoMatchInterval = setInterval(async () => {
+    //   await triggerAutoMatch();
+    // }, 90000);
 
-    return () => clearInterval(autoMatchInterval);
+    // return () => clearInterval(autoMatchInterval);
   }, []);
 
   const renderCell = React.useCallback((request, columnKey) => {
