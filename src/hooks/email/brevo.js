@@ -1,18 +1,16 @@
-"use server"
+"use server";
 import { createTransport } from "nodemailer";
 
 const transporter = createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
   auth: {
-    user: "heyanantraj@gmail.com",
+    user: "fhstutorme@gmail.com",
     pass: process.env.SMTP_PASSWORD,
   },
 });
 
-export async function SendEmail(
-  toEmail
-) {
+export async function SendEmail(toEmail) {
   await transporter.sendMail({
     from: "noreply@tutorme.com",
     to: toEmail,

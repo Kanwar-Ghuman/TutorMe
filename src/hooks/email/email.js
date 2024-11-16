@@ -4,7 +4,7 @@ import { createTransport } from "nodemailer";
 
 export async function sendEmail(to, subject, html) {
   const msg = {
-    from: "heyanantraj@gmail.com", // Your verified sender
+    from: "fhstutorme@gmail.com",
     to,
     subject,
     html,
@@ -13,6 +13,7 @@ export async function sendEmail(to, subject, html) {
   const transporter = createTransport({
     host: "smtp-relay.brevo.com",
     port: 587,
+
     auth: {
       user: "heyanantraj@gmail.com",
       pass: process.env.SMTP_PASSWORD,

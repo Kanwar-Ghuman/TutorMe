@@ -71,26 +71,6 @@ const TeacherTutorRequests = () => {
   const [viewMode, setViewMode] = useState("card");
   const { toast } = useToast();
 
-  // const getTutorName = (request) => {
-  //   if (request.status === "APPROVED") {
-  //     if (request.tutor?.name) {
-  //       return request.tutor.name;
-  //     }
-  //     if (request.matchedTutor?.name) {
-  //       return request.matchedTutor.name;
-  //     }
-  //   }
-
-  //   if (
-  //     request.status === "PENDING_CONFIRMATION" &&
-  //     request.matchedTutor?.name
-  //   ) {
-  //     return `${request.matchedTutor.name} (Pending)`;
-  //   }
-
-  //   return "No Tutor Yet";
-  // };
-
   useEffect(() => {
     const fetchRequests = async () => {
       try {
