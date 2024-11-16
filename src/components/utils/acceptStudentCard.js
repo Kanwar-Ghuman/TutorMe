@@ -8,6 +8,7 @@ import { CiEdit } from "react-icons/ci";
 import { Chip, Accordion, AccordionItem } from "@nextui-org/react";
 import { cn } from "@/lib/utils";
 import { getSubjectColor, getSubjectIcon } from "@/components/utils/common";
+import { ChevronDown } from "lucide-react";
 
 export default function AcceptStudentCard({
   id,
@@ -57,6 +58,18 @@ export default function AcceptStudentCard({
                 variant="light"
                 className="px-0"
                 selectionMode="single"
+                indicator={({ isOpen }) => (
+                  <ChevronDown
+                    className={cn(
+                      "size-10",
+                      "transition-transform",
+
+                      {
+                        "rotate-180": isOpen,
+                      }
+                    )}
+                  />
+                )}
               >
                 <AccordionItem title="Current Assignments">
                   <div className="space-y-4">

@@ -1,11 +1,17 @@
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
-import { TbMath, TbMathMax, TbMathIntegralX } from "react-icons/tb";
+import {
+  TbMath,
+  TbMathMax,
+  TbMathIntegralX,
+  TbNoDerivatives,
+} from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
 import { GiMaterialsScience } from "react-icons/gi";
-import { Dna } from "lucide-react";
+import { Dna, SigmaIcon } from "lucide-react";
 import { PiBooks } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
 import { LuSigma } from "react-icons/lu";
+import { FaCalculator } from "react-icons/fa6";
 
 export const subjectIconMap = {
   IM: <TbMath size={20} />,
@@ -133,7 +139,7 @@ export const getSubjectIcon = (subject) => {
   } else if (["Calc BC", "CalcBC"].includes(subject)) {
     return <TbMathIntegralX size={20} />;
   } else if (["Calc AB", "CalcAB"].includes(subject)) {
-    return <LuSigma size={20} />;
+    return <SigmaIcon size={20} />;
   } else if (["Physics", "AP Physics"].includes(subject)) {
     return <GiMaterialsScience size={20} />;
   } else if (["Biology", "AP Biology"].includes(subject)) {

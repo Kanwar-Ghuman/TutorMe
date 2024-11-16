@@ -63,6 +63,13 @@ const CreateRequest = () => {
       const responseData = await response.json();
       console.log(responseData);
 
+      await fetch("/api/admin/auto-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       setSuccess(true);
       setSubmittedData(data);
       form.reset(defaultValues);

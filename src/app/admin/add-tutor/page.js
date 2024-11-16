@@ -49,7 +49,6 @@ const TutorRequest = () => {
     ];
 
     console.log(formattedData);
-
     try {
       const response = await fetch("/api/admin/tutors", {
         method: "POST",
@@ -69,6 +68,13 @@ const TutorRequest = () => {
       const responseData = await response.json();
       setSuccess(true);
       form.reset(defaultValues);
+
+      await fetch("/api/admin/auto-match", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       toast({
         title: "Success",
