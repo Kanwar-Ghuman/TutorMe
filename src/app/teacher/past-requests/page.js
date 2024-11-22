@@ -58,7 +58,9 @@ const TeacherPastRequests = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch("/api/teacher/past-tutor-requests");
+        const response = await fetch(
+          "/api/teacher/past-tutor-requests?status=APPROVED"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch requests");
         }
