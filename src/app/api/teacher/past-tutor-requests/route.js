@@ -9,7 +9,10 @@ export async function GET(req) {
   if (!response.isValid) return response.error;
   const user = response.user;
 
-  // Get the teacher from the database
+  const { searchParams } = new URL(req.url);
+
+  const status = searchParams.get("status");
+
   const teacher = await prisma.teacher.findUnique({
     where: { userId: user.id },
   });
@@ -17,7 +20,9 @@ export async function GET(req) {
   const tutorRequests = await prisma.tutorRequest.findMany({
     where: {
       teacherId: teacher.id,
+      status: status || undefined,
     },
+
     select: {
       id: true,
       student: true,
