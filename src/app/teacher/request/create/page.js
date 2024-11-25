@@ -45,23 +45,32 @@ const CreateRequest = () => {
   const router = useRouter();
 
   async function onSubmit(data) {
+    console.log("Form submitted with data:", data); // Debug log
     setLoading(true);
     setError("");
     try {
+      const formattedData = {
+        ...data,
+        studentEmail: `${data.studentEmail}@franklinsabers.org`,
+      };
+      console.log("Formatted data:", formattedData); // Debug log
+
       const response = await fetch("/api/teacher/create-tutor-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formattedData),
       });
 
       if (!response.ok) {
-        throw new Error("Request failed");
+        const errorData = await response.json();
+        console.error("API error:", errorData);
+        throw new Error(errorData.message || "Request failed");
       }
 
       const responseData = await response.json();
-      console.log(responseData);
+      console.log("API response:", responseData);
 
       await fetch("/api/admin/auto-match", {
         method: "POST",
@@ -71,7 +80,7 @@ const CreateRequest = () => {
       });
 
       setSuccess(true);
-      setSubmittedData(data);
+      setSubmittedData(formattedData);
       form.reset(defaultValues);
       onOpen();
 
@@ -79,8 +88,8 @@ const CreateRequest = () => {
         setSuccess(false);
       }, 2000);
     } catch (err) {
-      console.log(err);
-      setError("An unexpected error occurred.");
+      console.error("Error details:", err);
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -114,8 +123,8 @@ const CreateRequest = () => {
               <FormInput
                 name="studentEmail"
                 label="Student Email Address"
-                placeholder="student@franklinsabers.org"
-                description="Enter the student's email address"
+                placeholder="alice.jones"
+                description="Enter the student's username only"
                 form={form}
                 isRequired
                 disabled={loading}
@@ -130,7 +139,7 @@ const CreateRequest = () => {
                 isRequired
                 disabled={loading}
               />
-              <FormDropDownInput
+              {/* <FormDropDownInput
                 name="genderPreference"
                 label="Gender Preference"
                 options={[
@@ -146,7 +155,7 @@ const CreateRequest = () => {
                 description="Does your student prefer a certain tutor gender?"
                 isRequired
                 disabled={loading}
-              />
+              /> */}
               <p
                 className={cn("text-danger fill-danger", error ? "" : "hidden")}
               >

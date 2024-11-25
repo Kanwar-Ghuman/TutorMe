@@ -13,7 +13,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
-import { MdAssignment } from "react-icons/md";
+import { MdAssignment, MdOutlineDeleteForever } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 import { cn } from "@/lib/utils";
 import {
   Button,
@@ -55,11 +56,28 @@ const PastRequests = () => {
   const [success, setSuccess] = useState(false);
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null);
-  const [viewMode, setViewMode] = useState("card");
+  const [viewMode, setViewMode] = useState("table");
 
   const [pendingMatches, setPendingMatches] = useState([]);
 
   const { toast } = useToast();
+
+  // Modfiying state vars
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editSubject, setEditSubject] = useState("");
+  const [editGenderPref, setEditGenderPref] = useState("");
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
+  //modify func:
+  const handleModifyClick = (request) => {
+    setSelectedRequest(request);
+    setEditName(request.student);
+    setEditEmail(request.studentEmail);
+    setEditSubject(request.subject);
+    setEditGenderPref(request.genderPref);
+    onOpen();
+  };
 
   useEffect(() => {
     const fetchAndMatch = async () => {
@@ -83,212 +101,12 @@ const PastRequests = () => {
         setStudentArr(requestsData);
         setUpdateArr(requestsData);
         display(requestsData, isReversed);
-
-        // if (!isAutoMatching) {
-        //   await triggerAutoMatch();
-        // }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
     };
 
     fetchAndMatch();
-
-    // const autoMatchInterval = setInterval(async () => {
-    //   await triggerAutoMatch();
-    // }, 90000);
-
-    // return () => clearInterval(autoMatchInterval);
-  }, []);
-
-  const renderCell = React.useCallback((request, columnKey) => {
-    switch (columnKey) {
-      case "stage":
-        return (
-          <div className="flex justify-start items-start mx-2">
-            <Tooltip
-              content={
-                request.status === "COMPLETED"
-                  ? "Complete"
-                  : request.status === "CONFIRMED"
-                  ? "Confirmed"
-                  : request.status === "PENDING_CONFIRMATION" || "pending"
-                  ? "Pending Confirmation"
-                  : "Pending"
-              }
-              className={cn(
-                "text-white font-medium",
-                getStageColor(request.status)
-              )}
-            >
-              <div
-                className={cn(
-                  "w-3 h-3 rounded-full",
-                  getStageColor(request.status)
-                )}
-              />
-            </Tooltip>
-          </div>
-        );
-      case "student":
-        const initials = request.student
-          .split(" ")
-          .map((name) => name[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
-        return (
-          <User
-            name={request.student}
-            description={request.studentEmail}
-            avatarProps={{
-              src: null,
-              name: initials,
-              color: "primary",
-            }}
-          >
-            {request.studentEmail}
-          </User>
-        );
-      case "subject":
-        return (
-          <div className="flex items-center gap-2">
-            <Chip
-              size="sm"
-              className={cn(
-                getSubjectColor(request.subject),
-                "flex items-center gap-1 px-2"
-              )}
-              endContent={getSubjectIcon(request.subject)}
-            >
-              {request.subject}
-            </Chip>
-          </div>
-        );
-      case "teacher":
-        return request.matchedTutor?.name || "Unassigned";
-      case "genderPref":
-        switch (request.genderPref) {
-          case "F":
-            return "Female";
-          case "M":
-            return "Male";
-          default:
-            return "No Preference";
-        }
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            {request.status === "PENDING" && (
-              <Tooltip content="Match Tutor">
-                <span
-                  className="text-lg text-primary cursor-pointer active:opacity-50"
-                  onClick={() => handleMatch(request.id)}
-                >
-                  <MdAssignment />
-                </span>
-              </Tooltip>
-            )}
-            {request.status === "PENDING_CONFIRMATION" && (
-              <>
-                <Tooltip content="Approve Match">
-                  <span
-                    className="text-lg cursor-pointer active:opacity-50 text-green-500"
-                    onClick={() => handleApprove(request.id)}
-                  >
-                    <CheckIcon />
-                  </span>
-                </Tooltip>
-                <Tooltip content="Deny Match">
-                  <span
-                    className="text-lg cursor-pointer active:opacity-50 text-red-500"
-                    onClick={() => handleDeny(request.id)}
-                  >
-                    <MdOutlineDeleteForever />
-                  </span>
-                </Tooltip>
-              </>
-            )}
-          </div>
-        );
-      default:
-        return request[columnKey];
-    }
-  }, []);
-
-  const columns = [
-    { name: "STUDENT", uid: "student" },
-    { name: "SUBJECT", uid: "subject" },
-    { name: "GENDER PREFERENCE", uid: "genderPref" },
-    { name: "ASSIGNED TUTOR", uid: "teacher" },
-    { name: "STAGE", uid: "stage" },
-    { name: "ACTIONS", uid: "actions" },
-  ];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [requestsResponse, matchesResponse] = await Promise.all([
-          fetch("/api/admin/past-tutor-requests"),
-          fetch(
-            "/api/admin/past-tutor-requests?status=pending,PENDING_CONFIRMATION"
-          ),
-        ]);
-
-        if (!requestsResponse.ok || !matchesResponse.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const [requestsData, matchesData] = await Promise.all([
-          requestsResponse.json(),
-          matchesResponse.json(),
-        ]);
-
-        setStudentArr(requestsData);
-        setUpdateArr(requestsData);
-        display(requestsData, isReversed);
-
-        const matchesWithTutors = await Promise.all(
-          matchesData.map(async (match) => {
-            if (match.matchedTutorId) {
-              const tutorResponse = await fetch(
-                `/api/admin/tutors/${match.matchedTutorId}`
-              );
-              if (tutorResponse.ok) {
-                const tutorData = await tutorResponse.json();
-                return { ...match, matchedTutor: tutorData };
-              }
-            }
-            return match;
-          })
-        );
-
-        setPendingMatches(matchesWithTutors);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/admin/tutors");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setTutors(data);
-      } catch (error) {
-        console.error("Failed to fetch tutors:", error);
-      }
-    };
-
-    fetchData();
   }, []);
 
   const handleAssign = (student) => {
@@ -513,6 +331,187 @@ const PastRequests = () => {
       console.error("Error denying match:", error);
     }
   };
+
+  const renderCell = React.useCallback(
+    (request, columnKey) => {
+      switch (columnKey) {
+        case "student":
+          return (
+            <User
+              name={request.student}
+              description={request.studentEmail}
+              avatarProps={{
+                src: null,
+                name: request.student
+                  .split(" ")
+                  .map((name) => name[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2),
+                color: "primary",
+              }}
+            />
+          );
+        case "subject":
+          return (
+            <Chip
+              size="md"
+              className={cn(
+                getSubjectColor(request.subject),
+                "flex items-center gap-1 px-2"
+              )}
+              endContent={getSubjectIcon(request.subject)}
+            >
+              {request.subject}
+            </Chip>
+          );
+        case "status":
+          return (
+            <Chip
+              size="sm"
+              className={
+                request.status === "APPROVED"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }
+            >
+              {request.status === "APPROVED"
+                ? "Approved"
+                : request.status === "PENDING_CONFIRMATION"
+                ? "Pending Confirmation"
+                : "Pending"}{" "}
+            </Chip>
+          );
+        case "tutor":
+          return (
+            request.tutor?.name || request.matchedTutor?.name || "Not Assigned"
+          );
+        case "actions":
+          if (request.status === "APPROVED") {
+            return null;
+          }
+          return (
+            <div className="flex gap-3 items-center justify-start">
+              {request.status === "PENDING" && (
+                <Tooltip content="Match Tutor">
+                  <span
+                    className="text-2xl text-primary cursor-pointer active:opacity-50"
+                    onClick={() => handleMatch(request.id)}
+                  >
+                    <MdAssignment />
+                  </span>
+                </Tooltip>
+              )}
+              {request.status === "PENDING_CONFIRMATION" && (
+                <>
+                  <Tooltip content="Approve Match">
+                    <span
+                      className="text-2xl cursor-pointer active:opacity-50 text-green-500"
+                      onClick={() => handleApprove(request.id)}
+                    >
+                      <CheckIcon />
+                    </span>
+                  </Tooltip>
+                  <Tooltip content="Deny Match">
+                    <span
+                      className="text-2xl cursor-pointer active:opacity-50 text-red-500"
+                      onClick={() => handleDeny(request.id)}
+                    >
+                      <MdOutlineDeleteForever />
+                    </span>
+                  </Tooltip>
+                </>
+              )}
+              <Tooltip content="Manually Assign Tutor">
+                <span
+                  className="text-2xl text-default-400 cursor-pointer active:opacity-50"
+                  onClick={() => handleModifyClick(request)}
+                >
+                  <CiEdit />
+                </span>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return request[columnKey];
+      }
+    },
+    [handleApprove, handleDeny, handleMatch, handleModifyClick]
+  );
+
+  const columns = [
+    { name: "STUDENT", uid: "student" },
+    { name: "SUBJECT", uid: "subject" },
+    { name: "STATUS", uid: "status" },
+    { name: "TUTOR", uid: "tutor" },
+    { name: "ACTIONS", uid: "actions" },
+  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [requestsResponse, matchesResponse] = await Promise.all([
+          fetch("/api/admin/past-tutor-requests"),
+          fetch(
+            "/api/admin/past-tutor-requests?status=pending,PENDING_CONFIRMATION"
+          ),
+        ]);
+
+        if (!requestsResponse.ok || !matchesResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const [requestsData, matchesData] = await Promise.all([
+          requestsResponse.json(),
+          matchesResponse.json(),
+        ]);
+
+        setStudentArr(requestsData);
+        setUpdateArr(requestsData);
+        display(requestsData, isReversed);
+
+        const matchesWithTutors = await Promise.all(
+          matchesData.map(async (match) => {
+            if (match.matchedTutorId) {
+              const tutorResponse = await fetch(
+                `/api/admin/tutors/${match.matchedTutorId}`
+              );
+              if (tutorResponse.ok) {
+                const tutorData = await tutorResponse.json();
+                return { ...match, matchedTutor: tutorData };
+              }
+            }
+            return match;
+          })
+        );
+
+        setPendingMatches(matchesWithTutors);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/tutors");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setTutors(data);
+      } catch (error) {
+        console.error("Failed to fetch tutors:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -591,7 +590,7 @@ const PastRequests = () => {
               ))}
             </div>
           ) : (
-            <Table aria-label="Past Requests table">
+            <Table aria-label="Tutor requests table">
               <TableHeader columns={columns}>
                 {(column) => (
                   <TableColumn

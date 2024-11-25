@@ -68,7 +68,7 @@ const TeacherTutorRequests = () => {
   const [studentArr, setStudentArr] = useState([]);
   const [updateArr, setUpdateArr] = useState([]);
   const [isReversed, setIsReversed] = useState(false);
-  const [viewMode, setViewMode] = useState("card");
+  const [viewMode, setViewMode] = useState("table");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -101,114 +101,6 @@ const TeacherTutorRequests = () => {
   const form = useForm({
     defaultValues,
   });
-
-  const renderCell = React.useCallback((request, columnKey) => {
-    switch (columnKey) {
-      case "stage":
-        return (
-          <div className="flex justify-start items-start mx-2">
-            <Tooltip
-              content={
-                request.subject === "Chemistry"
-                  ? "Complete"
-                  : request.subject === "AP Physics"
-                  ? "Confirmed"
-                  : "Pending"
-              }
-              className={cn(
-                "text-white font-medium",
-                getStageColor(request.subject)
-              )}
-            >
-              <div
-                className={cn(
-                  "w-3 h-3 rounded-full",
-                  getStageColor(request.subject)
-                )}
-              />
-            </Tooltip>
-          </div>
-        );
-      case "student":
-        const initials = request.student
-          .split(" ")
-          .map((name) => name[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
-        return (
-          <User
-            name={request.student}
-            description={request.studentEmail}
-            avatarProps={{
-              src: null,
-              name: initials,
-              color: "primary",
-            }}
-          >
-            {request.studentEmail}
-          </User>
-        );
-      case "subject":
-        return (
-          <div className="flex items-center gap-2">
-            <Chip
-              size="sm"
-              className={cn(
-                getSubjectColor(request.subject),
-                "flex items-center gap-1 px-2"
-              )}
-              endContent={getSubjectIcon(request.subject)}
-            >
-              {request.subject}
-            </Chip>
-          </div>
-        );
-      case "teacher":
-        return request.teacher?.user?.name || "Unassigned";
-      case "genderPref":
-        switch (request.genderPref) {
-          case "F":
-            return "Female";
-          case "M":
-            return "Male";
-          default:
-            return "No Preference";
-        }
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Assign Tutor">
-              <span
-                className="text-lg text-primary cursor-pointer active:opacity-50"
-                onClick={() => handleAssign(request)}
-              >
-                <MdAssignment />
-              </span>
-            </Tooltip>
-            <Tooltip content="Confirm Request">
-              <span
-                className="text-lg  cursor-pointer active:opacity-50 text-green-500"
-                onClick={() => handleAssign(request)}
-              >
-                <CheckIcon />
-              </span>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return request[columnKey];
-    }
-  }, []);
-
-  const columns = [
-    { name: "STUDENT", uid: "student" },
-    { name: "SUBJECT", uid: "subject" },
-    { name: "GENDER PREFERENCE", uid: "genderPref" },
-    { name: "ASSIGNED TUTOR", uid: "teacher" },
-    { name: "STAGE", uid: "stage" },
-    { name: "ACTIONS", uid: "actions" },
-  ];
 
   const handleDelete = async (id) => {
     try {
@@ -326,6 +218,107 @@ const TeacherTutorRequests = () => {
       setIsProcessing(false);
     }
   };
+
+  const renderCell = React.useCallback(
+    (request, columnKey) => {
+      switch (columnKey) {
+        case "student":
+          return (
+            <User
+              name={request.student}
+              description={request.studentEmail}
+              avatarProps={{
+                src: null,
+                name: request.student
+                  .split(" ")
+                  .map((name) => name[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2),
+                color: "primary",
+              }}
+            />
+          );
+        case "subject":
+          return (
+            <div className="flex items-center gap-1">
+              <Chip
+                size="sm"
+                className={cn(
+                  getSubjectColor(request.subject),
+                  "flex items-center gap-1 px-2"
+                )}
+                endContent={getSubjectIcon(request.subject)}
+              >
+                {request.subject}
+              </Chip>
+            </div>
+          );
+        case "teacher":
+          return (
+            request.tutor?.name ||
+            request.matchedTutor?.name ||
+            request.teacher?.user?.name ||
+            "No Tutor Yet"
+          );
+        case "stage":
+          return (
+            <div className="flex flex-col">
+              {request.status === "APPROVED" ? (
+                <Chip size="sm" className="bg-green-100 text-green-800">
+                  Approved
+                </Chip>
+              ) : request.status === "PENDING_CONFIRMATION" ? (
+                <Chip size="sm" className="bg-yellow-100 text-yellow-800">
+                  Pending Confirmation
+                </Chip>
+              ) : (
+                <Chip size="sm" className="bg-red-100 text-red-800">
+                  Pending Match
+                </Chip>
+              )}
+            </div>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-4">
+              {" "}
+              {request.status !== "APPROVED" && (
+                <>
+                  <Tooltip content="Delete Request">
+                    <span
+                      className="text-2xl cursor-pointer active:opacity-50 text-danger"
+                      onClick={() => handleDelete(request.id)}
+                    >
+                      <MdOutlineDeleteForever size={24} />
+                    </span>
+                  </Tooltip>
+                  <Tooltip content="Modify Request">
+                    <span
+                      className="text-2xl cursor-pointer active:opacity-50"
+                      onClick={() => handleModifyClick(request)}
+                    >
+                      <CiEdit size={24} />
+                    </span>
+                  </Tooltip>
+                </>
+              )}
+            </div>
+          );
+        default:
+          return request[columnKey];
+      }
+    },
+    [handleDelete, handleModifyClick]
+  );
+
+  const columns = [
+    { name: "STUDENT", uid: "student" },
+    { name: "SUBJECT", uid: "subject" },
+    { name: "ASSIGNED TUTOR", uid: "teacher" },
+    { name: "STATUS", uid: "stage" },
+    { name: "ACTIONS", uid: "actions", align: "start" },
+  ];
 
   const search = (value) => {
     const searchTerm = value.toLowerCase().trim();
