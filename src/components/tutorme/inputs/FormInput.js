@@ -24,6 +24,13 @@ const FormInput = ({
   ) : (
     ""
   );
+  const handleEmailInput = (e) => {
+    if (name === "studentsEmail") {
+      let value = e.target.value.replace(/@franklinsabers\.org$/, "");
+      value = value.replace(/@/g, "");
+      form.setValue(name, value);
+    }
+  };
 
   return (
     <FormField
@@ -35,12 +42,34 @@ const FormInput = ({
             {label} {requiredAsterik}
           </FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} {...field} />
+            <div className="relative">
+              <Input
+                placeholder={
+                  name === "studentsEmail" ? "alice.jones" : placeholder
+                }
+                {...field}
+                onChange={(e) => {
+                  name === "studentsEmail"
+                    ? handleEmailInput(e)
+                    : field.onChange(e);
+                }}
+                className={name === "studentsEmail" ? "pr-[50px]" : ""}
+              />
+              {name === "studentsEmail" && (
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                  @franklinsabers.org
+                </span>
+              )}
+            </div>
           </FormControl>
           {field.name in form.formState.errors ? (
             <FormMessage />
           ) : (
-            <FormDescription>{description}</FormDescription>
+            <FormDescription>
+              {name === "studentsEmail"
+                ? "Enter the student's username only"
+                : description}
+            </FormDescription>
           )}
         </FormItem>
       )}

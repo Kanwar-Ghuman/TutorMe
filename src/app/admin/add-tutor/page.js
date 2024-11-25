@@ -43,7 +43,7 @@ const TutorRequest = () => {
     const formattedData = [
       {
         name: data.studentsName,
-        email: data.studentsEmail,
+        email: `${data.studentsEmail}@franklinsabers.org`,
         subjects: data.studentsSubjects.map((subject) => subject.value),
       },
     ];

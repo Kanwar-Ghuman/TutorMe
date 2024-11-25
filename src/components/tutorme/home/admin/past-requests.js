@@ -13,7 +13,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
-import { MdAssignment } from "react-icons/md";
+import { MdAssignment, MdOutlineDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { cn } from "@/lib/utils";
 import {
@@ -56,7 +56,7 @@ const PastRequests = () => {
   const [success, setSuccess] = useState(false);
   const [tutors, setTutors] = useState([]);
   const [selectedTutor, setSelectedTutor] = useState(null);
-  const [viewMode, setViewMode] = useState("card");
+  const [viewMode, setViewMode] = useState("table");
 
   const [pendingMatches, setPendingMatches] = useState([]);
 
@@ -342,7 +342,13 @@ const PastRequests = () => {
               description={request.studentEmail}
               avatarProps={{
                 src: null,
-                name: request.student.charAt(0),
+                name: request.student
+                  .split(" ")
+                  .map((name) => name[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2),
+                color: "primary",
               }}
             />
           );
@@ -369,7 +375,11 @@ const PastRequests = () => {
                   : "bg-yellow-100 text-yellow-800"
               }
             >
-              {request.status}
+              {request.status === "APPROVED"
+                ? "Approved"
+                : request.status === "PENDING_CONFIRMATION"
+                ? "Pending Confirmation"
+                : "Pending"}{" "}
             </Chip>
           );
         case "tutor":
@@ -381,11 +391,11 @@ const PastRequests = () => {
             return null;
           }
           return (
-            <div className="flex gap-2 justify-center">
+            <div className="flex gap-3 items-center justify-start">
               {request.status === "PENDING" && (
                 <Tooltip content="Match Tutor">
                   <span
-                    className="text-lg text-primary cursor-pointer active:opacity-50"
+                    className="text-2xl text-primary cursor-pointer active:opacity-50"
                     onClick={() => handleMatch(request.id)}
                   >
                     <MdAssignment />
@@ -396,7 +406,7 @@ const PastRequests = () => {
                 <>
                   <Tooltip content="Approve Match">
                     <span
-                      className="text-lg cursor-pointer active:opacity-50 text-green-500"
+                      className="text-2xl cursor-pointer active:opacity-50 text-green-500"
                       onClick={() => handleApprove(request.id)}
                     >
                       <CheckIcon />
@@ -404,7 +414,7 @@ const PastRequests = () => {
                   </Tooltip>
                   <Tooltip content="Deny Match">
                     <span
-                      className="text-lg cursor-pointer active:opacity-50 text-red-500"
+                      className="text-2xl cursor-pointer active:opacity-50 text-red-500"
                       onClick={() => handleDeny(request.id)}
                     >
                       <MdOutlineDeleteForever />
@@ -412,9 +422,9 @@ const PastRequests = () => {
                   </Tooltip>
                 </>
               )}
-              <Tooltip content="Modify Request">
+              <Tooltip content="Manually Assign Tutor">
                 <span
-                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
+                  className="text-2xl text-default-400 cursor-pointer active:opacity-50"
                   onClick={() => handleModifyClick(request)}
                 >
                   <CiEdit />

@@ -58,13 +58,9 @@ export const createTutorSchemaReal = z.object({
       const nameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
       return nameRegex.test(value);
     }, "Please enter the full name in the format 'First Last'"),
-  studentsEmail: z
-    .string({
-      required_error: "Email address is required",
-    })
-    .email({
-      message: "Please enter a valid email address",
-    }),
+  studentsEmail: z.string({
+    required_error: "Email address is required",
+  }),
   studentsSubjects: z
     .array(
       z.object({

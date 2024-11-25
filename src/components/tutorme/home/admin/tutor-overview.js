@@ -59,7 +59,7 @@ const TutorOverview = () => {
 
   const [filteredStudents, setFilteredStudents] = useState([]);
 
-  const [viewMode, setViewMode] = useState("card");
+  const [viewMode, setViewMode] = useState("table");
   const [activeRequests, setActiveRequests] = useState([]);
 
   const handleDelete = async (id) => {
