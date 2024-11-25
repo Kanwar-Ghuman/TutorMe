@@ -24,55 +24,67 @@ const FormInput = ({
   ) : (
     ""
   );
-  const handleEmailInput = (e) => {
-    if (name === "studentsEmail") {
-      let value = e.target.value.replace(/@franklinsabers\.org$/, "");
-      value = value.replace(/@/g, "");
-      form.setValue(name, value);
-    }
-  };
 
   return (
     <FormField
       control={form.control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>
-            {label} {requiredAsterik}
-          </FormLabel>
-          <FormControl>
-            <div className="relative">
-              <Input
-                placeholder={
-                  name === "studentsEmail" ? "alice.jones" : placeholder
-                }
-                {...field}
-                onChange={(e) => {
-                  name === "studentsEmail"
-                    ? handleEmailInput(e)
-                    : field.onChange(e);
-                }}
-                className={name === "studentsEmail" ? "pr-[50px]" : ""}
-              />
-              {name === "studentsEmail" && (
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                  @franklinsabers.org
-                </span>
-              )}
-            </div>
-          </FormControl>
-          {field.name in form.formState.errors ? (
-            <FormMessage />
-          ) : (
-            <FormDescription>
-              {name === "studentsEmail"
-                ? "Enter the student's username only"
-                : description}
-            </FormDescription>
-          )}
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const handleEmailInput = (e) => {
+          if (name === "studentEmail" || name === "studentsEmail") {
+            let value = e.target.value.replace(/@franklinsabers\.org$/, "");
+            value = value.replace(/@/g, "");
+            value = value.slice(0, 30);
+            field.onChange(value);
+            form.setValue(name, value);
+          }
+        };
+
+        return (
+          <FormItem>
+            <FormLabel>
+              {label} {requiredAsterik}
+            </FormLabel>
+            <FormControl>
+              <div className="relative">
+                <Input
+                  placeholder={
+                    name === "studentEmail" || name === "studentsEmail"
+                      ? "alice.jones"
+                      : placeholder
+                  }
+                  {...field}
+                  value={field.value || ""}
+                  onChange={(e) => {
+                    name === "studentEmail" || name === "studentsEmail"
+                      ? handleEmailInput(e)
+                      : field.onChange(e);
+                  }}
+                  className={
+                    name === "studentEmail" || name === "studentsEmail"
+                      ? "pr-[165px]"
+                      : ""
+                  }
+                />
+                {(name === "studentEmail" || name === "studentsEmail") && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                    @franklinsabers.org
+                  </span>
+                )}
+              </div>
+            </FormControl>
+            {field.name in form.formState.errors ? (
+              <FormMessage />
+            ) : (
+              <FormDescription>
+                {name === "studentsEmail"
+                  ? "Enter the student's username only"
+                  : description}
+              </FormDescription>
+            )}
+          </FormItem>
+        );
+      }}
     />
   );
 };
