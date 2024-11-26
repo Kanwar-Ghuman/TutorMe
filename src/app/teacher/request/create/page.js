@@ -45,7 +45,7 @@ const CreateRequest = () => {
   const router = useRouter();
 
   async function onSubmit(data) {
-    console.log("Form submitted with data:", data); // Debug log
+    console.log("Form submitted with data:", data);
     setLoading(true);
     setError("");
     try {
@@ -53,7 +53,7 @@ const CreateRequest = () => {
         ...data,
         studentEmail: `${data.studentEmail}@franklinsabers.org`,
       };
-      console.log("Formatted data:", formattedData); // Debug log
+      console.log("Formatted data:", formattedData);
 
       const response = await fetch("/api/teacher/create-tutor-request", {
         method: "POST",
@@ -210,10 +210,6 @@ const CreateRequest = () => {
                     </p>
                     <p>
                       <strong>Subject:</strong> {submittedData.subject}
-                    </p>
-                    <p>
-                      <strong>Gender Preference:</strong>{" "}
-                      {submittedData.genderPreference}
                     </p>
                   </>
                 )}

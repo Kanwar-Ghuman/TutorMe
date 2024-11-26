@@ -13,7 +13,7 @@ const SideButton = React.memo(
           href={theLink}
           prefetch={true}
           className={`flex gap-2 items-center flex-row rounded-lg transition duration-150 w-full h-[4vh] p-2 ${
-            isActive ? "bg-primary text-white" : "hover:bg-slate-200"
+            isActive ? "bg-primary text-black" : "hover:bg-slate-200"
           }`}
         >
           <Icon className="ml-2 size-5" />
