@@ -50,7 +50,8 @@ const PastRequests = () => {
   const [noResults, setNoResults] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
+
+  const [selectedSubject, setSelectedSubject] = useState([]);
 
   const [formLoading, setFormLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -285,22 +286,21 @@ const PastRequests = () => {
     }
   };
 
-  const handleSubjectChange = (selectedOptions) => {
-    setSelectedSubjects(selectedOptions || []);
-    filterRequests(selectedOptions);
+  const handleSubjectChange = (selectedOption) => {
+    setSelectedSubject(selectedOption);
+    filterRequests(selectedOption);
   };
-  const filterRequests = (subjects) => {
-    if (!subjects || subjects.length === 0) {
+
+  const filterRequests = (subject) => {
+    if (!subject) {
       setListStudent(studentArr);
       setNoResults(false);
       return;
     }
 
-    const filtered = studentArr.filter((request) => {
-      return subjects.some((subject) =>
-        request.subject.toLowerCase().includes(subject.value.toLowerCase())
-      );
-    });
+    const filtered = studentArr.filter((request) =>
+      request.subject.toLowerCase().includes(subject.value.toLowerCase())
+    );
 
     setListStudent(filtered);
     setNoResults(filtered.length === 0);
@@ -547,8 +547,8 @@ const PastRequests = () => {
             styles={customStyles}
             formatOptionLabel={formatOptionLabel}
             onChange={handleSubjectChange}
-            value={selectedSubjects}
-            isMulti
+            value={selectedSubject}
+            isClearable={true}
           />
           <Input
             type="text"

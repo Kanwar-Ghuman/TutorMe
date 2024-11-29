@@ -52,7 +52,6 @@ const TutorOverview = () => {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editSubjects, setEditSubjects] = useState([]);
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -61,6 +60,10 @@ const TutorOverview = () => {
 
   const [viewMode, setViewMode] = useState("table");
   const [activeRequests, setActiveRequests] = useState([]);
+
+  const [tutorsList, setTutorsList] = useState([]);
+  const [filteredTutors, setFilteredTutors] = useState([]);
+  const [selectedSubjects, setSelectedSubjects] = useState(null);
 
   const handleDelete = async (id) => {
     try {
@@ -110,6 +113,23 @@ const TutorOverview = () => {
       tutor.subjects.map((subject) => ({ value: subject, label: subject }))
     );
     onOpen();
+  };
+
+  const filterTutors = (subject) => {
+    if (!subject) {
+      setFilteredTutors(tutorsList);
+      return;
+    }
+
+    const filtered = tutorsList.filter((tutor) => {
+      if (!tutor.subjects) return false;
+
+      return tutor.subjects.some((tutorSubject) =>
+        tutorSubject.toLowerCase().includes(subjects.value.toLowerCase())
+      );
+    });
+
+    setFilteredTutors(filtered);
   };
 
   const renderCell = React.useCallback(
@@ -227,19 +247,17 @@ const TutorOverview = () => {
       filtered = filtered.filter((student) => innerSearch(student, searchTerm));
     }
 
-    if (selectedSubjects.length > 0) {
+    if (selectedSubjects && selectedSubjects.value) {
       filtered = filtered.filter((student) =>
-        selectedSubjects.every((subject) =>
-          student.subjects.includes(subject.value)
-        )
+        student.subjects?.includes(selectedSubjects.value)
       );
     }
 
     setFilteredStudents(filtered);
   };
 
-  const handleSubjectChange = (selectedOptions) => {
-    setSelectedSubjects(selectedOptions || []); // Ensure it's always an array
+  const handleSubjectChange = (selectedOption) => {
+    setSelectedSubjects(selectedOption);
   };
 
   const handleSearchChange = (event) => {
