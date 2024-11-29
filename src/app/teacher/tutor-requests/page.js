@@ -71,6 +71,45 @@ const TeacherTutorRequests = () => {
   const [viewMode, setViewMode] = useState("table");
   const { toast } = useToast();
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSubjects, setSelectedSubjects] = useState(null);
+  const [filteredRequests, setFilteredRequests] = useState([]);
+
+  const filterRequests = () => {
+    if (!requests) return;
+    let filtered = requests;
+
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (request) =>
+          request.student?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          request.studentEmail
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          request.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          request.teacher?.user?.name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedSubjects && selectedSubjects.value) {
+      filtered = filtered.filter(
+        (request) => request.subject === selectedSubjects.value
+      );
+    }
+
+    setListStudent(filtered);
+    setUpdateArr(filtered);
+    setNoResults(filtered.length === 0);
+  };
+
+  useEffect(() => {
+    if (requests && requests.length > 0) {
+      filterRequests();
+    }
+  }, [selectedSubjects, searchTerm, requests]);
+
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -351,6 +390,11 @@ const TeacherTutorRequests = () => {
     setListStudent(myTempArr);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    search(event.target.value);
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col flex-wrap w-full items-center">
@@ -387,14 +431,16 @@ const TeacherTutorRequests = () => {
   return (
     <div className="flex flex-wrap flex-col items-start w-full p-4">
       <div className="w-full justify-center items-start flex flex-row mb-8">
-        <Switch
-          checked={viewMode === "table"}
-          onChange={() => setViewMode(viewMode === "card" ? "table" : "card")}
-        >
-          {viewMode === "card" ? "Card View" : "Table View"}
-        </Switch>
+        <div className="flex items-center mt-1">
+          <Switch
+            checked={viewMode === "table"}
+            onChange={() => setViewMode(viewMode === "card" ? "table" : "card")}
+          >
+            {viewMode === "card" ? "Card View" : "Table View"}
+          </Switch>
+        </div>
         <ReactSelect
-          className=" w-[15%]  h-10 px-4 basic-multi-select"
+          className="w-[15%] h-10 px-4 basic-multi-select"
           options={subjectsOptions}
           classNamePrefix="select"
           placeholder={
@@ -406,12 +452,16 @@ const TeacherTutorRequests = () => {
           styles={customStyles}
           formatOptionLabel={formatOptionLabel}
           isClearable={true}
+          onChange={(option) => setSelectedSubjects(option)}
+          value={selectedSubjects}
         />
         <Input
           type="text"
           id="inputSearch"
           placeholder="Search"
           className="sm:w-[50%] w-[60%]"
+          value={searchTerm}
+          onChange={handleSearchChange}
           onKeyUp={(event) => {
             search(event.target.value);
           }}
@@ -427,7 +477,7 @@ const TeacherTutorRequests = () => {
           </div>
         ) : viewMode === "card" ? (
           <div className="flex flex-wrap justify-center gap-4 p-4">
-            {requests.map((request) => (
+            {filterRequests.map((request) => (
               <Card
                 key={request.id}
                 className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
