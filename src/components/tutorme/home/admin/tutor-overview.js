@@ -194,7 +194,9 @@ const TutorOverview = () => {
             </div>
           );
         default:
-          return tutor[columnKey];
+          return typeof tutor[columnKey] === "object"
+            ? JSON.stringify(tutor[columnKey])
+            : tutor[columnKey];
       }
     },
     [handleModifyClickTable, handleDelete]

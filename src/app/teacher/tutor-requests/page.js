@@ -21,6 +21,7 @@ import { Loader2, CheckIcon } from "lucide-react";
 import { Form } from "@/components/ui/form";
 import ReactSelect from "react-select";
 import { useToast } from "@/hooks/use-toast";
+import { Spinner } from "@nextui-org/react";
 import {
   Card,
   CardHeader,
@@ -397,33 +398,8 @@ const TeacherTutorRequests = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col flex-wrap w-full items-center">
-        <Skeleton className="rounded-lg w-2/3 mb-4">
-          <div className="h-8 w-2/3 rounded-lg bg-default-300 items-center py-3"></div>
-        </Skeleton>
-        <div className="flex flex-row flex-wrap py-4 justify-center">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <Card
-              key={index}
-              className="overflow-hidden w-[38%] h-[320px] mb-8 p-4 space-y-5 mx-[3.2rem]"
-            >
-              <Skeleton className="rounded-lg">
-                <div className="h-24 rounded-lg bg-default-300"></div>
-              </Skeleton>
-              <div className="space-y-3">
-                <Skeleton className="w-3/5 rounded-lg">
-                  <div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
-                </Skeleton>
-                <Skeleton className="w-4/5 rounded-lg">
-                  <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-                </Skeleton>
-                <Skeleton className="w-2/5 rounded-lg">
-                  <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-                </Skeleton>
-              </div>
-            </Card>
-          ))}
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="lg" />
       </div>
     );
   }
@@ -477,7 +453,7 @@ const TeacherTutorRequests = () => {
           </div>
         ) : viewMode === "card" ? (
           <div className="flex flex-wrap justify-center gap-4 p-4">
-            {filterRequests.map((request) => (
+            {filteredRequests.map((request) => (
               <Card
                 key={request.id}
                 className="overflow-hidden w-[38%] mb-8 h-[360px] mx-3 bg-white border hover:shadow-[#FACC14] shadow-lg transition-transform duration-200 ease-in-out hover:scale-105"
