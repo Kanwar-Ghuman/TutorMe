@@ -388,7 +388,13 @@ const PastRequests = () => {
           );
         case "actions":
           if (request.status === "APPROVED") {
-            return null;
+            return (
+              <div className="flex gap-3 items-center justify-start">
+                <Chip size="sm" className="bg-gray-100 text-gray-600">
+                  No Actions Needed
+                </Chip>
+              </div>
+            );
           }
           return (
             <div className="flex gap-3 items-center justify-start">
