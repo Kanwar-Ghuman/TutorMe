@@ -28,9 +28,13 @@ export async function matchTutor(tutorRequest) {
     }
 
     const studentToken = generateToken();
-    const tutorToken = generateToken();
+    const tutorToken = generateToken(); //WELLLWELLWELLIFITSMYARCHNEMESIS
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL;
+    const baseUrl = "http://localhost:3000";
+
+    if (process.env.NEXT_PUBLIC_URL === "https://tutorme.vercel.app") {
+      baseUrl = process.env.NEXT_PUBLIC_URL;
+    }
 
     const updatedMatch = await prisma.tutorRequest.update({
       where: { id: tutorRequest.id },
