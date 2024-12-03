@@ -12,39 +12,69 @@ import GetBestMatch from "./tutorPairSystem";
 const prisma = new PrismaClient();
 const { sendMatchEmail } = useEmailSender();
 
+import { sendEmail } from "@/hooks/email/email";
+import { confirmationEmailTemplate } from "@/components/utils/emailTemplate";
+import crypto from "crypto";
+
+function generateToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
 export async function matchTutor(tutorRequest) {
   try {
-    const matchedTutor = await GetBestMatch(tutorRequest);
-
-    if (typeof matchedTutor === "string") {
-      return null;
-    }
-    const existingAssignment = await prisma.tutorRequest.findFirst({
-      where: {
-        matchedTutorId: matchedTutor.id,
-        status: {
-          in: ["PENDING_CONFIRMATION", "APPROVED"],
-        },
-      },
-    });
-
-    if (existingAssignment) {
-      console.log("Tutor already assigned to another request");
-      return null;
+    const bestMatch = await GetBestMatch(tutorRequest);
+    if (!bestMatch) {
+      throw new Error("No suitable tutor found");
     }
 
-    const updatedRequest = await prisma.tutorRequest.update({
+    const studentToken = generateToken();
+    const tutorToken = generateToken();
+
+    const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+
+    const updatedMatch = await prisma.tutorRequest.update({
       where: { id: tutorRequest.id },
       data: {
-        matchedTutorId: matchedTutor.id,
-        status: "PENDING_CONFIRMATION",
+        status: "MATCHED",
+        studentToken: studentToken,
+        tutorToken: tutorToken,
+        matchedTutor: {
+          connect: { id: bestMatch.id },
+        },
       },
       include: {
         matchedTutor: true,
+        teacher: true,
+        tutor: true,
       },
     });
 
-    return updatedRequest;
+    await Promise.all([
+      sendEmail(
+        updatedMatch.studentEmail,
+        "Confirm Your TutorMe Match",
+        confirmationEmailTemplate(
+          updatedMatch.student,
+          "student",
+          updatedMatch.matchedTutor.name,
+          updatedMatch.subject,
+          `${baseUrl}/confirm/${studentToken}?type=student`
+        )
+      ),
+      sendEmail(
+        updatedMatch.matchedTutor.email,
+        "Confirm Your TutorMe Match",
+        confirmationEmailTemplate(
+          updatedMatch.matchedTutor.name,
+          "tutor",
+          updatedMatch.student, // Matched student's name
+          updatedMatch.subject,
+          `${baseUrl}/confirm/${tutorToken}?type=tutor`
+        )
+      ),
+    ]);
+
+    return updatedMatch;
   } catch (error) {
     console.error("Error in matchTutor:", error);
     throw error;
@@ -110,7 +140,7 @@ export async function approveMatch(matchId) {
     await sendMatchEmail({
       recipient: updatedMatch.tutor.email,
       subject: tutorSubjectLine,
-      emailTemplate: tutorConfirmationEmail,
+      emailTemplate: confirmationEmailTemplate,
       tutorData: {
         name: updatedMatch.tutor.name,
         email: updatedMatch.tutor.email,
@@ -125,7 +155,7 @@ export async function approveMatch(matchId) {
     await sendMatchEmail({
       recipient: updatedMatch.studentEmail,
       subject: studentSubjectLine,
-      emailTemplate: studentConfirmationEmail,
+      emailTemplate: confirmationEmailTemplate,
       tutorData: {
         name: updatedMatch.tutor.name,
         email: updatedMatch.tutor.email,

@@ -28,6 +28,9 @@ model TutorRequest {
 
   matchedTutor   Tutor?  @relation("MatchedTutor", fields: [matchedTutorId], references: [id])
   matchedTutorId String?
+
+  studentToken String? 
+  tutorToken String? 
 }
 
 model Tutor {

@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import StudentCard from "./studentCard";
 import { IoFilter, IoSearchOutline } from "react-icons/io5";
 import { MdAssignment, MdOutlineDeleteForever } from "react-icons/md";
+import { useEmailSender } from "@/hooks/useEmailSender";
 import { CiEdit } from "react-icons/ci";
 import { cn } from "@/lib/utils";
 import {
@@ -79,6 +80,8 @@ const PastRequests = () => {
     setEditGenderPref(request.genderPref);
     onOpen();
   };
+
+  const { sendMatchEmail } = useEmailSender();
 
   useEffect(() => {
     const fetchAndMatch = async () => {
@@ -237,7 +240,6 @@ const PastRequests = () => {
       });
     }
   };
-
   const handleApprove = async (id) => {
     try {
       const response = await fetch("/api/tutor-match", {
@@ -245,29 +247,22 @@ const PastRequests = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ matchId: id, action: "approve" }),
+        body: JSON.stringify({ action: "approve", matchId: id }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to approve match");
+        throw new Error(errorData.error || "Failed to approve request");
       }
 
       const { match } = await response.json();
-      const updatedMatch = {
-        ...match,
-        status: "APPROVED",
-        teacher: {
-          user: {
-            name: match.matchedTutor?.name || match.tutor?.name,
-          },
-        },
-        tutor: match.matchedTutor || match.tutor,
-        matchedTutor: null,
-        matchedTutorId: null,
-      };
 
-      updateMatchesAndRequests(id, updatedMatch);
+      setListStudent((prev) =>
+        prev.map((request) =>
+          request.id === id ? { ...request, status: "APPROVED" } : request
+        )
+      );
+
       toast({
         title: "Success",
         description: "Match approved successfully",
@@ -276,13 +271,38 @@ const PastRequests = () => {
         duration: 3000,
       });
     } catch (error) {
-      console.error("Error approving match:", error);
+      console.error("Error approving request:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to approve match",
         variant: "destructive",
         duration: 3000,
       });
+    }
+  };
+
+  const handleDeny = async (id) => {
+    try {
+      const response = await fetch("/api/tutor-match", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: "deny", matchId: id }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to deny request");
+      }
+
+      setListStudent((prev) =>
+        prev.map((request) =>
+          request.id === id ? { ...request, status: "DENIED" } : request
+        )
+      );
+    } catch (error) {
+      console.error("Error denying request:", error);
     }
   };
 
@@ -306,29 +326,22 @@ const PastRequests = () => {
     setNoResults(filtered.length === 0);
   };
 
-  const handleDeny = async (id) => {
-    try {
-      const response = await fetch("/api/tutor-match", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ matchId: id, action: "deny" }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to deny match");
-      }
-
-      const { match } = await response.json();
-      updateMatchesAndRequests(id, {
-        ...match,
-        status: "PENDING",
-        matchedTutor: null,
-        matchedTutorId: null,
-      });
-    } catch (error) {
-      console.error("Error denying match:", error);
+  const getStatusTooltip = (status) => {
+    switch (status) {
+      case "PENDING":
+        return "Waiting for initial match";
+      case "MATCHED":
+        return "Waiting for both parties to confirm";
+      case "STUDENT_CONFIRMED":
+        return "Waiting for tutor confirmation";
+      case "TUTOR_CONFIRMED":
+        return "Waiting for student confirmation";
+      case "PENDING_ADMIN":
+        return "Both parties confirmed - Waiting for admin approval";
+      case "APPROVED":
+        return "Match approved and finalized";
+      default:
+        return status;
     }
   };
 
@@ -367,20 +380,28 @@ const PastRequests = () => {
           );
         case "status":
           return (
-            <Chip
-              size="sm"
-              className={
-                request.status === "APPROVED"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }
-            >
-              {request.status === "APPROVED"
-                ? "Approved"
-                : request.status === "PENDING_CONFIRMATION"
-                ? "Pending Confirmation"
-                : "Pending"}{" "}
-            </Chip>
+            <Tooltip content={getStatusTooltip(request.status)}>
+              <Chip
+                size="sm"
+                className={
+                  request.status === "APPROVED"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }
+              >
+                {request.status === "APPROVED"
+                  ? "Approved"
+                  : request.status === "PENDING_CONFIRMATION"
+                  ? "Pending Confirmation"
+                  : request.status === "STUDENT_CONFIRMED"
+                  ? "Student Confirmed"
+                  : request.status === "TUTOR_CONFIRMED"
+                  ? "Tutor Confirmed"
+                  : request.status === "PENDING_ADMIN"
+                  ? "Pending Admin"
+                  : "Pending"}
+              </Chip>
+            </Tooltip>
           );
         case "tutor":
           return (
@@ -393,6 +414,28 @@ const PastRequests = () => {
                 <Chip size="sm" className="bg-gray-100 text-gray-600">
                   No Actions Needed
                 </Chip>
+              </div>
+            );
+          }
+          if (request.status === "PENDING_ADMIN") {
+            return (
+              <div className="flex gap-3 items-center justify-start">
+                <Tooltip content="Approve Request">
+                  <span
+                    className="text-2xl cursor-pointer text-green-500"
+                    onClick={() => handleApprove(request.id)}
+                  >
+                    <MdAssignment />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Deny Request">
+                  <span
+                    className="text-2xl cursor-pointer text-red-500"
+                    onClick={() => handleDeny(request.id)}
+                  >
+                    <MdOutlineDeleteForever />
+                  </span>
+                </Tooltip>
               </div>
             );
           }
