@@ -28,9 +28,8 @@ const studentsEmailList = [
 ];
 
 function getUserRole(email) {
-  // Implement your logic to check if the email belongs to a teacher
   if (adminEmailList.includes(email)) return "admin";
-  if (teachersEmailList.includes(email)) return "teacher";
+  if (email.endsWith("@franklin.k12.wi.us")) return "teacher";
   if (studentsEmailList.includes(email)) return "student";
 
   return "unauthorized";
