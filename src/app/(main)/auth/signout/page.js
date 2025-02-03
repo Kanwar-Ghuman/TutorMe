@@ -12,8 +12,6 @@ export default async function Signout(context) {
     return redirect("/auth/login");
   }
 
-  const providers = await getProviders();
-
   return (
     <>
       <SignOut />

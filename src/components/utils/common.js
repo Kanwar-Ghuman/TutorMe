@@ -22,6 +22,7 @@ export const subjectIconMap = {
   Chemistry: <HiMiniBeaker size={20} />,
   Language: <IoLanguageOutline size={20} />,
   Other: <PiBooks size={20} />,
+  CS: <FaCalculator size={20} />,
 };
 
 export const getStageColor = (status) => {
@@ -90,6 +91,21 @@ export const subjectsOptions = [
     ],
   },
   {
+    label: "Computer Science",
+    options: [
+      {
+        value: "AP CSP",
+        label: "AP Computer Science Principles",
+        icon: subjectIconMap.CS,
+      },
+      {
+        value: "AP CSA",
+        label: "AP Computer Science A",
+        icon: subjectIconMap.CS,
+      },
+    ],
+  },
+  {
     label: "Spanish",
     options: [
       {
@@ -148,6 +164,8 @@ export const getSubjectIcon = (subject) => {
     return <HiMiniBeaker size={20} />;
   } else if (subject.includes("Spanish") || subject.includes("German")) {
     return <IoLanguageOutline size={20} />;
+  } else if (["AP CSP", "AP CSA"].includes(subject)) {
+    return <FaCalculator size={20} />;
   }
   return <PiBooks size={20} />;
 };
@@ -200,6 +218,8 @@ export const getSubjectColor = (subject) => {
     return "bg-chemistry text-white";
   } else if (subject.includes("Spanish") || subject.includes("German")) {
     return "bg-language text-white";
+  } else if (["AP CSP", "AP CSA"].includes(subject)) {
+    return "bg-cs text-white";
   }
   return "bg-other text-white";
 };
@@ -281,6 +301,20 @@ export const formSubjectsOptions = [
       { value: "German 3", label: "German 3" },
       { value: "German 4", label: "German 4" },
       { value: "German 5", label: "German 5" },
+    ],
+  },
+
+  {
+    label: "Computer Science",
+    group: [
+      {
+        value: "AP CSP",
+        label: "AP Computer Science Principles",
+      },
+      {
+        value: "AP CSA",
+        label: "AP Computer Science A",
+      },
     ],
   },
 ];
