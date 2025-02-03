@@ -159,7 +159,6 @@ export const confirmationEmailTemplate = (
       }:</strong> ${matchName}</p>
       <p>Please confirm this match by clicking the button below:</p>
       <a href="${confirmLink}" class="button">Confirm Match</a>
-      <p>If you didn't request this, please ignore this email.</p>
     </div>
     <div class="footer">
       <p>&copy; ${new Date().getFullYear()} TutorMe. All rights reserved.</p>

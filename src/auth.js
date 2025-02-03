@@ -29,7 +29,7 @@ const studentsEmailList = [
 
 function getUserRole(email) {
   if (adminEmailList.includes(email)) return "admin";
-  if (email.endsWith("@franklin.k12.wi.us")) return "teacher";
+  if (email.endsWith("franklin.k12.wi.us")) return "teacher";
   if (studentsEmailList.includes(email)) return "student";
 
   return "unauthorized";

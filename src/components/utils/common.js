@@ -7,7 +7,7 @@ import {
 } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
 import { GiMaterialsScience } from "react-icons/gi";
-import { Dna, SigmaIcon, Code } from "lucide-react";
+import { Dna, SigmaIcon, CodeXml } from "lucide-react";
 import { PiBooks } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
 import { LuSigma } from "react-icons/lu";
@@ -22,7 +22,7 @@ export const subjectIconMap = {
   Chemistry: <HiMiniBeaker size={20} />,
   Language: <IoLanguageOutline size={20} />,
   Other: <PiBooks size={20} />,
-  CS: <Code size={20} />,
+  CS: <CodeXml size={20} />,
 };
 
 export const getStageColor = (status) => {
@@ -165,7 +165,7 @@ export const getSubjectIcon = (subject) => {
   } else if (subject.includes("Spanish") || subject.includes("German")) {
     return <IoLanguageOutline size={20} />;
   } else if (["AP CSP", "AP CSA"].includes(subject)) {
-    return <FaCalculator size={20} />;
+    return <CodeXml size={20} />;
   }
   return <PiBooks size={20} />;
 };

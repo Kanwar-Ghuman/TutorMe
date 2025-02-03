@@ -8,7 +8,7 @@ function LoginPage() {
   return (
     <div className="bg-[#f7f7f7] flex flex-col md:flex-row justify-start md:justify-between items-center w-full h-full min-h-screen px-4 sm:px-10 md:px-20">
       <div className="text-left mb-10 mt-[9rem] sm:mt-[5rem] md:mt-[-2rem] ml-4 md:ml-20">
-        <p className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-none mb-8 md:mb-[6rem]">
+        <p className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-none mb-8 md:mb-[6rem]">
           Login
         </p>
         <p className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight mb-4 md:mb-0 md:inline-flex  pt-[3rem] sm:pt-[5rem]">
