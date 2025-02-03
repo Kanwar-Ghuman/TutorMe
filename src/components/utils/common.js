@@ -7,7 +7,7 @@ import {
 } from "react-icons/tb";
 import { HiMiniBeaker } from "react-icons/hi2";
 import { GiMaterialsScience } from "react-icons/gi";
-import { Dna, SigmaIcon } from "lucide-react";
+import { Dna, SigmaIcon, Code } from "lucide-react";
 import { PiBooks } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
 import { LuSigma } from "react-icons/lu";
@@ -22,7 +22,7 @@ export const subjectIconMap = {
   Chemistry: <HiMiniBeaker size={20} />,
   Language: <IoLanguageOutline size={20} />,
   Other: <PiBooks size={20} />,
-  CS: <FaCalculator size={20} />,
+  CS: <Code size={20} />,
 };
 
 export const getStageColor = (status) => {
