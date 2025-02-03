@@ -219,7 +219,7 @@ export const getSubjectColor = (subject) => {
   } else if (subject.includes("Spanish") || subject.includes("German")) {
     return "bg-language text-white";
   } else if (["AP CSP", "AP CSA"].includes(subject)) {
-    return "bg-cs text-white";
+    return "bg-math text-white";
   }
   return "bg-other text-white";
 };
