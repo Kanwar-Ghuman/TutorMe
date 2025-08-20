@@ -10,6 +10,7 @@ import { GiMaterialsScience } from "react-icons/gi";
 import { Dna, SigmaIcon, CodeXml } from "lucide-react";
 import { PiBooks } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
+import { GoBook } from "react-icons/go";
 import { LuSigma } from "react-icons/lu";
 import { FaCalculator } from "react-icons/fa6";
 
@@ -23,6 +24,7 @@ export const subjectIconMap = {
   Language: <IoLanguageOutline size={20} />,
   Other: <PiBooks size={20} />,
   CS: <CodeXml size={20} />,
+  English: <GoBook size={20} />,
 };
 
 export const getStageColor = (status) => {
@@ -143,6 +145,46 @@ export const subjectsOptions = [
       { value: "German 3", label: "German 3", icon: subjectIconMap.Language },
       { value: "German 4", label: "German 4", icon: subjectIconMap.Language },
       { value: "German 5", label: "German 5", icon: subjectIconMap.Language },
+    ],
+  },
+  {
+    label: "English",
+    options: [
+      {
+        value: "AP Language",
+        label: "AP Language",
+        icon: subjectIconMap.English,
+      },
+      {
+        value: "AP Literature",
+        label: "AP Literature",
+        icon: subjectIconMap.English,
+      },
+      {
+        value: "Pre-AP English 1",
+        label: "Pre-AP English 2",
+        icon: subjectIconMap.English,
+      },
+      {
+        value: "Pre-AP English 1",
+        label: "Pre-AP English 2",
+        icon: subjectIconMap.English,
+      },
+      {
+        value: "CP World Lit & Comp",
+        label: "CP World Lit & Comp",
+        icon: subjectIconMap.English,
+      },
+      {
+        value: "CP Nonfiction Analysis & Comp",
+        label: "CP Nonfiction Analysis & Comp",
+        icon: subjectIconMap.English,
+      },
+      {
+        value: "CP Multicultural Lit",
+        label: "CP Multicultural Lit",
+        icon: subjectIconMap.English,
+      },
     ],
   },
 ];
@@ -314,6 +356,39 @@ export const formSubjectsOptions = [
       {
         value: "AP CSA",
         label: "AP Computer Science A",
+      },
+    ],
+  },
+  {
+    label: "English",
+    options: [
+      {
+        value: "AP Language",
+        label: "AP Language",
+      },
+      {
+        value: "AP Literature",
+        label: "AP Literature",
+      },
+      {
+        value: "Pre-AP English 1",
+        label: "Pre-AP English 2",
+      },
+      {
+        value: "Pre-AP English 1",
+        label: "Pre-AP English 2",
+      },
+      {
+        value: "CP World Lit & Comp",
+        label: "CP World Lit & Comp",
+      },
+      {
+        value: "CP Nonfiction Analysis & Comp",
+        label: "CP Nonfiction Analysis & Comp",
+      },
+      {
+        value: "CP Multicultural Lit",
+        label: "CP Multicultural Lit",
       },
     ],
   },
