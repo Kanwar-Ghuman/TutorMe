@@ -372,10 +372,10 @@ export const formSubjectsOptions = [
       },
       {
         value: "Pre-AP English 1",
-        label: "Pre-AP English 2",
+        label: "Pre-AP English 1",
       },
       {
-        value: "Pre-AP English 1",
+        value: "Pre-AP English 2",
         label: "Pre-AP English 2",
       },
       {
