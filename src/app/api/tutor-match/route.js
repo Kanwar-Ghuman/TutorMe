@@ -25,27 +25,10 @@ export async function POST(req) {
 
     const match = await matchTutor(tutorRequest);
 
-    const studentToken = generateToken();
-    const tutorToken = generateToken();
+    // matchTutor already handles token generation and email sending
+    // No need for duplicate logic here
 
-    const updatedMatch = await prisma.tutorRequest.update({
-      where: { id: requestId },
-      data: {
-        studentToken,
-        tutorToken,
-        status: "MATCHED",
-      },
-    });
-
-    await sendConfirmationEmails({
-      studentEmail: match.studentEmail,
-      tutorEmail: match.tutor.email,
-      studentToken,
-      tutorToken,
-      requestId: match.id,
-    });
-
-    return NextResponse.json({ match: updatedMatch });
+    return NextResponse.json({ match });
   } catch (error) {
     console.error("Error in POST /api/tutor-match:", error);
     return NextResponse.json(
@@ -119,33 +102,21 @@ export async function PUT(req) {
     }
 
     if (action === "approve") {
-      const match = await prisma.tutorRequest.update({
-        where: { id: matchId },
-        data: {
-          status: "APPROVED",
-        },
-        include: {
-          tutor: true,
-          matchedTutor: true,
-        },
-      });
-
-      return NextResponse.json({ match });
-    }
-
-    if (action === "approve" || action === "deny") {
       if (!matchId) {
         return NextResponse.json({ error: "Missing matchId" }, { status: 400 });
       }
 
-      const updated = await prisma.tutorRequest.update({
-        where: { id: matchId },
-        data: {
-          status: action === "approve" ? "APPROVED" : "DENIED",
-        },
-      });
+      const match = await approveMatch(matchId);
+      return NextResponse.json({ match });
+    }
 
-      return NextResponse.json({ status: updated.status });
+    if (action === "deny") {
+      if (!matchId) {
+        return NextResponse.json({ error: "Missing matchId" }, { status: 400 });
+      }
+
+      const match = await denyMatch(matchId);
+      return NextResponse.json({ match });
     }
 
     return NextResponse.json(

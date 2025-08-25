@@ -23,8 +23,8 @@ const UnAuth = () => {
       </h2>
       <p className="text-sm sm:text-base md:text-lg lg:text-xl text-center font-regular mt-10">
         Email us at{" "}
-        <a href="mailto:tutorme@franklin.k12.wi.us" className="text-blue-500">
-          tutorme@franklin.k12.wi.us
+        <a href="mailto:ghumankm@gmail.com" className="text-blue-500">
+          ghumankm@gmail.com
         </a>{" "}
         if you think this is a mistake
       </p>

@@ -1,20 +1,16 @@
 import { PrismaClient } from "@prisma/client";
-import { useEmailSender } from "@/hooks/useEmailSender";
 import {
-  tutorConfirmationEmail,
-  studentConfirmationEmail,
   tutorSubjectLine,
   studentSubjectLine,
+  confirmationEmailTemplate,
+  enhancedConfirmationEmailTemplate,
 } from "@/components/utils/emailTemplate";
-
+// Enhanced email template imported from emailTemplate.js
 import GetBestMatch from "./tutorPairSystem";
+import { sendEmail } from "@/hooks/email/email";
+import crypto from "crypto";
 
 const prisma = new PrismaClient();
-const { sendMatchEmail } = useEmailSender();
-
-import { sendEmail } from "@/hooks/email/email";
-import { confirmationEmailTemplate } from "@/components/utils/emailTemplate";
-import crypto from "crypto";
 
 function generateToken() {
   return crypto.randomBytes(32).toString("hex");
@@ -52,8 +48,8 @@ export async function matchTutor(tutorRequest) {
     await Promise.all([
       sendEmail(
         updatedMatch.studentEmail,
-        "Confirm Your TutorMe Match",
-        confirmationEmailTemplate(
+        "🎉 Your TutorMe Match is Ready!",
+        enhancedConfirmationEmailTemplate(
           updatedMatch.student,
           "student",
           updatedMatch.matchedTutor.name,
@@ -63,11 +59,11 @@ export async function matchTutor(tutorRequest) {
       ),
       sendEmail(
         updatedMatch.matchedTutor.email,
-        "Confirm Your TutorMe Match",
-        confirmationEmailTemplate(
+        "🎯 New Student Match - Confirmation Required",
+        enhancedConfirmationEmailTemplate(
           updatedMatch.matchedTutor.name,
           "tutor",
-          updatedMatch.student, // Matched student's name
+          updatedMatch.student,
           updatedMatch.subject,
           `${baseUrl}/confirm/${tutorToken}?type=tutor`
         )
@@ -136,36 +132,30 @@ export async function approveMatch(matchId) {
       return updatedRequest;
     });
 
-    // Send confirmation emails
-    await sendMatchEmail({
-      recipient: updatedMatch.tutor.email,
-      subject: tutorSubjectLine,
-      emailTemplate: confirmationEmailTemplate,
-      tutorData: {
-        name: updatedMatch.tutor.name,
-        email: updatedMatch.tutor.email,
-      },
-      studentData: {
-        name: updatedMatch.student,
-        email: updatedMatch.studentEmail,
-        subject: updatedMatch.subject,
-      },
-    });
+    // Send final approval emails
+    await sendEmail(
+      updatedMatch.tutor.email,
+      "✅ Tutoring Session Approved - Ready to Start!",
+      enhancedConfirmationEmailTemplate(
+        updatedMatch.tutor.name,
+        "tutor",
+        updatedMatch.student,
+        updatedMatch.subject,
+        null // No confirmation link needed for approved matches
+      )
+    );
 
-    await sendMatchEmail({
-      recipient: updatedMatch.studentEmail,
-      subject: studentSubjectLine,
-      emailTemplate: confirmationEmailTemplate,
-      tutorData: {
-        name: updatedMatch.tutor.name,
-        email: updatedMatch.tutor.email,
-      },
-      studentData: {
-        name: updatedMatch.student,
-        email: updatedMatch.studentEmail,
-        subject: updatedMatch.subject,
-      },
-    });
+    await sendEmail(
+      updatedMatch.studentEmail,
+      "✅ Your Tutoring Session is Approved!",
+      enhancedConfirmationEmailTemplate(
+        updatedMatch.student,
+        "student",
+        updatedMatch.tutor.name,
+        updatedMatch.subject,
+        null // No confirmation link needed for approved matches
+      )
+    );
 
     return updatedMatch;
   } catch (error) {

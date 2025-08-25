@@ -15,7 +15,7 @@ export async function sendEmail(to, subject, html) {
     port: 587,
 
     auth: {
-      user: "heyanantraj@gmail.com",
+      user: "68078a001@smtp-brevo.com",
       pass: process.env.SMTP_PASSWORD,
     },
   });

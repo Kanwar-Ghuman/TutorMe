@@ -23,6 +23,7 @@ const teachersEmailList = [
   ,
 ];
 const studentsEmailList = [
+  "kanwarmehtab.ghuman@franklinsabers.org",
   "shamit.surana@franklinsabers.org",
   "mcdabg1236@gmail.com",
 ];

@@ -170,3 +170,223 @@ export const confirmationEmailTemplate = (
 
 export const tutorSubjectLine = "Tutor Me Confirmation";
 export const studentSubjectLine = "Tutor Me Confirmation";
+
+// Enhanced email template for tutor matching confirmations
+export const enhancedConfirmationEmailTemplate = (
+  name,
+  role,
+  matchName,
+  subject,
+  confirmLink
+) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .email-container {
+      background-color: white;
+      margin: 20px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background: linear-gradient(135deg, #FACC14 0%, #F59E0B 100%);
+      color: black;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .logo .highlight {
+      background-color: black;
+      color: #FACC14;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-left: 4px;
+    }
+    .header-subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      margin: 0;
+    }
+    .content {
+      padding: 30px;
+    }
+    .match-card {
+      background-color: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .match-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      padding: 10px;
+      background-color: white;
+      border-radius: 6px;
+      border-left: 4px solid #FACC14;
+    }
+    .match-info .label {
+      font-weight: bold;
+      color: #666;
+    }
+    .match-info .value {
+      color: #333;
+      font-weight: 500;
+    }
+    .confirm-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #FACC14 0%, #F59E0B 100%);
+      color: black;
+      padding: 15px 30px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 20px 0;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .confirm-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    .role-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .role-student {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+    .role-tutor {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #e9ecef;
+    }
+    .urgent-notice {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .urgent-notice strong {
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <div class="logo">
+        NHS<span class="highlight">TutorMe</span>
+      </div>
+      <p class="header-subtitle">📚 \${role === 'tutor' ? 'New Student Match!' : 'Your Tutor is Ready!'}</p>
+    </div>
+    
+    <div class="content">
+      <h2>Hello \${name}! 👋</h2>
+      
+      <p>Great news! We've found \${role === 'tutor' ? 'a student who needs your help' : 'the perfect tutor for you'}.</p>
+      
+      <div class="match-card">
+        <h3>🎯 Match Details</h3>
+        <div class="role-badge \${role === 'tutor' ? 'role-tutor' : 'role-student'}">
+          You are the \${role}
+        </div>
+        
+        <div class="match-info">
+          <span class="label">\${role === 'tutor' ? '👨‍🎓 Student:' : '👨‍🏫 Tutor:'}</span>
+          <span class="value">\${matchName}</span>
+        </div>
+        
+        <div class="match-info">
+          <span class="label">📖 Subject:</span>
+          <span class="value">\${subject}</span>
+        </div>
+        
+        <div class="match-info">
+          <span class="label">📅 Match Date:</span>
+          <span class="value">\${new Date().toLocaleDateString()}</span>
+        </div>
+      </div>
+
+      \${confirmLink ? \`
+        <div class="urgent-notice">
+          <strong>⏰ Action Required:</strong> Please confirm this match within 24 hours
+        </div>
+        
+        <div style="text-align: center;">
+          <a href="\${confirmLink}" class="confirm-button">
+            ✅ Confirm This Match
+          </a>
+        </div>
+        
+        <p style="text-align: center; color: #666; font-size: 14px;">
+          <strong>Important:</strong> Both \${role === 'tutor' ? 'student and tutor' : 'tutor and student'} must confirm before the match is finalized.
+        </p>
+      \` : \`
+        <div style="text-align: center; padding: 20px; background-color: #d4edda; border-radius: 8px; color: #155724;">
+          <h3>🎉 Match Confirmed!</h3>
+          <p>This tutoring session has been approved and is ready to begin.</p>
+        </div>
+      \`}
+      
+      <div style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+        <h4>📋 Next Steps:</h4>
+        <ul style="text-align: left; margin: 10px 0;">
+          \${confirmLink ? 
+            \`<li>Click the confirmation button above</li>
+             <li>Wait for the other party to confirm</li>
+             <li>You'll receive another email when both parties confirm</li>\` :
+            \`<li>Contact information will be shared separately</li>
+             <li>Schedule your first session</li>
+             <li>Start learning together!</li>\`
+          }
+        </ul>
+      </div>
+      
+      <p style="margin-top: 30px;">
+        Questions? Reply to this email or contact our support team.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>&copy; \${new Date().getFullYear()} NHS TutorMe. All rights reserved.</p>
+      <p>This email was sent to confirm your tutoring match.</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
