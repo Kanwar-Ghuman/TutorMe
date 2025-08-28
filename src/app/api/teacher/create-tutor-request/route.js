@@ -27,6 +27,12 @@ export async function POST(req) {
       studentEmail: data.studentEmail,
       subject: data.subject,
       genderPref: data.genderPreference,
+      preferredTimes: data.preferredGoldBlocks
+        ? JSON.stringify(data.preferredGoldBlocks)
+        : null,
+      gradeLevel: data.gradeLevel || null,
+      description: data.description || null,
+      tutorType: data.tutorType || null,
       teacherId: teacher.id,
     },
   });

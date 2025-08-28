@@ -17,6 +17,12 @@ export const createTutorRequestSchema = z.object({
       required_error: "Subject is required",
     })
     .min(1, "Subject is required"),
+
+  // Gold Block and other fields
+  preferredGoldBlocks: z.array(z.string()).optional(),
+  gradeLevel: z.string().optional(),
+  description: z.string().optional(),
+  tutorType: z.enum(["drop", "long-term"]).optional(),
 });
 
 export const createTutorSchema = z.object({
@@ -60,4 +66,7 @@ export const createTutorSchemaReal = z.object({
       })
     )
     .min(1, "At least one subject must be selected"),
+
+  // Gold Block availability
+  goldBlockDays: z.array(z.string()).optional(),
 });

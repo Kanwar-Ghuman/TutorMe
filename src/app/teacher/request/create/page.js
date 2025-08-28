@@ -4,7 +4,12 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { formSubjectsOptions } from "@/components/utils/common";
+import {
+  formSubjectsOptions,
+  gradeLevelOptions,
+  goldBlockOptions,
+  tutorTypeOptions,
+} from "@/components/utils/common";
 import {
   Modal,
   ModalContent,
@@ -16,6 +21,8 @@ import {
 } from "@nextui-org/react";
 import { FormDropDownInput } from "@/components/tutorme/inputs/FormDropDownInput";
 import { FormInput } from "@/components/tutorme/inputs/FormInput";
+import { FormMultiSelectInput } from "@/components/tutorme/inputs/FormMultiSelectInput";
+import { FormTextarea } from "@/components/tutorme/inputs/FormTextarea";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { BsExclamationCircle } from "react-icons/bs";
@@ -30,6 +37,10 @@ const CreateRequest = () => {
     studentEmail: "",
     subject: "",
     genderPreference: "",
+    preferredGoldBlocks: [],
+    gradeLevel: "",
+    description: "",
+    tutorType: "",
   };
 
   const form = useForm({
@@ -139,6 +150,44 @@ const CreateRequest = () => {
                 isRequired
                 disabled={loading}
               />
+
+              <FormDropDownInput
+                name="gradeLevel"
+                label="Grade Level"
+                options={gradeLevelOptions}
+                form={form}
+                description="What grade level is the student?"
+                disabled={loading}
+              />
+
+              <FormMultiSelectInput
+                name="preferredGoldBlocks"
+                label="Preferred Gold Block Days"
+                options={goldBlockOptions}
+                form={form}
+                description="Select which gold block days work for tutoring sessions"
+                disabled={loading}
+              />
+
+              <FormDropDownInput
+                name="tutorType"
+                label="Tutoring Type"
+                options={tutorTypeOptions}
+                form={form}
+                description="Choose the type of tutoring arrangement"
+                disabled={loading}
+              />
+
+              <FormTextarea
+                name="description"
+                label="Additional Description"
+                placeholder="Please provide any additional details about the tutoring request, specific topics to focus on, student's learning style, etc."
+                description="Help us find the best tutor by providing more context about the student's needs"
+                form={form}
+                disabled={loading}
+                rows={4}
+              />
+
               {/* <FormDropDownInput
                 name="genderPreference"
                 label="Gender Preference"

@@ -19,6 +19,12 @@ model TutorRequest {
   genderPref     String?
   additionalInfo String?
 
+  // New fields
+  preferredTimes String?    // JSON string or comma-separated values
+  gradeLevel     String?    // Grade level of the student
+  description    String?    // Description of tutor request
+  tutorType      String?    // "drop" or "long-term"
+
   isActive Boolean @default(true)
 
   status String @default("PENDING")
@@ -41,8 +47,33 @@ model Tutor {
 
   isActive Boolean @default(true)
 
+  // Gold Block availability - only Monday, Tuesday, Friday
+  goldBlockDays String[] // ["monday", "tuesday", "friday"]
+  
   assignedRequests TutorRequest[] @relation("AssignedTutor")
   matchedRequests  TutorRequest[] @relation("MatchedTutor")
+  tutoringSessions TutoringSession[]
+}
+
+model TutoringSession {
+  id          String   @id @default(cuid())
+  tutor       Tutor    @relation(fields: [tutorId], references: [id])
+  tutorId     String
+  
+  studentName  String
+  studentEmail String
+  subject      String
+  
+  scheduledDate DateTime
+  goldBlockDay  String   // "monday", "tuesday", or "friday"
+  
+  status       String   @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  
+  notes        String?
+  location     String?  @default("Gold Block Room")
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Teacher {

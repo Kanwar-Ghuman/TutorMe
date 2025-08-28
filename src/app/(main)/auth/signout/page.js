@@ -11,7 +11,6 @@ export default async function Signout(context) {
   if (!session) {
     return redirect("/auth/login");
   }
-
   return (
     <>
       <SignOut />

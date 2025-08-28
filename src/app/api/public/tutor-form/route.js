@@ -43,6 +43,7 @@ export async function POST(req) {
             name: tutor.name,
             email: tutor.email,
             subjects: tutor.subjects,
+            goldBlockDays: tutor.goldBlockDays || [],
           },
         })
       );

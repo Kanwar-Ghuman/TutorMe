@@ -393,3 +393,72 @@ export const formSubjectsOptions = [
     ],
   },
 ];
+
+// Grade Level Options
+export const gradeLevelOptions = [
+  {
+    group: [
+      { value: "9", label: "9th Grade" },
+      { value: "10", label: "10th Grade" },
+      { value: "11", label: "11th Grade" },
+      { value: "12", label: "12th Grade" },
+    ],
+  },
+];
+
+// Preferred Times Options
+export const preferredTimesOptions = [
+  {
+    group: [
+      { value: "morning", label: "Morning (8:00 AM - 12:00 PM)" },
+      { value: "afternoon", label: "Afternoon (12:00 PM - 5:00 PM)" },
+      { value: "evening", label: "Evening (5:00 PM - 8:00 PM)" },
+      { value: "after-school", label: "After School (3:00 PM - 6:00 PM)" },
+      { value: "lunch", label: "Lunch Time (11:30 AM - 1:00 PM)" },
+      { value: "study-hall", label: "Study Hall" },
+      { value: "flexible", label: "Flexible Schedule" },
+    ],
+  },
+];
+
+// Tutor Type Options
+export const tutorTypeOptions = [
+  {
+    group: [
+      { value: "drop", label: "Drop-in Tutoring (As needed)" },
+      { value: "long-term", label: "Long-term Tutoring (Regular sessions)" },
+    ],
+  },
+];
+
+// Gold Block Days - Tutoring only happens on these days
+export const goldBlockDays = [
+  { value: "monday", label: "Monday Gold Block" },
+  { value: "tuesday", label: "Tuesday Gold Block" },
+  { value: "friday", label: "Friday Gold Block" },
+];
+
+// Gold Block Availability Options
+export const goldBlockOptions = [
+  {
+    label: "Gold Block Availability",
+    group: [
+      { value: "monday", label: "Monday Gold Block" },
+      { value: "tuesday", label: "Tuesday Gold Block" },
+      { value: "friday", label: "Friday Gold Block" },
+    ],
+  },
+];
+
+// Timezone Options
+export const timezoneOptions = [
+  {
+    label: "Timezones",
+    group: [
+      { value: "America/Chicago", label: "Central Time (CT)" },
+      { value: "America/New_York", label: "Eastern Time (ET)" },
+      { value: "America/Denver", label: "Mountain Time (MT)" },
+      { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
+    ],
+  },
+];

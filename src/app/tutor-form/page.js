@@ -16,6 +16,7 @@ import {
   customStyles,
   formatOptionLabel,
 } from "@/components/utils/common";
+import GoldBlockScheduler from "@/components/tutorme/inputs/GoldBlockScheduler";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -25,6 +26,7 @@ const TutorApplicationForm = () => {
     studentsName: "",
     studentsEmail: "",
     studentsSubjects: [],
+    goldBlockDays: [],
   };
 
   const form = useForm({
@@ -124,6 +126,31 @@ const TutorApplicationForm = () => {
                   {form.formState.errors.studentsSubjects && (
                     <p className="text-red-500 text-sm mt-1">
                       {form.formState.errors.studentsSubjects.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+
+            <Controller
+              name="goldBlockDays"
+              control={form.control}
+              render={({ field }) => (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Gold Block Availability
+                  </label>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Select which gold block days you are available for tutoring.
+                  </p>
+                  <GoldBlockScheduler
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={loading}
+                  />
+                  {form.formState.errors.goldBlockDays && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {form.formState.errors.goldBlockDays.message}
                     </p>
                   )}
                 </div>

@@ -3,7 +3,7 @@ import {
   tutorSubjectLine,
   studentSubjectLine,
   confirmationEmailTemplate,
-  enhancedConfirmationEmailTemplate,
+  createTutorConfirmationEmail,
 } from "@/components/utils/emailTemplate";
 // Enhanced email template imported from emailTemplate.js
 import GetBestMatch from "./tutorPairSystem";
@@ -48,8 +48,8 @@ export async function matchTutor(tutorRequest) {
     await Promise.all([
       sendEmail(
         updatedMatch.studentEmail,
-        "🎉 Your TutorMe Match is Ready!",
-        enhancedConfirmationEmailTemplate(
+        studentSubjectLine,
+        confirmationEmailTemplate(
           updatedMatch.student,
           "student",
           updatedMatch.matchedTutor.name,
@@ -59,10 +59,9 @@ export async function matchTutor(tutorRequest) {
       ),
       sendEmail(
         updatedMatch.matchedTutor.email,
-        "🎯 New Student Match - Confirmation Required",
-        enhancedConfirmationEmailTemplate(
+        tutorSubjectLine,
+        createTutorConfirmationEmail(
           updatedMatch.matchedTutor.name,
-          "tutor",
           updatedMatch.student,
           updatedMatch.subject,
           `${baseUrl}/confirm/${tutorToken}?type=tutor`
@@ -135,8 +134,8 @@ export async function approveMatch(matchId) {
     // Send final approval emails
     await sendEmail(
       updatedMatch.tutor.email,
-      "✅ Tutoring Session Approved - Ready to Start!",
-      enhancedConfirmationEmailTemplate(
+      "Tutoring Session Approved - Ready to Start!",
+      confirmationEmailTemplate(
         updatedMatch.tutor.name,
         "tutor",
         updatedMatch.student,
@@ -147,8 +146,8 @@ export async function approveMatch(matchId) {
 
     await sendEmail(
       updatedMatch.studentEmail,
-      "✅ Your Tutoring Session is Approved!",
-      enhancedConfirmationEmailTemplate(
+      "Your Tutoring Session is Approved!",
+      confirmationEmailTemplate(
         updatedMatch.student,
         "student",
         updatedMatch.tutor.name,
