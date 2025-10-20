@@ -1,14 +1,16 @@
 import { z } from "zod";
 
 export const createTutorRequestSchema = z.object({
-  studentName: z
+  studentFirstName: z
     .string({
-      required_error: "Student Name is required",
+      required_error: "First name is required",
     })
-    .refine((value) => {
-      const nameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
-      return nameRegex.test(value);
-    }, "Please enter the student's full name in the format 'First Last'"),
+    .min(1, "First name is required"),
+  studentLastName: z
+    .string({
+      required_error: "Last name is required",
+    })
+    .min(1, "Last name is required"),
   studentEmail: z.string({
     required_error: "Email address is required",
   }),
@@ -18,9 +20,8 @@ export const createTutorRequestSchema = z.object({
     })
     .min(1, "Subject is required"),
 
-  // Gold Block and other fields
-  preferredGoldBlocks: z.array(z.string()).optional(),
-  gradeLevel: z.string().optional(),
+  // Preferred times including after school
+  preferredTimes: z.array(z.string()).optional(),
   description: z.string().optional(),
   tutorType: z.enum(["drop", "long-term"]).optional(),
 });

@@ -5,10 +5,9 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import {
-  formSubjectsOptions,
-  gradeLevelOptions,
-  goldBlockOptions,
+  preferredTimesOptionsNew,
   tutorTypeOptions,
+  subjectsOptions,
 } from "@/components/utils/common";
 import {
   Modal,
@@ -20,6 +19,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { FormDropDownInput } from "@/components/tutorme/inputs/FormDropDownInput";
+import { FormDropDownInputWithIcons } from "@/components/tutorme/inputs/FormDropDownInputWithIcons";
 import { FormInput } from "@/components/tutorme/inputs/FormInput";
 import { FormMultiSelectInput } from "@/components/tutorme/inputs/FormMultiSelectInput";
 import { FormTextarea } from "@/components/tutorme/inputs/FormTextarea";
@@ -32,13 +32,46 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createTutorRequestSchema } from "@/lib/forms/schemas";
 
 const CreateRequest = () => {
+  useEffect(() => {
+    fetchTeacherProfile();
+  }, []);
+
+  const fetchTeacherProfile = async () => {
+    try {
+      const response = await fetch("/api/teacher/profile");
+      if (response.ok) {
+        const data = await response.json();
+        if (data.classes) {
+          const classes = JSON.parse(data.classes);
+          setTeacherClasses(classes);
+
+          // Filter subject options based on teacher's classes
+          const filtered = subjectsOptions
+            .map((group) => {
+              const filteredOptions = group.options.filter((option) =>
+                classes.includes(option.value)
+              );
+              return {
+                ...group,
+                options: filteredOptions,
+              };
+            })
+            .filter((group) => group.options.length > 0);
+
+          setFilteredSubjectOptions(filtered);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching teacher profile:", err);
+    }
+  };
+
   const defaultValues = {
-    studentName: "",
+    studentFirstName: "",
+    studentLastName: "",
     studentEmail: "",
     subject: "",
-    genderPreference: "",
-    preferredGoldBlocks: [],
-    gradeLevel: "",
+    preferredTimes: [],
     description: "",
     tutorType: "",
   };
@@ -52,6 +85,8 @@ const CreateRequest = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [submittedData, setSubmittedData] = useState(null);
+  const [teacherClasses, setTeacherClasses] = useState([]);
+  const [filteredSubjectOptions, setFilteredSubjectOptions] = useState([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
 
@@ -62,6 +97,7 @@ const CreateRequest = () => {
     try {
       const formattedData = {
         ...data,
+        studentName: `${data.studentFirstName} ${data.studentLastName}`,
         studentEmail: `${data.studentEmail}@franklinsabers.org`,
       };
       console.log("Formatted data:", formattedData);
@@ -113,76 +149,79 @@ const CreateRequest = () => {
   return (
     <>
       <div className="flex items-center justify-center m-4 pt-8">
-        <div className="w-full md:w-1/2">
+        <div className="w-full max-w-4xl">
           <h1 className="text-2xl mb-10">Request A Tutor</h1>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className={cn("space-y-8", {
+              className={cn("space-y-6", {
                 "opacity-50 pointer-events-none": loading,
               })}
             >
-              <FormInput
-                name="studentName"
-                label="Student Name"
-                placeholder="Alice Jones"
-                description="Use the format 'First Last' (e.g. 'Alice Jones')"
-                form={form}
-                isRequired
-                disabled={loading}
-              />
-              <FormInput
-                name="studentEmail"
-                label="Student Email Address"
-                placeholder="alice.jones"
-                description="Enter the student's username only"
-                form={form}
-                isRequired
-                disabled={loading}
-              />
+              {/* Row 1: First Name and Last Name */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  name="studentFirstName"
+                  label="First Name"
+                  placeholder="Alice"
+                  form={form}
+                  isRequired
+                  disabled={loading}
+                />
+                <FormInput
+                  name="studentLastName"
+                  label="Last Name"
+                  placeholder="Jones"
+                  form={form}
+                  isRequired
+                  disabled={loading}
+                />
+              </div>
 
-              <FormDropDownInput
-                name="subject"
-                label="Subject"
-                options={formSubjectsOptions}
-                form={form}
-                description="What subject does your student need help with?"
-                isRequired
-                disabled={loading}
-              />
+              {/* Row 2: Email and Subject */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  name="studentEmail"
+                  label="Student Email Address (Enter the student's username only)"
+                  placeholder="alice.jones"
+                  form={form}
+                  isRequired
+                  disabled={loading}
+                />
+                <FormDropDownInputWithIcons
+                  name="subject"
+                  label="Subject"
+                  options={filteredSubjectOptions}
+                  form={form}
+                  isRequired
+                  disabled={loading}
+                  placeholder="Select a subject..."
+                />
+              </div>
 
-              <FormDropDownInput
-                name="gradeLevel"
-                label="Grade Level"
-                options={gradeLevelOptions}
-                form={form}
-                description="What grade level is the student?"
-                disabled={loading}
-              />
+              {/* Row 3: Tutoring Type and Preferred Times */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormDropDownInput
+                  name="tutorType"
+                  label="Tutoring Type"
+                  options={tutorTypeOptions}
+                  form={form}
+                  disabled={loading}
+                />
+                <FormMultiSelectInput
+                  name="preferredTimes"
+                  label="Preferred Times"
+                  options={preferredTimesOptionsNew}
+                  form={form}
+                  disabled={loading}
+                />
+              </div>
 
-              <FormMultiSelectInput
-                name="preferredGoldBlocks"
-                label="Preferred Gold Block Days"
-                options={goldBlockOptions}
-                form={form}
-                description="Select which gold block days work for tutoring sessions"
-                disabled={loading}
-              />
-
-              <FormDropDownInput
-                name="tutorType"
-                label="Tutoring Type"
-                options={tutorTypeOptions}
-                form={form}
-                description="Choose the type of tutoring arrangement"
-                disabled={loading}
-              />
-
+              {/* Row 4: Description */}
               <FormTextarea
                 name="description"
                 label="Additional Description"
                 placeholder="Please provide any additional details about the tutoring request, specific topics to focus on, student's learning style, etc."
-                description="Help us find the best tutor by providing more context about the student's needs"
                 form={form}
                 disabled={loading}
                 rows={4}
@@ -259,6 +298,11 @@ const CreateRequest = () => {
                     </p>
                     <p>
                       <strong>Subject:</strong> {submittedData.subject}
+                    </p>
+                    <p>
+                      <strong>Preferred Times:</strong>{" "}
+                      {submittedData.preferredTimes?.join(", ") ||
+                        "None specified"}
                     </p>
                   </>
                 )}

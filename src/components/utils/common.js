@@ -446,6 +446,20 @@ export const goldBlockOptions = [
       { value: "monday", label: "Monday Gold Block" },
       { value: "tuesday", label: "Tuesday Gold Block" },
       { value: "friday", label: "Friday Gold Block" },
+      { value: "after-school", label: "After School" },
+    ],
+  },
+];
+
+// Preferred Times Options (for the new form)
+export const preferredTimesOptionsNew = [
+  {
+    label: "Preferred Times",
+    group: [
+      { value: "monday", label: "Monday Gold Block" },
+      { value: "tuesday", label: "Tuesday Gold Block" },
+      { value: "friday", label: "Friday Gold Block" },
+      { value: "after-school", label: "After School" },
     ],
   },
 ];

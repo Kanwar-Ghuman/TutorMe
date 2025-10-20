@@ -26,11 +26,11 @@ export async function POST(req) {
       student: data.studentName,
       studentEmail: data.studentEmail,
       subject: data.subject,
-      genderPref: data.genderPreference,
-      preferredTimes: data.preferredGoldBlocks
-        ? JSON.stringify(data.preferredGoldBlocks)
+      genderPref: "N", // Default to no preference
+      preferredTimes: data.preferredTimes
+        ? JSON.stringify(data.preferredTimes)
         : null,
-      gradeLevel: data.gradeLevel || null,
+      gradeLevel: null, // Removed from form
       description: data.description || null,
       tutorType: data.tutorType || null,
       teacherId: teacher.id,

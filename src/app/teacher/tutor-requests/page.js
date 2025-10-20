@@ -76,10 +76,41 @@ const TeacherTutorRequests = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSubjects, setSelectedSubjects] = useState(null);
   const [filteredRequests, setFilteredRequests] = useState([]);
+  const [timeFilter, setTimeFilter] = useState("all"); // "past", "present", "future", "all"
 
   const filterRequests = () => {
     if (!requests) return;
     let filtered = requests;
+
+    // Time-based filtering
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const thirtyDaysFromNow = new Date(
+      now.getTime() + 30 * 24 * 60 * 60 * 1000
+    );
+
+    if (timeFilter === "past") {
+      filtered = filtered.filter((request) => {
+        const createdDate = new Date(request.createdAt);
+        return createdDate < thirtyDaysAgo || request.status === "COMPLETED";
+      });
+    } else if (timeFilter === "present") {
+      filtered = filtered.filter((request) => {
+        const createdDate = new Date(request.createdAt);
+        return (
+          createdDate >= thirtyDaysAgo &&
+          createdDate <= now &&
+          request.status !== "COMPLETED"
+        );
+      });
+    } else if (timeFilter === "future") {
+      filtered = filtered.filter((request) => {
+        return (
+          request.status === "PENDING" ||
+          request.status === "PENDING_CONFIRMATION"
+        );
+      });
+    }
 
     if (searchTerm) {
       filtered = filtered.filter(
@@ -110,7 +141,7 @@ const TeacherTutorRequests = () => {
     if (requests && requests.length > 0) {
       filterRequests();
     }
-  }, [selectedSubjects, searchTerm, requests]);
+  }, [selectedSubjects, searchTerm, requests, timeFilter]);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -425,39 +456,79 @@ const TeacherTutorRequests = () => {
       <div className="w-full">
         <Card className="w-full">
           <CardBody className="p-6">
-            <h3 className="text-xl font-semibold mb-4">Tutor Requests</h3>
+            <h3 className="text-xl font-semibold mb-4">All Requests</h3>
 
-            <div className="w-full justify-center items-start flex flex-row mb-6 gap-4">
-              <ReactSelect
-                className="w-[15%] h-10 basic-multi-select"
-                options={subjectsOptions}
-                classNamePrefix="select"
-                placeholder={
-                  <div className="flex items-center">
-                    <IoFilter className="mr-2" />
-                    <span>Filter</span>
-                  </div>
-                }
-                styles={customStyles}
-                formatOptionLabel={formatOptionLabel}
-                isClearable={true}
-                onChange={(option) => setSelectedSubjects(option)}
-                value={selectedSubjects}
-              />
-              <Input
-                type="text"
-                id="inputSearch"
-                placeholder="Search"
-                className="sm:w-[50%] w-[60%]"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onKeyUp={(event) => {
-                  search(event.target.value);
-                }}
-                startContent={
-                  <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
-                }
-              />
+            {/* Filter Controls */}
+            <div className="w-full mb-6 space-y-4">
+              {/* Time Filter Buttons */}
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  size="sm"
+                  variant={timeFilter === "all" ? "solid" : "bordered"}
+                  color={timeFilter === "all" ? "primary" : "default"}
+                  onClick={() => setTimeFilter("all")}
+                >
+                  All
+                </Button>
+                <Button
+                  size="sm"
+                  variant={timeFilter === "past" ? "solid" : "bordered"}
+                  color={timeFilter === "past" ? "primary" : "default"}
+                  onClick={() => setTimeFilter("past")}
+                >
+                  Past
+                </Button>
+                <Button
+                  size="sm"
+                  variant={timeFilter === "present" ? "solid" : "bordered"}
+                  color={timeFilter === "present" ? "primary" : "default"}
+                  onClick={() => setTimeFilter("present")}
+                >
+                  Present
+                </Button>
+                <Button
+                  size="sm"
+                  variant={timeFilter === "future" ? "solid" : "bordered"}
+                  color={timeFilter === "future" ? "primary" : "default"}
+                  onClick={() => setTimeFilter("future")}
+                >
+                  Future
+                </Button>
+              </div>
+
+              {/* Subject Filter and Search */}
+              <div className="w-full justify-center items-start flex flex-row gap-4">
+                <ReactSelect
+                  className="w-[15%] h-10 basic-multi-select"
+                  options={subjectsOptions}
+                  classNamePrefix="select"
+                  placeholder={
+                    <div className="flex items-center">
+                      <IoFilter className="mr-2" />
+                      <span>Filter</span>
+                    </div>
+                  }
+                  styles={customStyles}
+                  formatOptionLabel={formatOptionLabel}
+                  isClearable={true}
+                  onChange={(option) => setSelectedSubjects(option)}
+                  value={selectedSubjects}
+                />
+                <Input
+                  type="text"
+                  id="inputSearch"
+                  placeholder="Search"
+                  className="sm:w-[50%] w-[60%]"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onKeyUp={(event) => {
+                    search(event.target.value);
+                  }}
+                  startContent={
+                    <IoSearchOutline className="text-gray-400 pointer-events-none flex-shrink-0" />
+                  }
+                />
+              </div>
             </div>
             <div className="w-full overflow-y-auto max-h-[600px]">
               {noResults ? (

@@ -69,9 +69,12 @@ const WeeklyTutorCalendar = () => {
     const days = [];
     const start = getWeekStart();
 
-    for (let i = 0; i < 7; i++) {
+    // Only include Gold Block days: Monday (1), Tuesday (2), and Friday (5)
+    const goldBlockDayIndices = [1, 2, 5];
+
+    for (const dayIndex of goldBlockDayIndices) {
       const day = new Date(start);
-      day.setDate(start.getDate() + i);
+      day.setDate(start.getDate() + dayIndex);
       days.push(day);
     }
 
@@ -231,19 +234,7 @@ const WeeklyTutorCalendar = () => {
 
       {!isExpanded && (
         <CardBody className="py-4">
-          <div className="grid grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-lg font-semibold text-gray-900">
-                {tutors.length}
-              </div>
-              <div className="text-xs text-gray-600">Tutors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-semibold text-gray-900">
-                {tutors.reduce((acc, tutor) => acc + tutor.sessions.length, 0)}
-              </div>
-              <div className="text-xs text-gray-600">Sessions</div>
-            </div>
+          <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
               <div className="text-lg font-semibold text-gray-900">
                 {tutors.reduce(
@@ -254,7 +245,7 @@ const WeeklyTutorCalendar = () => {
                   0
                 )}
               </div>
-              <div className="text-xs text-gray-600">Scheduled</div>
+              <div className="text-xs text-gray-600">Upcoming</div>
             </div>
             <div className="text-center">
               <div className="text-lg font-semibold text-gray-900">
@@ -273,13 +264,19 @@ const WeeklyTutorCalendar = () => {
 
       {isExpanded && (
         <CardBody className="p-6">
+          {/* Gold Block Days Notice */}
+          <div className="mb-4 text-center">
+            <p className="text-sm text-gray-600">
+              Showing Gold Block tutoring days only
+            </p>
+          </div>
+
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-3 gap-4">
             {/* Day Headers */}
             {weekDays.map((date, index) => {
-              const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][
-                index
-              ];
+              const dayNames = ["Monday", "Tuesday", "Friday"];
+              const dayName = dayNames[index];
               const isToday = date.toDateString() === new Date().toDateString();
               const isGoldBlock = isGoldBlockDay(date);
 
@@ -287,15 +284,14 @@ const WeeklyTutorCalendar = () => {
                 <div
                   key={index}
                   className={cn(
-                    "p-3 text-center border-b-2 mb-2",
-                    isToday && "border-blue-500",
-                    isGoldBlock && "bg-yellow-50",
-                    !isGoldBlock && "bg-gray-50"
+                    "p-4 text-center border-b-2 mb-2 rounded-t-lg",
+                    isToday && "border-blue-500 bg-blue-50",
+                    !isToday && "border-yellow-400 bg-yellow-50"
                   )}
                 >
                   <div
                     className={cn(
-                      "font-semibold text-sm",
+                      "font-semibold text-lg",
                       isToday && "text-blue-600"
                     )}
                   >
@@ -310,169 +306,148 @@ const WeeklyTutorCalendar = () => {
                   >
                     {formatDate(date)}
                   </div>
-                  {isGoldBlock && (
-                    <Chip
-                      size="sm"
-                      color="warning"
-                      variant="flat"
-                      className="mt-1"
-                    >
-                      Gold Block
-                    </Chip>
-                  )}
+                  <Chip
+                    size="sm"
+                    color="warning"
+                    variant="flat"
+                    className="mt-2"
+                  >
+                    Gold Block
+                  </Chip>
                 </div>
               );
             })}
 
             {/* Calendar Content */}
             {weekDays.map((date, dayIndex) => {
-              const isGoldBlock = isGoldBlockDay(date);
+              const isToday = date.toDateString() === new Date().toDateString();
               const availableTutors = getTutorsForDay(date);
 
               return (
                 <div
                   key={dayIndex}
                   className={cn(
-                    "min-h-[400px] p-3 border border-gray-200 rounded-lg",
-                    isGoldBlock ? "bg-yellow-50/30" : "bg-gray-50/30"
+                    "min-h-[450px] p-4 border border-gray-200 rounded-lg bg-yellow-50/30",
+                    isToday && "border-blue-400 border-2"
                   )}
                 >
-                  {!isGoldBlock ? (
-                    <div className="text-center text-gray-500 py-8">
-                      <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">No tutoring today</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {availableTutors.length === 0 ? (
-                        <div className="text-center text-gray-500 py-4">
-                          <Users className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                          <p className="text-xs">No tutors available</p>
-                        </div>
-                      ) : (
-                        availableTutors.map((tutor) => {
-                          const sessions = getSessionsForTutorAndDay(
-                            tutor.id,
-                            date
-                          );
+                  <div className="space-y-3">
+                    {availableTutors.length === 0 ? (
+                      <div className="text-center text-gray-500 py-4">
+                        <Users className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                        <p className="text-xs">No tutors available</p>
+                      </div>
+                    ) : (
+                      availableTutors.map((tutor) => {
+                        const sessions = getSessionsForTutorAndDay(
+                          tutor.id,
+                          date
+                        );
 
-                          return (
-                            <Card
-                              key={tutor.id}
-                              className="bg-white shadow-sm border border-gray-200"
-                            >
-                              <CardBody className="p-3">
-                                {/* Tutor Header */}
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                      <span className="text-xs font-semibold text-blue-700">
-                                        {tutor.name
-                                          .split(" ")
-                                          .map((n) => n[0])
-                                          .join("")
-                                          .toUpperCase()}
-                                      </span>
-                                    </div>
-                                    <div>
-                                      <p className="text-sm font-semibold text-gray-900">
-                                        {tutor.name}
-                                      </p>
-                                      <div className="flex flex-wrap gap-1 mt-1">
-                                        {tutor.subjects
-                                          .slice(0, 2)
-                                          .map((subject, idx) => (
-                                            <Chip
-                                              key={idx}
-                                              size="sm"
-                                              variant="flat"
-                                              color="primary"
-                                              className="text-xs"
-                                            >
-                                              {subject}
-                                            </Chip>
-                                          ))}
-                                        {tutor.subjects.length > 2 && (
-                                          <span className="text-xs text-gray-500">
-                                            +{tutor.subjects.length - 2}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </div>
+                        return (
+                          <Card
+                            key={tutor.id}
+                            className="bg-white shadow-sm border border-gray-200"
+                          >
+                            <CardBody className="p-3">
+                              {/* Tutor Header */}
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-semibold text-blue-700">
+                                      {tutor.name
+                                        .split(" ")
+                                        .map((n) => n[0])
+                                        .join("")
+                                        .toUpperCase()}
+                                    </span>
                                   </div>
-
-                                  <div className="text-right">
-                                    <p className="text-xs text-gray-500">
-                                      Sessions
+                                  <div>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                      {tutor.name}
                                     </p>
-                                    <p className="text-sm font-semibold">
-                                      {sessions.length}
-                                    </p>
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {tutor.subjects
+                                        .slice(0, 2)
+                                        .map((subject, idx) => (
+                                          <Chip
+                                            key={idx}
+                                            size="sm"
+                                            variant="flat"
+                                            color="primary"
+                                            className="text-xs"
+                                          >
+                                            {subject}
+                                          </Chip>
+                                        ))}
+                                      {tutor.subjects.length > 2 && (
+                                        <span className="text-xs text-gray-500">
+                                          +{tutor.subjects.length - 2}
+                                        </span>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
 
-                                {/* Sessions */}
-                                {sessions.length === 0 ? (
-                                  <div className="text-center py-2 text-gray-500">
-                                    <Clock className="w-4 h-4 mx-auto mb-1 opacity-50" />
-                                    <p className="text-xs">Available</p>
-                                  </div>
-                                ) : (
-                                  <div className="space-y-2">
-                                    {sessions.map((session, idx) => (
-                                      <div
-                                        key={idx}
-                                        className={cn(
-                                          "p-2 rounded border text-xs",
-                                          getStatusColor(session.status)
-                                        )}
-                                      >
-                                        <div className="flex items-center justify-between">
-                                          <div>
-                                            <p className="font-medium">
-                                              {session.studentName}
-                                            </p>
-                                            <p className="opacity-75">
-                                              {session.subject}
-                                            </p>
-                                          </div>
-                                          <div className="text-right">
-                                            <p className="text-xs opacity-75">
-                                              {session.location ||
-                                                "Gold Block Room"}
-                                            </p>
-                                          </div>
+                                <div className="text-right">
+                                  <p className="text-xs text-gray-500">
+                                    Sessions
+                                  </p>
+                                  <p className="text-sm font-semibold">
+                                    {sessions.length}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Sessions */}
+                              {sessions.length === 0 ? (
+                                <div className="text-center py-2 text-gray-500">
+                                  <Clock className="w-4 h-4 mx-auto mb-1 opacity-50" />
+                                  <p className="text-xs">Available</p>
+                                </div>
+                              ) : (
+                                <div className="space-y-2">
+                                  {sessions.map((session, idx) => (
+                                    <div
+                                      key={idx}
+                                      className={cn(
+                                        "p-2 rounded border text-xs",
+                                        getStatusColor(session.status)
+                                      )}
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <div>
+                                          <p className="font-medium">
+                                            {session.studentName}
+                                          </p>
+                                          <p className="opacity-75">
+                                            {session.subject}
+                                          </p>
+                                        </div>
+                                        <div className="text-right">
+                                          <p className="text-xs opacity-75">
+                                            {session.location ||
+                                              "Gold Block Room"}
+                                          </p>
                                         </div>
                                       </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </CardBody>
-                            </Card>
-                          );
-                        })
-                      )}
-                    </div>
-                  )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </CardBody>
+                          </Card>
+                        );
+                      })
+                    )}
+                  </div>
                 </div>
               );
             })}
           </div>
 
           {/* Summary Stats */}
-          <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t">
-            <div className="text-center">
-              <div className="text-2xl font-semibold text-gray-900">
-                {tutors.length}
-              </div>
-              <div className="text-sm text-gray-600">Total Tutors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-semibold text-gray-900">
-                {tutors.reduce((acc, tutor) => acc + tutor.sessions.length, 0)}
-              </div>
-              <div className="text-sm text-gray-600">Total Sessions</div>
-            </div>
+          <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t">
             <div className="text-center">
               <div className="text-2xl font-semibold text-gray-900">
                 {tutors.reduce(
@@ -483,7 +458,7 @@ const WeeklyTutorCalendar = () => {
                   0
                 )}
               </div>
-              <div className="text-sm text-gray-600">Scheduled</div>
+              <div className="text-sm text-gray-600">Upcoming</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-semibold text-gray-900">

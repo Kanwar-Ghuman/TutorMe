@@ -5,6 +5,7 @@ export async function TeacherNavbar({ user }) {
   const menuItems = [
     { label: "Dashboard", link: "/teacher/tutor-requests" },
     { label: "Create a Request", link: "/teacher/request/create" },
+    { label: "Profile", link: "/teacher/profile" },
   ];
 
   const profile = [
